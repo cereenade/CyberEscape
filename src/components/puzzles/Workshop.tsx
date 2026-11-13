@@ -32,7 +32,7 @@ export function Workshop({ tools, initialInput = "" }: Props) {
 
   return (
     <div className="tool workshop">
-      <p className="tool-title">🧪 Atelier de décodage</p>
+      <p className="tool-title">Atelier de décodage</p>
 
       <label className="tool-label" htmlFor="workshop-input">
         Texte de départ

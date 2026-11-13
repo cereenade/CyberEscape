@@ -35,7 +35,7 @@ export function Quiz({ slug, questions }: Props) {
 
   return (
     <section className="quiz" aria-labelledby="quiz-title">
-      <h2 id="quiz-title">🧠 Mini-quiz</h2>
+      <h2 id="quiz-title">Mini-quiz</h2>
       {alreadyDone && !checked && <p className="muted">Tu as déjà réussi ce quiz. Tu peux le refaire quand tu veux.</p>}
 
       <ol className="quiz-questions">
@@ -76,7 +76,7 @@ export function Quiz({ slug, questions }: Props) {
         <div className="quiz-result">
           <p className={score === questions.length ? "feedback feedback-success" : "feedback feedback-error"}>
             {score === questions.length
-              ? `Parfait : ${score}/${questions.length} ! Leçon validée ✅`
+              ? `Parfait : ${score}/${questions.length} ! Leçon validée.`
               : `${score}/${questions.length}. Relis la leçon et retente ta chance.`}
           </p>
           {score !== questions.length && (

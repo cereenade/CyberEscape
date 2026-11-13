@@ -17,7 +17,7 @@ const NOTICES: Record<string, { ok: boolean; text: string }> = {
   "paiement:ok": { ok: true, text: "Merci ! Ton abonnement est en cours d'activation (quelques secondes)." },
   "paiement:retour": { ok: true, text: "Merci ! Si ton paiement a abouti, l'illimité s'active dans quelques secondes : recharge la page si besoin." },
   "paiement:annule": { ok: false, text: "Paiement annulé : rien n'a été prélevé." },
-  "etudiant:ok": { ok: true, text: "Statut étudiant confirmé pour un an ✅ Tu peux maintenant choisir l'offre Étudiant." },
+  "etudiant:ok": { ok: true, text: "Statut étudiant confirmé pour un an. Tu peux maintenant choisir l'offre Étudiant." },
   "etudiant:expire": { ok: false, text: "Ce lien a expiré. Redemande un e-mail de vérification." },
   "etudiant:invalide": { ok: false, text: "Lien de vérification invalide ou déjà utilisé." },
   "etudiant:deja-utilisee": { ok: false, text: "Cette adresse d'école est déjà associée à un autre compte." },

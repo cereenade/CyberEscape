@@ -37,20 +37,20 @@ export default async function LessonPage({ params }: Props) {
       <div className="lesson-badges">
         {theme && (
           <span className="theme-pill">
-            {theme.icon} {theme.name}
+            {theme.name}
           </span>
         )}
         <span className={`level-pill level-pill-${lesson.level}`}>{levelName(lesson.level)}</span>
-        <span className="lesson-meta">⏱ {lesson.duration}</span>
+        <span className="lesson-meta">{lesson.duration}</span>
       </div>
 
       <h1 className="page-title">
-        {lesson.icon} {lesson.title}
+        {lesson.title}
       </h1>
       <p className="page-intro">{lesson.summary}</p>
 
       <aside className="lesson-box objectives" aria-labelledby="objectifs">
-        <h2 id="objectifs">🎯 À la fin de cette leçon, tu sauras…</h2>
+        <h2 id="objectifs">À la fin de cette leçon, tu sauras…</h2>
         <ul>
           {lesson.objectives.map((objective) => (
             <li key={objective}>{objective}</li>
@@ -78,7 +78,7 @@ export default async function LessonPage({ params }: Props) {
       ))}
 
       <aside className="lesson-box key-points" aria-labelledby="a-retenir">
-        <h2 id="a-retenir">📌 À retenir</h2>
+        <h2 id="a-retenir">À retenir</h2>
         <ul>
           {lesson.keyPoints.map((point) => (
             <li key={point}>{point}</li>
@@ -88,7 +88,7 @@ export default async function LessonPage({ params }: Props) {
 
       {lesson.sources && lesson.sources.length > 0 && (
         <aside className="lesson-box lesson-sources" aria-labelledby="sources">
-          <h2 id="sources">📚 Sources et pour aller plus loin</h2>
+          <h2 id="sources">Sources et pour aller plus loin</h2>
           <ul>
             {lesson.sources.map((source) => (
               <li key={source.url}>

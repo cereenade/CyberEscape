@@ -101,7 +101,7 @@ export function Plans(props: Props) {
         </article>
 
         <article className="plan plan-featured">
-          <h2>🎓 {PLANS.etudiant.name}</h2>
+          <h2>{PLANS.etudiant.name}</h2>
           <p className="plan-price">
             {PLANS.etudiant.price} <small>/ mois</small>
           </p>
@@ -114,7 +114,7 @@ export function Plans(props: Props) {
         </article>
 
         <article className="plan">
-          <h2>⚡ {PLANS.standard.name}</h2>
+          <h2>{PLANS.standard.name}</h2>
           <p className="plan-price">
             {PLANS.standard.price} <small>/ mois</small>
           </p>
@@ -158,7 +158,7 @@ function StudentBox({ open, student }: { open: boolean; student: Props["student"
   if (student) {
     return (
       <section className="account-section">
-        <h2>🎓 Statut étudiant</h2>
+        <h2>Statut étudiant</h2>
         <p className="feedback feedback-success">
           Vérifié avec {student.email}
           {student.until ? ` (valable jusqu'au ${DATE.format(new Date(student.until))})` : ""}.
@@ -183,7 +183,7 @@ function StudentBox({ open, student }: { open: boolean; student: Props["student"
 
   return (
     <section className="account-section">
-      <h2>🎓 Prouver que tu es étudiant(e)</h2>
+      <h2>Prouver que tu es étudiant(e)</h2>
       {open ? (
         <form className="auth-form inline-form" onSubmit={handleSubmit}>
           <p className="muted">Entre l&apos;adresse e-mail fournie par ton école ou ton université : on t&apos;y envoie un lien de confirmation.</p>
