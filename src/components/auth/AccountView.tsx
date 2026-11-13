@@ -60,7 +60,7 @@ export function AccountView() {
             return (
               <li key={level.id}>
                 <span>
-                  {level.icon} {level.name}
+                  {level.name}
                 </span>
                 <div className="progress-track">
                   <div className="progress-fill" style={{ width: `${(solved / total) * 100}%` }} />
@@ -141,7 +141,7 @@ function SubscriptionInfo({ premium, plan, tokensLeft, tokensPerDay }: { premium
       </p>
       {plan === "admin" && (
         <Link href="/admin" className="btn btn-primary btn-small">
-          🛠️ Ouvrir l&apos;administration
+          Ouvrir l&apos;administration
         </Link>
       )}
       {plan !== "offert" && plan !== "admin" && (
@@ -187,7 +187,7 @@ function PseudoForm({ userId, current, onSaved }: { userId: string; current: str
       return setMessage({ ok: false, text });
     }
     await onSaved();
-    setMessage({ ok: true, text: "Pseudo mis à jour ✅" });
+    setMessage({ ok: true, text: "Pseudo mis à jour." });
   }
 
   return (

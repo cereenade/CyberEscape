@@ -15,12 +15,12 @@ const PAGE_SIZE = 25;
 const DATE = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
 
 const LINKS = [
-  { href: "https://supabase.com/dashboard/projects", label: "🗄️ Base de données (Supabase)" },
+  { href: "https://supabase.com/dashboard/projects", label: "Base de données (Supabase)" },
   { href: "https://vercel.com/dashboard", label: "▲ Hébergement et logs (Vercel)" },
-  { href: "https://github.com/cereenade/CyberEscape", label: "🐙 Code source (GitHub)" },
-  { href: "https://github.dev/cereenade/CyberEscape", label: "✏️ Éditer le code en ligne (github.dev)" },
-  { href: "https://my.mollie.com/dashboard", label: "💳 Paiements (Mollie)" },
-  { href: "https://resend.com/emails", label: "✉️ E-mails envoyés (Resend)" },
+  { href: "https://github.com/cereenade/CyberEscape", label: "Code source (GitHub)" },
+  { href: "https://github.dev/cereenade/CyberEscape", label: "Éditer le code en ligne (github.dev)" },
+  { href: "https://my.mollie.com/dashboard", label: "Paiements (Mollie)" },
+  { href: "https://resend.com/emails", label: "E-mails envoyés (Resend)" },
 ];
 
 interface Props {
@@ -84,7 +84,7 @@ export default async function AdminPage({ searchParams }: Props) {
 
   return (
     <>
-      <h1 className="page-title">🛠️ Administration</h1>
+      <h1 className="page-title">Administration</h1>
       <p className="page-intro">
         Visible uniquement par toi. Pour modifier le code ou la base, utilise les outils ci-dessous : ils ont leur propre connexion sécurisée (pense à
         activer la double authentification partout).
@@ -101,7 +101,7 @@ export default async function AdminPage({ searchParams }: Props) {
         </div>
         <p className="muted small">
           {PLANS.etudiant.name} : {countPlan("etudiant")} · {PLANS.standard.name} : {countPlan("standard")} · Offerts : {countPlan("offert")} · Paiement{" "}
-          {MOLLIE_ENABLED ? "✅ activé" : "⏸️ non configuré"} · E-mails {EMAIL_ENABLED ? "✅ activés" : "⏸️ non configurés"}
+          {MOLLIE_ENABLED ? "activé" : "non configuré"} · E-mails {EMAIL_ENABLED ? "activés" : "non configurés"}
         </p>
       </section>
 
@@ -168,7 +168,7 @@ export default async function AdminPage({ searchParams }: Props) {
                         <span className="muted">gratuit</span>
                       )}
                     </td>
-                    <td>{student?.verified_at ? `✅ ${(student.school_email as string | null) ?? "manuel"}` : <span className="muted">—</span>}</td>
+                    <td>{student?.verified_at ? `${(student.school_email as string | null) ?? "manuel"}` : <span className="muted">—</span>}</td>
                     <td>
                       <div className="admin-links">
                         {!active && (

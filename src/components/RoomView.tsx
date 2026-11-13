@@ -38,7 +38,7 @@ export function RoomView({ room, onSolved, onNext }: Props) {
 
       {phase === "explore" && (
         <button type="button" className="btn btn-primary" onClick={() => setPhase("card")}>
-          🔍 Explorer la salle
+          Explorer la salle
         </button>
       )}
 
@@ -75,7 +75,7 @@ export function RoomView({ room, onSolved, onNext }: Props) {
             {showHint ? (
               <p>
                 <strong>
-                  {card.icon} {card.title} :
+                  {card.title} :
                 </strong>{" "}
                 {card.hint}
               </p>
@@ -90,7 +90,7 @@ export function RoomView({ room, onSolved, onNext }: Props) {
 
       {phase === "solved" && (
         <div className="success">
-          <p className="feedback feedback-success">✅ {successText}</p>
+          <p className="feedback feedback-success">{successText}</p>
           <button type="button" className="btn btn-primary" onClick={onNext}>
             Porte suivante →
           </button>
