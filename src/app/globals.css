@@ -38,8 +38,8 @@ body {
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 20% 0%, rgba(157, 107, 255, 0.2), transparent 40%),
-    radial-gradient(circle at 100% 30%, rgba(236, 92, 255, 0.13), transparent 40%),
+    radial-gradient(circle at 20% 0%, rgba(157, 107, 255, 0.08), transparent 40%),
+    radial-gradient(circle at 100% 30%, rgba(236, 92, 255, 0.05), transparent 40%),
     var(--bg);
   color: var(--text);
   font-family: var(--sans);
@@ -271,7 +271,6 @@ pre {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 28px rgba(157, 107, 255, 0.5));
 }
 
 .hero-text {
