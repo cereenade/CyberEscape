@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     siteName: "CyberEscape",
     title: "CyberEscape — Échappe-toi du serveur piraté",
-    description: "100 salles, 100 cyber-cartes et 14 leçons pour apprendre la cybersécurité en jouant, directement dans ton navigateur.",
+    description: "200 salles, 200 cyber-cartes et 30 leçons pour apprendre la cybersécurité en jouant, directement dans ton navigateur.",
     url: SITE_URL,
   },
   twitter: {
