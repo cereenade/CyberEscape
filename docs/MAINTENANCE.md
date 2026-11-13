@@ -74,10 +74,11 @@ npm run dev                  # → http://localhost:3000
 
 Les valeurs de `.env.local` se trouvent dans Supabase → **Project Settings** → **API Keys**, ou dans Vercel → **Environment Variables**. Ne pousse jamais ce fichier sur GitHub (il est déjà ignoré par `.gitignore`).
 
-Avant de pousser, vérifie que tout compile :
+Avant de pousser, vérifie que tout compile et que le contenu est valide :
 
 ```bash
 npm run typecheck
+npm run check:content
 npm run build
 ```
 
@@ -94,7 +95,7 @@ npm run build
 
 | Je veux changer… | Fichier(s) |
 |---|---|
-| Une salle, une énigme, une carte | `src/data/levels/*.ts` |
+| Une salle, une énigme, une carte | `src/data/levels/*.ts` (procédure d'ajout : `docs/AJOUT-QUOTIDIEN.md`) |
 | Une leçon ou un quiz | `src/data/lessons/*.ts` (thèmes et ordre dans `index.ts`) |
 | Les niveaux, le nombre de jetons, les prix affichés | `src/data/meta.ts` |
 | La limite d'essais par salle | `src/app/actions/game.ts` |

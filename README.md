@@ -12,7 +12,7 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 
 ## Le jeu
 
-**200 salles réparties en 5 niveaux de 40 salles.** Le joueur choisit librement son niveau.
+**500 salles réparties en 5 niveaux de 100 salles, et 10 nouvelles salles chaque jour.** Le joueur choisit librement son niveau.
 
 | Niveau | Thème | Exemples d'énigmes |
 |---|---|---|
@@ -22,10 +22,10 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 | 🔴 Très difficile | Dans la peau d'un analyste SOC | XOR, JWT, YARA, SIEM, beaconing, macros, capture réseau, MITRE ATT&CK |
 | 💀 Impossible | Réservé aux experts | Décodages en plusieurs couches, chronologie d'incident, SSRF, deepfakes, chasse finale |
 
-- **Une cyber-carte par salle** (200 au total) : elle explique une notion et sert d'indice.
+- **Une cyber-carte par salle** (500 au total) : elle explique une notion et sert d'indice.
 - **5 types d'énigmes** : réponse libre, choix unique, choix multiples, remise dans l'ordre et chasse au phishing.
 - **Un atelier de décodage** : on empile des opérations (Base64, César, XOR, Vigenère…) pour décoder les messages.
-- **La salle de cours** : 30 leçons rangées par thème (7) et par niveau (débutant, intermédiaire, avancé). Chaque leçon a des objectifs, des explications pas à pas avec exemples, un encadré « À retenir » et un mini-quiz.
+- **La salle de cours** : 60 leçons rangées par thème (7) et par niveau (débutant, intermédiaire, avancé). Chaque leçon a des objectifs, des explications pas à pas avec exemples, un encadré « À retenir » et un mini-quiz.
 
 - **Comptes joueurs** : inscription, connexion, mot de passe oublié, page « Mon compte » (pseudo, statistiques, offre, mot de passe, suppression du compte). Un compte est nécessaire pour jouer ; les cours restent libres.
 - **Jetons** : 5 par jour (non cumulables, remis à zéro à minuit), 1 jeton par salle réussie.
@@ -101,7 +101,7 @@ En local, copie `.env.example` en `.env.local` et remplis-le avec les valeurs de
 
 Tout ce qu'il faut pour gérer le projet (travailler en local, corriger un bug, revenir en arrière, gérer la base) est dans le [guide de maintenance](docs/MAINTENANCE.md).
 
-À chaque push et pull request, GitHub Actions vérifie les types et le build (`.github/workflows/ci.yml`). Dependabot propose les mises à jour des dépendances chaque semaine.
+À chaque push et pull request, GitHub Actions vérifie les types, le contenu (`npm run check:content`) et le build (`.github/workflows/ci.yml`). Dependabot propose les mises à jour des dépendances chaque semaine.
 
 ## Structure
 
@@ -110,7 +110,7 @@ src/
 ├── app/                      # Pages (App Router)
 │   ├── page.tsx              # Accueil
 │   ├── jeu/page.tsx          # Choix du niveau
-│   ├── jeu/[niveau]/page.tsx # Un niveau de 40 salles
+│   ├── jeu/[niveau]/page.tsx # Un niveau et ses salles
 │   ├── cours/page.tsx        # Salle de cours
 │   ├── cours/[slug]/page.tsx # Une leçon + son quiz
 │   ├── deck/page.tsx         # Collection de cyber-cartes
@@ -137,7 +137,7 @@ src/
 ├── data/
 │   ├── meta.ts               # Niveaux, jetons et prix (utilisable dans le navigateur)
 │   ├── game.ts               # Salles et cartes assemblées (serveur uniquement : contient les réponses)
-│   ├── levels/               # Trois fiches par niveau (salles 1–10, 11–20, 21–40, avec leurs cartes)
+│   ├── levels/               # Fiches de salles par niveau (1–10, 11–20, 21–40, puis par 20) + raccourcis _build.ts
 │   └── lessons/              # Une fiche par leçon
 └── lib/
     ├── types.ts              # Types partagés
@@ -153,7 +153,7 @@ supabase/schema.sql           # Tables, règles RLS et fonctions
 
 ### Ajouter du contenu
 
-- **Une salle** : ajoute-la dans le fichier du niveau (`src/data/levels/`), avec sa carte et son énigme (`answer`, `choice`, `multi`, `order` ou `phishing`). Ajoute `tools` pour afficher l'atelier de décodage.
+- **Une salle** : suis la procédure de [`docs/AJOUT-QUOTIDIEN.md`](docs/AJOUT-QUOTIDIEN.md) (fichier du niveau, compteur dans `src/data/meta.ts`, puis `npm run check:content`). Une tâche automatique propose chaque jour 10 nouvelles salles en pull request.
 - **Une leçon** : crée un fichier dans `src/data/lessons/` (avec son thème, son niveau, ses objectifs et ses points à retenir) et ajoute-le à la liste dans `index.ts`.
 
 ## Branches
