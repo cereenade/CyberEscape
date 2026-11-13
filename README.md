@@ -27,7 +27,9 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 - **Un atelier de décodage** : on empile des opérations (Base64, César, XOR, Vigenère…) pour décoder les messages.
 - **La salle de cours** : 14 leçons par thème, chacune avec un mini-quiz.
 
-La progression, le deck et les leçons validées sont sauvegardés dans le navigateur (`localStorage`).
+- **Comptes joueurs** (facultatifs) : inscription, connexion, mot de passe oublié, page « Mon compte » (pseudo, statistiques, mot de passe, suppression du compte). La progression est synchronisée sur le compte.
+
+Sans compte, la progression est sauvegardée dans le navigateur (`localStorage`). En se connectant, elle est fusionnée avec celle du compte.
 
 ## Technologies
 
@@ -35,6 +37,7 @@ La progression, le deck et les leçons validées sont sauvegardés dans le navig
 - React 19
 - TypeScript
 - CSS natif, sans dépendance
+- [Supabase](https://supabase.com/) pour les comptes et la base de données (`@supabase/ssr`)
 
 ## Lancer le projet en local
 
@@ -64,6 +67,27 @@ Puis ouvre [http://localhost:3000](http://localhost:3000).
 
 Chaque push sur `main` redéploie le site automatiquement, et chaque pull request reçoit une URL de prévisualisation.
 
+## Activer les comptes (Supabase)
+
+Le site fonctionne sans cette étape : les liens de connexion sont simplement masqués. Pour activer les comptes :
+
+1. **Créer la base** : sur Vercel, ouvre le projet → onglet **Storage** → **Supabase** → crée la base et connecte-la au projet. Les variables `NEXT_PUBLIC_SUPABASE_URL` et la clé publique sont ajoutées automatiquement.
+2. **Créer les tables** : dans Supabase → **SQL Editor** → **New query**, colle le contenu de [`supabase/schema.sql`](supabase/schema.sql) puis clique sur **Run**.
+3. **Autoriser les redirections** : dans Supabase → **Authentication** → **URL Configuration** :
+   - *Site URL* : `https://ton-site.vercel.app`
+   - *Redirect URLs* : `https://ton-site.vercel.app/auth/callback` et `http://localhost:3000/auth/callback`
+4. **Redéployer** : sur Vercel → **Deployments** → **Redeploy**, pour que les nouvelles variables soient prises en compte.
+
+En local, copie `.env.example` en `.env.local` et remplis-le avec les valeurs de Supabase → **Project Settings** → **API**.
+
+> L'envoi de mails intégré à Supabase est très limité. Pour un vrai lancement, configure un serveur SMTP (Authentication → SMTP Settings) et traduis les modèles de mails en français (Authentication → Email Templates).
+
+### Sécurité
+
+- Les mots de passe sont gérés et hachés par Supabase, jamais stockés par le site.
+- Chaque table est protégée par des règles RLS : un joueur ne peut lire et modifier que sa propre progression.
+- La suppression de compte passe par une fonction SQL qui ne peut supprimer que le compte connecté.
+
 ## Structure
 
 ```
@@ -75,9 +99,15 @@ src/
 │   ├── cours/page.tsx        # Salle de cours
 │   ├── cours/[slug]/page.tsx # Une leçon + son quiz
 │   ├── deck/page.tsx         # Collection de cyber-cartes
+│   ├── inscription/, connexion/, mot-de-passe-oublie/, reinitialiser-mot-de-passe/
+│   ├── compte/page.tsx       # Mon compte
+│   ├── auth/callback/        # Arrivée des liens envoyés par mail
+│   ├── conditions/, confidentialite/, mentions-legales/
 │   ├── layout.tsx, not-found.tsx, globals.css
 ├── components/
-│   ├── GameProvider.tsx      # État du jeu + sauvegarde
+│   ├── AuthProvider.tsx      # Joueur connecté et profil
+│   ├── GameProvider.tsx      # État du jeu, sauvegarde locale et synchronisation du compte
+│   ├── auth/                 # Formulaires de compte et page Mon compte
 │   ├── LevelSelect.tsx       # Grille des niveaux
 │   ├── LevelGame.tsx         # Enchaînement des salles d'un niveau
 │   ├── RoomView.tsx          # Une salle : exploration, carte, énigme
@@ -92,7 +122,11 @@ src/
     ├── crypto.ts             # Encodages et chiffrements (Base64, César, XOR…)
     ├── progress.ts           # Avancement par niveau, salle en cours
     ├── text.ts               # Comparaison des réponses
-    └── storage.ts            # Sauvegarde localStorage
+    ├── storage.ts            # Sauvegarde localStorage
+    ├── auth.ts               # Validation et messages d'erreur des comptes
+    └── supabase/             # Clients Supabase (navigateur, serveur, middleware)
+src/middleware.ts             # Rafraîchit la session, protège /compte
+supabase/schema.sql           # Tables, règles RLS et fonctions
 ```
 
 ### Ajouter du contenu

@@ -19,9 +19,18 @@ const FEATURES = [
   },
 ];
 
-export default function HomePage() {
+interface Props {
+  searchParams: Promise<{ compte?: string }>;
+}
+
+export default async function HomePage({ searchParams }: Props) {
+  const { compte } = await searchParams;
+
   return (
     <>
+      {compte === "supprime" && (
+        <p className="feedback feedback-success">Ton compte et tes données ont bien été supprimés. À bientôt !</p>
+      )}
       <section className="hero">
         <p className="hero-kicker">&gt; alerte : intrusion détectée</p>
         <h1 className="hero-title">CyberEscape</h1>
