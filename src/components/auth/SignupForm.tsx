@@ -74,7 +74,7 @@ export function SignupForm() {
     return (
       <div className="auth-form">
         <p className="feedback feedback-success">
-          📬 Presque fini ! Un lien de confirmation a été envoyé à <strong>{sentTo}</strong>. Clique dessus pour activer
+          Presque fini ! Un lien de confirmation a été envoyé à <strong>{sentTo}</strong>. Clique dessus pour activer
           ton compte.
         </p>
         <p className="muted small">Rien reçu ? Regarde dans tes spams, ou réessaie dans quelques minutes.</p>

@@ -56,7 +56,7 @@ export function NewPasswordForm({ submitLabel, onDone }: Props) {
           {error}
         </p>
       )}
-      {success && <p className="feedback feedback-success">Mot de passe modifié ✅</p>}
+      {success && <p className="feedback feedback-success">Mot de passe modifié.</p>}
 
       <button type="submit" className="btn btn-primary" disabled={pending}>
         {pending ? "Enregistrement…" : submitLabel}

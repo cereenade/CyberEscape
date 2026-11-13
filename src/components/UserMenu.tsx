@@ -7,10 +7,10 @@ import { useAuth } from "./AuthProvider";
 import { useGame } from "./GameProvider";
 import { type ThemeChoice, applyTheme, readTheme } from "./theme";
 
-const THEMES: { id: ThemeChoice; label: string; icon: string }[] = [
-  { id: "dark", label: "Sombre", icon: "🌙" },
-  { id: "light", label: "Clair", icon: "☀️" },
-  { id: "system", label: "Système", icon: "💻" },
+const THEMES: { id: ThemeChoice; label: string }[] = [
+  { id: "dark", label: "Sombre" },
+  { id: "light", label: "Clair" },
+  { id: "system", label: "Système" },
 ];
 
 /** Menu déroulant du compte : profil, liens, apparence et déconnexion. */
@@ -82,22 +82,22 @@ export function UserMenu() {
             <strong>{pseudo}</strong>
             <span className="muted small">{user.email}</span>
             <span className="user-menu-plan">
-              {status.isAdmin ? "🛠️ Administratrice · illimité" : status.premium ? "∞ Illimité" : `🪙 ${status.tokensLeft}/${status.tokensPerDay} jetons aujourd'hui`}
+              {status.isAdmin ? "Administratrice · illimité" : status.premium ? "∞ Illimité" : `${status.tokensLeft}/${status.tokensPerDay} jetons aujourd'hui`}
             </span>
           </div>
 
           <Link href="/compte" className="user-menu-item" role="menuitem">
-            👤 Mon compte
+            Mon compte
           </Link>
           <Link href="/deck" className="user-menu-item" role="menuitem">
-            🃏 Mon deck
+            Mon deck
           </Link>
           <Link href="/abonnement" className="user-menu-item" role="menuitem">
-            💳 {status.premium && !status.isAdmin ? "Mon abonnement" : "Offres et abonnement"}
+            {status.premium && !status.isAdmin ? "Mon abonnement" : "Offres et abonnement"}
           </Link>
           {status.isAdmin && (
             <Link href="/admin" className="user-menu-item" role="menuitem">
-              🛠️ Administration
+              Administration
             </Link>
           )}
 
@@ -113,7 +113,7 @@ export function UserMenu() {
                   className={theme === item.id ? "theme-option active" : "theme-option"}
                   onClick={() => chooseTheme(item.id)}
                 >
-                  <span aria-hidden>{item.icon}</span> {item.label}
+                  {item.label}
                 </button>
               ))}
             </div>
