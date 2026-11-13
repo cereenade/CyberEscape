@@ -255,19 +255,5 @@ grant execute on function public.add_progress_item(uuid, text, text) to service_
 
 -- ---------- Suppression de son propre compte ----------
 
-create or replace function public.delete_own_account()
-returns void
-language plpgsql
-security definer
-set search_path = ''
-as $$
-begin
-  if auth.uid() is null then
-    raise exception 'Non connecté';
-  end if;
-  delete from auth.users where id = auth.uid();
-end;
-$$;
-
-revoke all on function public.delete_own_account() from public, anon;
-grant execute on function public.delete_own_account() to authenticated;
+-- La suppression passe désormais par le serveur (qui résilie aussi l'abonnement Stripe).
+drop function if exists public.delete_own_account();
