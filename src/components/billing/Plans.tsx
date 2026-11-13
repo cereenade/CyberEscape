@@ -146,7 +146,7 @@ export function Plans(props: Props) {
       )}
 
       {loggedIn && !premium && <StudentBox open={props.studentCheckOpen} student={student} />}
-      <p className="muted small">
+      <p className="muted small plan-note">
         Paiement sécurisé par Stripe : CyberEscape ne voit jamais ton numéro de carte. <Link href="/cgv">CGV</Link>
       </p>
     </>

@@ -26,7 +26,8 @@ export function RoomView({ room, onSolved, onNext }: Props) {
 
   async function handleSubmit(submission: Submission) {
     const result = await submitAnswer(room.id, submission);
-    if (result.status) setStatus(result.status);
+    // En cas de succès, l'état est mis à jour dans onSolved (même rendu que l'affichage du succès).
+    if (!result.correct && result.status) setStatus(result.status);
     return result;
   }
 
@@ -67,6 +68,7 @@ export function RoomView({ room, onSolved, onNext }: Props) {
               setSuccessText(result.successText ?? "Salle ouverte !");
               onSolved();
               setPhase("solved");
+              if (result.status) setStatus(result.status);
             }}
           />
           <div className="hint">
