@@ -1,33 +1,63 @@
 import type { Lesson, LessonLevel, LessonTheme } from "@/lib/types";
+import { ACTIVE_DIRECTORY } from "./active-directory";
+import { ADRESSAGE_IP } from "./adressage-ip";
 import { API_CLOUD } from "./api-cloud";
 import { ARNAQUES } from "./arnaques";
+import { ARNAQUES_QUOTIDIEN } from "./arnaques-quotidien";
+import { ASYMETRIQUE } from "./asymetrique";
 import { ATTACK } from "./attack";
+import { AUTHENTIFICATION_WEB } from "./authentification-web";
 import { BASES } from "./bases";
+import { COOKIES_SESSIONS } from "./cookies-sessions";
 import { CRYPTANALYSE } from "./cryptanalyse";
 import { CRYPTO } from "./crypto";
+import { CRYPTO_FUTUR } from "./crypto-futur";
 import { CRYPTO_MODERNE } from "./crypto-moderne";
 import { CTI } from "./cti";
 import { DEFENSE_RESEAU } from "./defense-reseau";
 import { DETECTION } from "./detection";
+import { DNS } from "./dns";
+import { FORENSIQUE_WINDOWS } from "./forensique-windows";
+import { FRAUDE_ENTREPRISE } from "./fraude-entreprise";
+import { GOUVERNANCE } from "./gouvernance";
 import { HACHAGE } from "./hachage";
 import { HTTP } from "./http";
+import { IA_MANIPULATION } from "./ia-manipulation";
 import { INCIDENT } from "./incident";
+import { INGENIERIE_DETECTION } from "./ingenierie-detection";
 import { INGENIERIE_SOCIALE } from "./ingenierie-sociale";
+import { INJECTION_SQL } from "./injection-sql";
+import { INTERNET_INFRA } from "./internet-infra";
+import { LIGNE_COMMANDE } from "./ligne-commande";
 import { LINUX } from "./linux";
+import { LIRE_JOURNAUX } from "./lire-journaux";
 import { LOI } from "./loi";
 import { MALWARE } from "./malware";
 import { METIERS } from "./metiers";
 import { MOBILE } from "./mobile";
+import { MODES_CHIFFREMENT } from "./modes-chiffrement";
 import { MOTS_DE_PASSE } from "./mots-de-passe";
 import { OSINT } from "./osint";
 import { OWASP } from "./owasp";
 import { PHISHING } from "./phishing";
+import { PRIVILEGES_LINUX } from "./privileges-linux";
+import { PRIVILEGES_WINDOWS } from "./privileges-windows";
+import { RECONNAITRE_ENCODAGES } from "./reconnaitre-encodages";
 import { RESEAU } from "./reseau";
+import { RESEAU_LOCAL_ATTAQUES } from "./reseau-local-attaques";
+import { RESEAUX_SOCIAUX } from "./reseaux-sociaux";
 import { SAUVEGARDES } from "./sauvegardes";
+import { SECURITE_CLOUD } from "./securite-cloud";
+import { SECURITE_NAVIGATEUR } from "./securite-navigateur";
+import { SECURITE_PHYSIQUE } from "./securite-physique";
 import { SYSTEME } from "./systeme";
 import { TCP_IP } from "./tcp-ip";
+import { TELETRAVAIL } from "./teletravail";
+import { TRIAGE_ALERTES } from "./triage-alertes";
 import { VIE_PRIVEE } from "./vie-privee";
 import { WEB } from "./web";
+import { WEB_AVANCE } from "./web-avance";
+import { WIFI } from "./wifi";
 import { WINDOWS } from "./windows";
 
 export const THEMES: { id: LessonTheme; name: string; icon: string; description: string }[] = [
@@ -49,13 +79,13 @@ export const LESSON_LEVELS: { id: LessonLevel; name: string }[] = [
 const LEVEL_ORDER: Record<LessonLevel, number> = { debutant: 0, intermediaire: 1, avance: 2 };
 
 const ALL: Lesson[] = [
-  BASES, MOTS_DE_PASSE, MOBILE, SAUVEGARDES, METIERS, LOI,
-  PHISHING, VIE_PRIVEE, ARNAQUES, INGENIERIE_SOCIALE,
-  HTTP, WEB, OWASP, API_CLOUD,
-  CRYPTO, CRYPTO_MODERNE, HACHAGE, CRYPTANALYSE,
-  RESEAU, TCP_IP, DEFENSE_RESEAU, OSINT,
-  SYSTEME, LINUX, WINDOWS,
-  INCIDENT, DETECTION, MALWARE, ATTACK, CTI,
+  BASES, MOTS_DE_PASSE, MOBILE, SAUVEGARDES, SECURITE_PHYSIQUE, TELETRAVAIL, METIERS, LOI,
+  PHISHING, VIE_PRIVEE, ARNAQUES, RESEAUX_SOCIAUX, ARNAQUES_QUOTIDIEN, INGENIERIE_SOCIALE, FRAUDE_ENTREPRISE, IA_MANIPULATION,
+  HTTP, COOKIES_SESSIONS, WEB, INJECTION_SQL, SECURITE_NAVIGATEUR, OWASP, API_CLOUD, AUTHENTIFICATION_WEB, WEB_AVANCE,
+  CRYPTO, RECONNAITRE_ENCODAGES, CRYPTO_MODERNE, HACHAGE, CRYPTANALYSE, ASYMETRIQUE, MODES_CHIFFREMENT, CRYPTO_FUTUR,
+  RESEAU, ADRESSAGE_IP, TCP_IP, DEFENSE_RESEAU, OSINT, WIFI, DNS, RESEAU_LOCAL_ATTAQUES, INTERNET_INFRA,
+  LIGNE_COMMANDE, SYSTEME, LINUX, WINDOWS, PRIVILEGES_LINUX, PRIVILEGES_WINDOWS, ACTIVE_DIRECTORY, FORENSIQUE_WINDOWS,
+  LIRE_JOURNAUX, INCIDENT, DETECTION, TRIAGE_ALERTES, GOUVERNANCE, MALWARE, ATTACK, CTI, INGENIERIE_DETECTION, SECURITE_CLOUD,
 ];
 
 /** Leçons triées par thème, puis par niveau (débutant → avancé). */
