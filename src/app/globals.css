@@ -1693,3 +1693,8 @@ a.level-card:hover {
 .legal h2 {
   margin-top: 2rem;
 }
+
+.lesson-sources {
+  border-left: 4px solid var(--border);
+  font-size: 0.9rem;
+}
