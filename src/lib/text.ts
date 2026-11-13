@@ -11,6 +11,13 @@ export function normalizeAnswer(value: string): string {
     .replace(/[^a-z0-9]/g, "");
 }
 
-export function isCorrectAnswer(input: string, expected: string): boolean {
-  return normalizeAnswer(input) === normalizeAnswer(expected);
+/** Ignore seulement la casse, les espaces et le style des apostrophes. */
+export function normalizeStrict(value: string): string {
+  return value.toLowerCase().replace(/[\u2018\u2019`]/g, "'").replace(/\s+/g, "");
+}
+
+export function isCorrectAnswer(input: string, accepted: string[], strict = false): boolean {
+  const normalize = strict ? normalizeStrict : normalizeAnswer;
+  const normalized = normalize(input);
+  return normalized !== "" && accepted.some((answer) => normalize(answer) === normalized);
 }
