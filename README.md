@@ -1,4 +1,4 @@
-# 🔐 CyberEscape
+# CyberEscape
 
 > **Collectionne. Décode. Échappe-toi.**
 
@@ -10,7 +10,7 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 
 ---
 
-## 🎮 Le jeu
+## Le jeu
 
 - **Escape game** : chaque salle est verrouillée par une énigme à résoudre.
 - **Cyber-cartes** : des cartes à collectionner qui expliquent une notion de cybersécurité et servent d'indice pour ouvrir les portes.
@@ -24,14 +24,14 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 | Un message chiffré à décoder | Cryptographie (César, Base64…) |
 | Un faux mail à démasquer | Phishing et ingénierie sociale |
 
-## 🚧 Statut
+## Statut
 
 Projet en cours de développement. Le jeu sera jouable directement dans le navigateur.
 
-## 🤝 Contribuer
+## Contribuer
 
 Les idées d'énigmes et de cyber-cartes sont les bienvenues ! Ouvre une *issue* ou propose une *pull request*.
 
-## 👩‍💻 Auteur
+## Auteur
 
 **Ceren Yikilmaz** — [@cereenade](https://github.com/cereenade)
