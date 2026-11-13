@@ -10,9 +10,9 @@
   --text: #ece8f5;
   --muted: #9c94b3;
   /* Accent principal (violet) et secondaire (fuchsia) */
-  --violet: #7b69ad;
-  --violet-light: #9282c0;
-  --pink: #8c739e;
+  --violet: #8460d9;
+  --violet-light: #9d80e6;
+  --pink: #a964c4;
   --red: #ff5470;
   --yellow: #ffd166;
   --indigo: #818cf8;
@@ -38,7 +38,7 @@ body {
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 20% 0%, rgba(90, 68, 140, 0.06), transparent 40%),
+    radial-gradient(circle at 20% 0%, rgba(110, 66, 200, 0.08), transparent 40%),
     radial-gradient(circle at 100% 30%, rgba(130, 96, 150, 0.04), transparent 40%),
     var(--bg);
   color: var(--text);
@@ -122,7 +122,7 @@ pre {
   font-size: 0.75rem;
   padding: 0.05rem 0.45rem;
   border-radius: 999px;
-  background: rgba(98, 80, 145, 0.15);
+  background: rgba(120, 82, 210, 0.15);
   color: var(--violet);
 }
 
@@ -194,12 +194,12 @@ pre {
 
 .btn-primary {
   /* Violet plus foncé pour un bon contraste avec le texte blanc */
-  background: #3f2f70;
+  background: #4b2a9e;
   color: #ffffff;
 }
 
 .btn-primary:hover {
-  background: #4c3a85;
+  background: #5b35bd;
 }
 
 .btn-ghost {
@@ -451,8 +451,8 @@ pre {
 }
 
 .feedback-success {
-  background: rgba(98, 80, 145, 0.1);
-  border: 1px solid rgba(98, 80, 145, 0.35);
+  background: rgba(120, 82, 210, 0.1);
+  border: 1px solid rgba(120, 82, 210, 0.35);
   color: #d8cdee;
 }
 
@@ -826,7 +826,7 @@ a.level-card:hover {
 }
 
 .workshop {
-  border-color: rgba(120, 98, 145, 0.35);
+  border-color: rgba(160, 90, 190, 0.35);
 }
 
 .tool-title {
@@ -899,12 +899,12 @@ a.level-card:hover {
 
 .choice-selected {
   border-color: var(--pink);
-  background: rgba(120, 98, 145, 0.08);
+  background: rgba(160, 90, 190, 0.08);
 }
 
 .choice-right {
   border-color: var(--violet);
-  background: rgba(98, 80, 145, 0.08);
+  background: rgba(120, 82, 210, 0.08);
 }
 
 .choice:disabled {
