@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { LEVELS, getLevel, getLevelRooms } from "@/data/game";
-import { currentRoomIndex, isLevelUnlocked } from "@/lib/progress";
+import { currentRoomIndex } from "@/lib/progress";
 import type { LevelId } from "@/lib/types";
 import { useGame } from "./GameProvider";
 import { ProgressBar } from "./ProgressBar";
@@ -21,23 +21,6 @@ export function LevelGame({ levelId }: { levelId: LevelId }) {
 
   const levelIndex = LEVELS.findIndex((l) => l.id === levelId);
 
-  if (!isLevelUnlocked(save, levelId)) {
-    return (
-      <section className="victory">
-        <p className="victory-icon" aria-hidden>
-          🔒
-        </p>
-        <h1>Niveau verrouillé</h1>
-        <p>Termine d&apos;abord le niveau {LEVELS[levelIndex - 1].name} pour accéder à celui-ci.</p>
-        <div className="actions">
-          <Link href="/jeu" className="btn btn-primary">
-            Choisir un niveau
-          </Link>
-        </div>
-      </section>
-    );
-  }
-
   const viewed = rooms.find((room) => room.id === viewedRoomId);
   const index = viewed ? viewed.index : currentRoomIndex(save, levelId);
 
@@ -51,8 +34,8 @@ export function LevelGame({ levelId }: { levelId: LevelId }) {
         <h1>{next ? `Niveau ${level.name} terminé !` : "Tu t'es échappé du serveur !"}</h1>
         <p>
           {next
-            ? `Les 10 salles sont ouvertes et 10 nouvelles cyber-cartes ont rejoint ton deck. Le niveau ${next.name} est débloqué.`
-            : "Les 50 salles sont ouvertes, le pirate est éjecté. Tu as collecté tout le savoir du serveur."}
+            ? `Les 10 salles sont ouvertes et 10 nouvelles cyber-cartes ont rejoint ton deck. Prêt pour le niveau ${next.name} ?`
+            : "Le pirate est éjecté et le serveur est libre. Bravo, tu as battu le niveau le plus dur du jeu !"}
         </p>
         <div className="actions">
           {next && (

@@ -10,8 +10,8 @@ export default function GamePage() {
     <>
       <h1 className="page-title">Choisis ton niveau</h1>
       <p className="page-intro">
-        5 niveaux de 10 salles. Chaque niveau terminé débloque le suivant, et chaque salle t&apos;apporte une nouvelle
-        cyber-carte.
+        5 niveaux de 10 salles, tous accessibles : commence par celui qui te correspond. Chaque salle t&apos;apporte une
+        nouvelle cyber-carte.
       </p>
       <LevelSelect />
     </>
