@@ -3,17 +3,19 @@
    ========================================================================== */
 
 :root {
-  --bg: #0b0f14;
-  --bg-elevated: #121821;
-  --bg-sunken: #070a0e;
-  --border: #223041;
-  --text: #e6edf3;
-  --muted: #8b9bb0;
-  --green: #39ff88;
-  --cyan: #3ad6ff;
+  --bg: #09080d;
+  --bg-elevated: #14111c;
+  --bg-sunken: #06050a;
+  --border: #2b2440;
+  --text: #ece8f5;
+  --muted: #9c94b3;
+  /* Accent principal (violet) et secondaire (fuchsia) */
+  --violet: #a855f7;
+  --violet-light: #c084fc;
+  --pink: #e879f9;
   --red: #ff5470;
   --yellow: #ffd166;
-  --purple: #b48cff;
+  --indigo: #818cf8;
   --radius: 12px;
   --mono: ui-monospace, "SFMono-Regular", "Cascadia Code", "Fira Code", Menlo, Consolas, monospace;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -36,8 +38,8 @@ body {
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 20% 0%, rgba(57, 255, 136, 0.08), transparent 40%),
-    radial-gradient(circle at 100% 30%, rgba(58, 214, 255, 0.06), transparent 40%),
+    radial-gradient(circle at 20% 0%, rgba(168, 85, 247, 0.08), transparent 40%),
+    radial-gradient(circle at 100% 30%, rgba(232, 121, 249, 0.06), transparent 40%),
     var(--bg);
   color: var(--text);
   font-family: var(--sans);
@@ -45,7 +47,7 @@ body {
 }
 
 a {
-  color: var(--cyan);
+  color: var(--pink);
 }
 
 h1,
@@ -74,7 +76,7 @@ pre {
   gap: 1rem;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border);
-  background: rgba(11, 15, 20, 0.85);
+  background: rgba(9, 8, 13, 0.85);
   backdrop-filter: blur(6px);
   position: sticky;
   top: 0;
@@ -90,7 +92,7 @@ pre {
 }
 
 .logo-mark {
-  color: var(--green);
+  color: var(--violet);
 }
 
 .nav {
@@ -120,8 +122,8 @@ pre {
   font-size: 0.75rem;
   padding: 0.05rem 0.45rem;
   border-radius: 999px;
-  background: rgba(57, 255, 136, 0.15);
-  color: var(--green);
+  background: rgba(168, 85, 247, 0.15);
+  color: var(--violet);
 }
 
 .main {
@@ -151,7 +153,7 @@ pre {
 
 .loading {
   font-family: var(--mono);
-  color: var(--green);
+  color: var(--violet);
 }
 
 .actions {
@@ -186,17 +188,18 @@ pre {
 .input:focus-visible,
 .choice:focus-visible,
 .deck-item:focus-visible {
-  outline: 2px solid var(--cyan);
+  outline: 2px solid var(--pink);
   outline-offset: 2px;
 }
 
 .btn-primary {
-  background: var(--green);
-  color: #04130a;
+  /* Violet plus foncé pour un bon contraste avec le texte blanc */
+  background: #9333ea;
+  color: #ffffff;
 }
 
 .btn-primary:hover {
-  background: #6dffa8;
+  background: var(--violet);
 }
 
 .btn-ghost {
@@ -206,8 +209,8 @@ pre {
 }
 
 .btn-ghost:hover {
-  border-color: var(--cyan);
-  color: var(--cyan);
+  border-color: var(--pink);
+  color: var(--pink);
 }
 
 .btn-danger {
@@ -244,7 +247,7 @@ pre {
 
 .range {
   width: 100%;
-  accent-color: var(--green);
+  accent-color: var(--violet);
 }
 
 /* ---------- Accueil ---------- */
@@ -263,7 +266,7 @@ pre {
 .hero-title {
   font-size: clamp(2.5rem, 8vw, 4.5rem);
   margin: 0.5rem 0;
-  background: linear-gradient(90deg, var(--green), var(--cyan));
+  background: linear-gradient(90deg, var(--violet), var(--pink));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -276,7 +279,7 @@ pre {
 
 .hero-tagline {
   font-family: var(--mono);
-  color: var(--green);
+  color: var(--violet);
   font-weight: 700;
 }
 
@@ -336,7 +339,7 @@ pre {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--green), var(--cyan));
+  background: linear-gradient(90deg, var(--violet), var(--pink));
   transition: width 0.4s ease;
 }
 
@@ -385,7 +388,7 @@ pre {
   overflow-x: auto;
   font-size: 0.85rem;
   line-height: 1.5;
-  color: #c9d6e3;
+  color: #d9d2ea;
 }
 
 .cipher-text {
@@ -400,7 +403,7 @@ pre {
 }
 
 .cipher-output {
-  color: var(--green);
+  color: var(--violet);
   margin-bottom: 0;
 }
 
@@ -448,9 +451,9 @@ pre {
 }
 
 .feedback-success {
-  background: rgba(57, 255, 136, 0.1);
-  border: 1px solid rgba(57, 255, 136, 0.35);
-  color: #b8ffd5;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  color: #e9d5ff;
 }
 
 .hint {
@@ -499,7 +502,7 @@ pre {
 
 .email-body {
   margin: 0;
-  color: #c9d6e3;
+  color: #d9d2ea;
 }
 
 .email-link {
@@ -507,7 +510,7 @@ pre {
 }
 
 .fake-link {
-  color: var(--cyan);
+  color: var(--pink);
   text-decoration: underline;
 }
 
@@ -538,7 +541,7 @@ pre {
 }
 
 .choice:hover {
-  border-color: var(--cyan);
+  border-color: var(--pink);
 }
 
 .choice-wrong {
@@ -564,7 +567,7 @@ pre {
 /* ---------- Cyber-cartes ---------- */
 
 .cyber-card {
-  --accent: var(--cyan);
+  --accent: var(--pink);
   width: 100%;
   max-width: 420px;
   padding: 1.25rem;
@@ -577,11 +580,11 @@ pre {
 }
 
 .cat-web {
-  --accent: var(--cyan);
+  --accent: var(--pink);
 }
 
 .cat-crypto {
-  --accent: var(--purple);
+  --accent: var(--indigo);
 }
 
 .cat-social {
@@ -640,7 +643,7 @@ pre {
 
 .deck-count {
   font-family: var(--mono);
-  color: var(--green);
+  color: var(--violet);
 }
 
 .deck-grid {
@@ -707,7 +710,7 @@ pre {
 }
 
 .level-card {
-  --accent: var(--green);
+  --accent: var(--violet);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -739,7 +742,7 @@ a.level-card:hover {
 }
 
 .level-impossible {
-  --accent: var(--purple);
+  --accent: var(--indigo);
 }
 
 .level-top {
@@ -823,14 +826,14 @@ a.level-card:hover {
 }
 
 .workshop {
-  border-color: rgba(58, 214, 255, 0.35);
+  border-color: rgba(232, 121, 249, 0.35);
 }
 
 .tool-title {
   margin: 0;
   font-family: var(--mono);
   font-weight: 700;
-  color: var(--cyan);
+  color: var(--pink);
 }
 
 .tool-buttons {
@@ -895,13 +898,13 @@ a.level-card:hover {
 }
 
 .choice-selected {
-  border-color: var(--cyan);
-  background: rgba(58, 214, 255, 0.08);
+  border-color: var(--pink);
+  background: rgba(232, 121, 249, 0.08);
 }
 
 .choice-right {
-  border-color: var(--green);
-  background: rgba(57, 255, 136, 0.08);
+  border-color: var(--violet);
+  background: rgba(168, 85, 247, 0.08);
 }
 
 .choice:disabled {
@@ -930,7 +933,7 @@ a.level-card:hover {
 }
 
 .lesson-card:hover {
-  border-color: var(--cyan);
+  border-color: var(--pink);
   transform: translateY(-2px);
 }
 
@@ -964,11 +967,11 @@ a.level-card:hover {
 
 .lesson-status {
   font-size: 0.85rem;
-  color: var(--cyan);
+  color: var(--pink);
 }
 
 .lesson-status.done {
-  color: var(--green);
+  color: var(--violet);
 }
 
 .lesson {
@@ -988,7 +991,7 @@ a.level-card:hover {
 
 .lesson-section h2 {
   font-size: 1.15rem;
-  color: var(--cyan);
+  color: var(--pink);
 }
 
 .lesson-section .code-block {
