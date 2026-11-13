@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AuthProvider } from "@/components/AuthProvider";
 import { GameProvider } from "@/components/GameProvider";
 import { Header } from "@/components/Header";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,6 +14,21 @@ export const metadata: Metadata = {
   description:
     "Un escape game dans ton navigateur pour apprendre la cybersécurité : résous des énigmes, collectionne les cyber-cartes et échappe-toi du serveur piraté.",
   icons: { icon: "/favicon.svg" },
+  metadataBase: new URL(SITE_URL),
+  keywords: ["cybersécurité", "escape game", "jeu éducatif", "phishing", "cryptographie", "SOC", "apprendre"],
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    siteName: "CyberEscape",
+    title: "CyberEscape — Échappe-toi du serveur piraté",
+    description: "100 salles, 100 cyber-cartes et 14 leçons pour apprendre la cybersécurité en jouant, directement dans ton navigateur.",
+    url: SITE_URL,
+  },
+  twitter: {
+    card: "summary",
+    title: "CyberEscape — Échappe-toi du serveur piraté",
+    description: "Apprends la cybersécurité en jouant : énigmes, cyber-cartes et salle de cours.",
+  },
 };
 
 export const viewport: Viewport = {
