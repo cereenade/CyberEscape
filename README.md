@@ -12,7 +12,7 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 
 ## Le jeu
 
-**100 salles réparties en 5 niveaux de 20 salles.** Le joueur choisit librement son niveau.
+**200 salles réparties en 5 niveaux de 40 salles.** Le joueur choisit librement son niveau.
 
 | Niveau | Thème | Exemples d'énigmes |
 |---|---|---|
@@ -22,10 +22,10 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 | 🔴 Très difficile | Dans la peau d'un analyste SOC | XOR, JWT, YARA, SIEM, beaconing, macros, capture réseau, MITRE ATT&CK |
 | 💀 Impossible | Réservé aux experts | Décodages en plusieurs couches, chronologie d'incident, SSRF, deepfakes, chasse finale |
 
-- **Une cyber-carte par salle** (100 au total) : elle explique une notion et sert d'indice.
+- **Une cyber-carte par salle** (200 au total) : elle explique une notion et sert d'indice.
 - **5 types d'énigmes** : réponse libre, choix unique, choix multiples, remise dans l'ordre et chasse au phishing.
 - **Un atelier de décodage** : on empile des opérations (Base64, César, XOR, Vigenère…) pour décoder les messages.
-- **La salle de cours** : 14 leçons par thème, chacune avec un mini-quiz.
+- **La salle de cours** : 30 leçons rangées par thème (7) et par niveau (débutant, intermédiaire, avancé). Chaque leçon a des objectifs, des explications pas à pas avec exemples, un encadré « À retenir » et un mini-quiz.
 
 - **Comptes joueurs** (facultatifs) : inscription, connexion, mot de passe oublié, page « Mon compte » (pseudo, statistiques, mot de passe, suppression du compte). La progression est synchronisée sur le compte.
 
@@ -101,7 +101,7 @@ src/
 ├── app/                      # Pages (App Router)
 │   ├── page.tsx              # Accueil
 │   ├── jeu/page.tsx          # Choix du niveau
-│   ├── jeu/[niveau]/page.tsx # Un niveau de 20 salles
+│   ├── jeu/[niveau]/page.tsx # Un niveau de 40 salles
 │   ├── cours/page.tsx        # Salle de cours
 │   ├── cours/[slug]/page.tsx # Une leçon + son quiz
 │   ├── deck/page.tsx         # Collection de cyber-cartes
@@ -121,7 +121,7 @@ src/
 │   └── puzzles/              # Énigmes : réponse, choix, choix multiples, ordre, phishing, atelier
 ├── data/
 │   ├── game.ts               # Niveaux, salles et cartes assemblés
-│   ├── levels/               # Deux fiches par niveau (salles 1–10 et 11–20, avec leurs cartes)
+│   ├── levels/               # Trois fiches par niveau (salles 1–10, 11–20, 21–40, avec leurs cartes)
 │   └── lessons/              # Une fiche par leçon
 └── lib/
     ├── types.ts              # Types partagés
@@ -138,7 +138,7 @@ supabase/schema.sql           # Tables, règles RLS et fonctions
 ### Ajouter du contenu
 
 - **Une salle** : ajoute-la dans le fichier du niveau (`src/data/levels/`), avec sa carte et son énigme (`answer`, `choice`, `multi`, `order` ou `phishing`). Ajoute `tools` pour afficher l'atelier de décodage.
-- **Une leçon** : crée un fichier dans `src/data/lessons/` et ajoute-le à la liste dans `index.ts`.
+- **Une leçon** : crée un fichier dans `src/data/lessons/` (avec son thème, son niveau, ses objectifs et ses points à retenir) et ajoute-le à la liste dans `index.ts`.
 
 ## Branches
 

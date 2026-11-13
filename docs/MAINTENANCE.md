@@ -47,10 +47,11 @@ npm run build
 | Je veux changer… | Fichier(s) |
 |---|---|
 | Une salle, une énigme, une carte | `src/data/levels/*.ts` |
-| Une leçon ou un quiz | `src/data/lessons/*.ts` |
+| Une leçon ou un quiz | `src/data/lessons/*.ts` (thèmes et ordre dans `index.ts`) |
 | Les niveaux (noms, descriptions) | `src/data/game.ts` |
 | Les couleurs, le style | `src/app/globals.css` (variables en haut du fichier) |
 | Une page | `src/app/<nom-de-la-page>/page.tsx` |
+| La mini-énigme de l'accueil | `src/components/home/MiniPuzzle.tsx` |
 | Les messages d'erreur des comptes | `src/lib/auth.ts` |
 | La structure de la base | `supabase/schema.sql` (à relancer dans Supabase) |
 | Les pages légales | `src/app/mentions-legales`, `confidentialite`, `conditions` |
