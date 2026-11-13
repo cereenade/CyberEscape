@@ -152,11 +152,79 @@ export interface Lesson {
   quiz: QuizQuestion[];
 }
 
-/* ---------- Sauvegarde ---------- */
+/* ---------- Données envoyées au navigateur (sans les réponses) ---------- */
 
-export interface GameSave {
-  version: 2;
+export interface PublicEmail {
+  id: string;
+  fromName: string;
+  fromAddress: string;
+  subject: string;
+  body: string;
+  linkText: string;
+  linkHref: string;
+}
+
+interface PublicPuzzleBase {
+  intro?: string;
+  content?: string;
+  contentLabel?: string;
+  tools?: Op[];
+  workshopInput?: string;
+}
+
+export type PublicPuzzle =
+  | (PublicPuzzleBase & { kind: "answer"; question: string; placeholder?: string })
+  | (PublicPuzzleBase & { kind: "phishing"; emails: PublicEmail[] })
+  | (PublicPuzzleBase & { kind: "choice"; question: string; options: string[] })
+  | (PublicPuzzleBase & { kind: "multi"; question: string; options: string[] })
+  | (PublicPuzzleBase & { kind: "order"; question: string; items: string[] });
+
+export interface PublicRoom {
+  id: string;
+  level: LevelId;
+  index: number;
+  name: string;
+  story: string;
+  card: CyberCard;
+  puzzle: PublicPuzzle;
+}
+
+/* ---------- Réponses envoyées au serveur ---------- */
+
+export type Submission =
+  | { kind: "answer"; value: string }
+  | { kind: "choice"; index: number }
+  | { kind: "multi"; indices: number[] }
+  | { kind: "phishing"; emailId: string }
+  | { kind: "order"; sequence: string[] };
+
+export interface SubmitResult {
+  correct: boolean;
+  /** Message à afficher en cas d'erreur (mauvaise réponse, plus de jetons…). */
+  message?: string;
+  /** Explications des mauvais choix (choix unique, multiple, phishing). */
+  explanations?: string[];
+  /** Nombre de bonnes réponses manquantes (choix multiples). */
+  missing?: number;
+  successText?: string;
+  /** Plus de jetons aujourd'hui : afficher l'offre d'abonnement. */
+  noTokens?: boolean;
+  status?: PlayerStatus;
+}
+
+/* ---------- État du joueur ---------- */
+
+export interface Progress {
   cards: string[];
   solvedRooms: string[];
   lessonsDone: string[];
+}
+
+export interface PlayerStatus {
+  loggedIn: boolean;
+  premium: boolean;
+  plan: "etudiant" | "standard" | "offert" | null;
+  tokensLeft: number;
+  tokensPerDay: number;
+  progress: Progress;
 }

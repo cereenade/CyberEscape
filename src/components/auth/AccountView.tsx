@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CARDS, LEVELS, ROOMS } from "@/data/game";
+import { LEVELS, ROOMS_PER_LEVEL, TOTAL_CARDS, TOTAL_ROOMS } from "@/data/meta";
 import { LESSONS } from "@/data/lessons";
 import { translateAuthError, validatePseudo } from "@/lib/auth";
 import { solvedCount } from "@/lib/progress";
@@ -47,13 +47,13 @@ export function AccountView() {
       <section className="account-section">
         <h2>Ma progression</h2>
         <div className="stats">
-          <Stat value={`${save.solvedRooms.length} / ${ROOMS.length}`} label="salles ouvertes" />
-          <Stat value={`${save.cards.length} / ${CARDS.length}`} label="cyber-cartes" />
+          <Stat value={`${save.solvedRooms.length} / ${TOTAL_ROOMS}`} label="salles ouvertes" />
+          <Stat value={`${save.cards.length} / ${TOTAL_CARDS}`} label="cyber-cartes" />
           <Stat value={`${save.lessonsDone.length} / ${LESSONS.length}`} label="leçons validées" />
         </div>
         <ul className="account-levels">
           {LEVELS.map((level) => {
-            const total = ROOMS.filter((room) => room.level === level.id).length;
+            const total = ROOMS_PER_LEVEL;
             const solved = solvedCount(save, level.id);
             return (
               <li key={level.id}>

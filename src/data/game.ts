@@ -1,4 +1,6 @@
-import type { CyberCard, Level, LevelId, Room, RoomContent } from "@/lib/types";
+import "server-only";
+import type { CyberCard, LevelId, Room, RoomContent } from "@/lib/types";
+import { LEVELS, ROOMS_PER_LEVEL } from "./meta";
 import { DIFFICILE } from "./levels/difficile";
 import { DIFFICILE_2 } from "./levels/difficile-2";
 import { DIFFICILE_3 } from "./levels/difficile-3";
@@ -15,43 +17,6 @@ import { TRES_DIFFICILE } from "./levels/tres-difficile";
 import { TRES_DIFFICILE_2 } from "./levels/tres-difficile-2";
 import { TRES_DIFFICILE_3 } from "./levels/tres-difficile-3";
 
-export const LEVELS: Level[] = [
-  {
-    id: "facile",
-    name: "Facile",
-    icon: "🟢",
-    tagline: "Les bons réflexes",
-    description: "Mots de passe, faux mails, SMS piégés, Wi-Fi public : les pièges du quotidien.",
-  },
-  {
-    id: "moyen",
-    name: "Moyen",
-    icon: "🟡",
-    tagline: "Lire les indices",
-    description: "Encodages, adresses web, DNS, métadonnées, scans et premiers journaux.",
-  },
-  {
-    id: "difficile",
-    name: "Difficile",
-    icon: "🟠",
-    tagline: "Penser comme un attaquant",
-    description: "Chiffrements, hachage, failles web (SQL, XSS, CSRF) et configurations dangereuses.",
-  },
-  {
-    id: "tres-difficile",
-    name: "Très difficile",
-    icon: "🔴",
-    tagline: "Dans la peau d'un analyste SOC",
-    description: "XOR, JWT, YARA, SIEM, macros, beaconing et analyse de trafic.",
-  },
-  {
-    id: "impossible",
-    name: "Impossible",
-    icon: "💀",
-    tagline: "Réservé aux experts",
-    description: "Énigmes en plusieurs couches, enquêtes complètes, SSRF, deepfakes et la chasse finale.",
-  },
-];
 
 /** 40 salles par niveau, réparties en trois fichiers (1–10, 11–20, 21–40). */
 const CONTENT: Record<LevelId, RoomContent[]> = {
@@ -62,15 +27,13 @@ const CONTENT: Record<LevelId, RoomContent[]> = {
   impossible: [...IMPOSSIBLE, ...IMPOSSIBLE_2, ...IMPOSSIBLE_3],
 };
 
+export { LEVELS };
+
 export const ROOMS: Room[] = LEVELS.flatMap((level) =>
   CONTENT[level.id].map((room, index) => ({ ...room, level: level.id, index })),
 );
 
 export const CARDS: CyberCard[] = ROOMS.map((room) => ({ ...room.card, id: room.id, level: room.level }));
-
-export function getLevel(id: string): Level | undefined {
-  return LEVELS.find((level) => level.id === id);
-}
 
 export function getLevelRooms(id: LevelId): Room[] {
   return ROOMS.filter((room) => room.level === id);
@@ -78,4 +41,12 @@ export function getLevelRooms(id: LevelId): Room[] {
 
 export function getCard(id: string): CyberCard | undefined {
   return CARDS.find((card) => card.id === id);
+}
+
+// Garde-fou : les compteurs affichés côté navigateur (meta.ts) doivent correspondre au contenu réel.
+for (const level of LEVELS) {
+  const count = CONTENT[level.id].length;
+  if (count !== ROOMS_PER_LEVEL) {
+    throw new Error(`Le niveau ${level.id} contient ${count} salles au lieu de ${ROOMS_PER_LEVEL} (voir src/data/meta.ts).`);
+  }
 }

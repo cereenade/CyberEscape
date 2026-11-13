@@ -1,46 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import type { ChoiceOption } from "@/lib/types";
+import type { Submission } from "@/lib/types";
 
 interface Props {
   question: string;
-  options: ChoiceOption[];
-  onSolved: () => void;
+  options: string[];
+  pending: boolean;
+  onSubmit: (submission: Submission) => void;
 }
 
-export function ChoicePuzzle({ question, options, onSolved }: Props) {
-  const [wrongPick, setWrongPick] = useState<ChoiceOption | null>(null);
-
-  function choose(option: ChoiceOption) {
-    if (option.correct) {
-      setWrongPick(null);
-      onSolved();
-    } else {
-      setWrongPick(option);
-    }
-  }
+export function ChoicePuzzle({ question, options, pending, onSubmit }: Props) {
+  const [picked, setPicked] = useState<number | null>(null);
 
   return (
     <div className="puzzle-body">
       <p className="puzzle-intro">{question}</p>
       <div className="choices">
-        {options.map((option) => (
+        {options.map((label, index) => (
           <button
-            key={option.label}
+            key={label}
             type="button"
-            className={wrongPick === option ? "choice choice-wrong" : "choice"}
-            onClick={() => choose(option)}
+            className={picked === index ? "choice choice-selected" : "choice"}
+            disabled={pending}
+            onClick={() => {
+              setPicked(index);
+              onSubmit({ kind: "choice", index });
+            }}
           >
-            <code>{option.label}</code>
+            <code>{label}</code>
           </button>
         ))}
       </div>
-      {wrongPick && (
-        <p className="feedback feedback-error" role="alert">
-          Mauvais choix : {wrongPick.explanation}
-        </p>
-      )}
     </div>
   );
 }

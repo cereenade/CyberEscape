@@ -1,151 +1,83 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { getLevelRooms } from "@/data/game";
-import { EMPTY_SAVE, clearSave, loadSave, writeSave } from "@/lib/storage";
-import { getBrowserSupabase } from "@/lib/supabase/client";
-import type { GameSave, LevelId } from "@/lib/types";
+import * as actions from "@/app/actions/game";
+import { TOKENS_PER_DAY } from "@/data/meta";
+import type { PlayerStatus, Progress } from "@/lib/types";
 import { useAuth } from "./AuthProvider";
 
 interface GameContextValue {
-  save: GameSave;
-  /** `false` tant que la sauvegarde n'a pas été lue (évite un flash au chargement). */
+  /** Progression du compte (vide si personne n'est connecté). */
+  save: Progress;
+  /** Connexion, abonnement et jetons du jour. */
+  status: PlayerStatus;
+  /** `false` tant que l'état n'a pas été lu sur le serveur (évite un flash au chargement). */
   loaded: boolean;
-  collectCard: (cardId: string) => void;
-  solveRoom: (roomId: string) => void;
-  completeLesson: (slug: string) => void;
-  /** Rejoue un niveau : ses salles redeviennent à résoudre, les cartes restent. */
-  resetLevel: (levelId: LevelId) => void;
-  resetGame: () => void;
+  /** Met à jour l'état après une réponse du serveur. */
+  setStatus: (status: PlayerStatus) => void;
+  refresh: () => Promise<void>;
+  collectCard: (roomId: string) => Promise<void>;
+  completeLesson: (slug: string) => Promise<void>;
+  resetGame: () => Promise<void>;
 }
+
+const GUEST: PlayerStatus = {
+  loggedIn: false,
+  premium: false,
+  plan: null,
+  tokensLeft: 0,
+  tokensPerDay: TOKENS_PER_DAY,
+  progress: { cards: [], solvedRooms: [], lessonsDone: [] },
+};
 
 const GameContext = createContext<GameContextValue | null>(null);
 
-function addUnique(list: string[], value: string): string[] {
-  return list.includes(value) ? list : [...list, value];
-}
-
-function union(a: string[], b: string[]): string[] {
-  return Array.from(new Set([...a, ...b]));
-}
-
-interface RemoteProgress {
-  cards: string[] | null;
-  solved_rooms: string[] | null;
-  lessons_done: string[] | null;
-}
-
-/** Délai avant d'envoyer la progression au serveur (évite une requête par clic). */
-const SYNC_DELAY_MS = 800;
-
+/**
+ * Toute la progression est gérée par le serveur : le navigateur ne fait que l'afficher.
+ * Impossible donc de tricher en modifiant le stockage local ou en écrivant directement dans la base.
+ */
 export function GameProvider({ children }: { children: React.ReactNode }) {
-  const [save, setSave] = useState<GameSave>(EMPTY_SAVE);
-  const [loaded, setLoaded] = useState(false);
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const userId = user?.id ?? null;
-  /** Compte dont la progression en ligne a déjà été fusionnée avec la progression locale. */
-  const [syncedUserId, setSyncedUserId] = useState<string | null>(null);
+  const [status, setStatus] = useState<PlayerStatus>(GUEST);
+  const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    setSave(loadSave());
-    setLoaded(true);
+  const refresh = useCallback(async () => {
+    try {
+      setStatus(await actions.getStatus());
+    } catch {
+      setStatus(GUEST);
+    } finally {
+      setLoaded(true);
+    }
   }, []);
 
   useEffect(() => {
-    if (loaded) writeSave(save);
-  }, [save, loaded]);
-
-  // Connexion : on fusionne la progression du navigateur avec celle du compte.
-  // Déconnexion : on vide la progression locale (elle reste sauvegardée sur le compte).
-  useEffect(() => {
-    if (!loaded) return;
-    const supabase = getBrowserSupabase();
-    if (!supabase) return;
-
+    if (loading) return;
     if (!userId) {
-      if (syncedUserId) {
-        clearSave();
-        setSave(EMPTY_SAVE);
-        setSyncedUserId(null);
-      }
+      setStatus(GUEST);
+      setLoaded(true);
       return;
     }
-    if (userId === syncedUserId) return;
+    setLoaded(false);
+    refresh();
+  }, [loading, userId, refresh]);
 
-    let cancelled = false;
-    supabase
-      .from("progress")
-      .select("cards, solved_rooms, lessons_done")
-      .eq("user_id", userId)
-      .maybeSingle()
-      .then(({ data, error }) => {
-        if (cancelled) return;
-        if (error) {
-          console.warn("Synchronisation de la progression impossible :", error.message);
-          return;
-        }
-        const remote = (data ?? { cards: [], solved_rooms: [], lessons_done: [] }) as RemoteProgress;
-        setSave((prev) => ({
-          ...prev,
-          cards: union(prev.cards, remote.cards ?? []),
-          solvedRooms: union(prev.solvedRooms, remote.solved_rooms ?? []),
-          lessonsDone: union(prev.lessonsDone, remote.lessons_done ?? []),
-        }));
-        setSyncedUserId(userId);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [loaded, userId, syncedUserId]);
-
-  // Une fois synchronisé, chaque changement est envoyé au compte.
-  useEffect(() => {
-    if (!syncedUserId || syncedUserId !== userId) return;
-    const supabase = getBrowserSupabase();
-    if (!supabase) return;
-
-    const timer = window.setTimeout(() => {
-      supabase
-        .from("progress")
-        .upsert({
-          user_id: syncedUserId,
-          cards: save.cards,
-          solved_rooms: save.solvedRooms,
-          lessons_done: save.lessonsDone,
-          updated_at: new Date().toISOString(),
-        })
-        .then(({ error }) => {
-          if (error) console.warn("Sauvegarde en ligne impossible :", error.message);
-        });
-    }, SYNC_DELAY_MS);
-    return () => window.clearTimeout(timer);
-  }, [save, syncedUserId, userId]);
-
-  const collectCard = useCallback((cardId: string) => {
-    setSave((prev) => ({ ...prev, cards: addUnique(prev.cards, cardId) }));
+  const collectCard = useCallback(async (roomId: string) => {
+    setStatus(await actions.collectCard(roomId));
   }, []);
 
-  const solveRoom = useCallback((roomId: string) => {
-    setSave((prev) => ({ ...prev, solvedRooms: addUnique(prev.solvedRooms, roomId) }));
+  const completeLesson = useCallback(async (slug: string) => {
+    setStatus(await actions.completeLesson(slug));
   }, []);
 
-  const completeLesson = useCallback((slug: string) => {
-    setSave((prev) => ({ ...prev, lessonsDone: addUnique(prev.lessonsDone, slug) }));
-  }, []);
-
-  const resetLevel = useCallback((levelId: LevelId) => {
-    const ids = new Set(getLevelRooms(levelId).map((room) => room.id));
-    setSave((prev) => ({ ...prev, solvedRooms: prev.solvedRooms.filter((id) => !ids.has(id)) }));
-  }, []);
-
-  const resetGame = useCallback(() => {
-    clearSave();
-    setSave(EMPTY_SAVE);
+  const resetGame = useCallback(async () => {
+    setStatus(await actions.resetProgress());
   }, []);
 
   const value = useMemo<GameContextValue>(
-    () => ({ save, loaded, collectCard, solveRoom, completeLesson, resetLevel, resetGame }),
-    [save, loaded, collectCard, solveRoom, completeLesson, resetLevel, resetGame],
+    () => ({ save: status.progress, status, loaded, setStatus, refresh, collectCard, completeLesson, resetGame }),
+    [status, loaded, refresh, collectCard, completeLesson, resetGame],
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

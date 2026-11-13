@@ -1,28 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import type { Email } from "@/lib/types";
+import type { PublicEmail, Submission } from "@/lib/types";
 
 interface Props {
-  emails: Email[];
-  onSolved: () => void;
+  emails: PublicEmail[];
+  pending: boolean;
+  onSubmit: (submission: Submission) => void;
 }
 
-export function PhishingPuzzle({ emails, onSolved }: Props) {
+export function PhishingPuzzle({ emails, pending, onSubmit }: Props) {
   const [revealedLinks, setRevealedLinks] = useState<string[]>([]);
-  const [wrongPick, setWrongPick] = useState<Email | null>(null);
 
   function revealLink(id: string) {
     setRevealedLinks((prev) => (prev.includes(id) ? prev : [...prev, id]));
-  }
-
-  function report(email: Email) {
-    if (email.isPhishing) {
-      setWrongPick(null);
-      onSolved();
-    } else {
-      setWrongPick(email);
-    }
   }
 
   return (
@@ -51,18 +42,17 @@ export function PhishingPuzzle({ emails, onSolved }: Props) {
                 Inspecter le lien
               </button>
             )}
-            <button type="button" className="btn btn-danger btn-small" onClick={() => report(email)}>
+            <button
+              type="button"
+              className="btn btn-danger btn-small"
+              disabled={pending}
+              onClick={() => onSubmit({ kind: "phishing", emailId: email.id })}
+            >
               Signaler comme phishing
             </button>
           </article>
         ))}
       </div>
-
-      {wrongPick && (
-        <p className="feedback feedback-error" role="alert">
-          Raté : {wrongPick.explanation}
-        </p>
-      )}
     </div>
   );
 }
