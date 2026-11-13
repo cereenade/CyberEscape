@@ -95,7 +95,7 @@ export default async function HomePage({ searchParams }: Props) {
         <ol className="levels-list">
           {LEVELS.map((level) => (
             <li key={level.id}>
-              <strong>{level.name}</strong>
+              <span aria-hidden>{level.icon}</span> <strong>{level.name}</strong>
               <span className="muted"> · {level.tagline}</span>
             </li>
           ))}

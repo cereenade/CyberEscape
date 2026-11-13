@@ -104,7 +104,7 @@ export function LevelGame({ levelId, rooms }: Props) {
     <>
       <div className="level-head">
         <p className="level-badge">
-          Niveau {level.name}
+          {level.icon} Niveau {level.name}
         </p>
         <TokenBadge />
       </div>
