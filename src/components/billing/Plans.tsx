@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { openBillingPortal, startCheckout } from "@/app/actions/billing";
+import { startCheckout } from "@/app/actions/billing";
 import { requestStudentVerification } from "@/app/actions/student";
 import { PLANS, TOKENS_PER_DAY, type PaidPlan } from "@/data/meta";
+import { CancelSubscription } from "./CancelSubscription";
 
 interface Props {
   loggedIn: boolean;
@@ -13,7 +14,7 @@ interface Props {
   hasBilling: boolean;
   cancelAtPeriodEnd: boolean;
   periodEnd: string | null;
-  /** Paiement Stripe configuré ? Sinon : « bientôt disponible ». */
+  /** Paiement Mollie configuré ? Sinon : « bientôt disponible ». */
   salesOpen: boolean;
   studentCheckOpen: boolean;
   student: { email: string; until: string | null } | null;
@@ -72,11 +73,7 @@ export function Plans(props: Props) {
             {props.periodEnd ? ` jusqu'au ${DATE.format(new Date(props.periodEnd))}` : ""}
             {props.cancelAtPeriodEnd ? " — résiliation programmée, aucun nouveau prélèvement." : "."}
           </p>
-          {props.hasBilling && salesOpen && (
-            <button type="button" className="btn btn-ghost btn-small" disabled={pending !== null} onClick={() => go(openBillingPortal, "portal")}>
-              {pending === "portal" ? "Ouverture…" : "Gérer mon abonnement (carte, factures, résiliation)"}
-            </button>
-          )}
+          {props.hasBilling && salesOpen && !props.cancelAtPeriodEnd && <CancelSubscription />}
         </div>
       )}
 
@@ -147,7 +144,7 @@ export function Plans(props: Props) {
 
       {loggedIn && !premium && <StudentBox open={props.studentCheckOpen} student={student} />}
       <p className="muted small plan-note">
-        Paiement sécurisé par Stripe : CyberEscape ne voit jamais ton numéro de carte. <Link href="/cgv">CGV</Link>
+        Paiement sécurisé par Mollie (carte bancaire, puis prélèvement mensuel automatique) : CyberEscape ne voit jamais ton numéro de carte. <Link href="/cgv">CGV</Link>
       </p>
     </>
   );

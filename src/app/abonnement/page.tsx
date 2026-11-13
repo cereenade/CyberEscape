@@ -3,7 +3,7 @@ import { Plans } from "@/components/billing/Plans";
 import { TOKENS_PER_DAY } from "@/data/meta";
 import { getPlayerStatus, getSessionUser, getSubscription } from "@/server/player";
 import { EMAIL_ENABLED } from "@/server/email";
-import { STRIPE_ENABLED } from "@/server/stripe";
+import { MOLLIE_ENABLED } from "@/server/mollie";
 import { getAdminSupabase } from "@/server/supabase-admin";
 
 export const metadata: Metadata = {
@@ -15,6 +15,7 @@ export const dynamic = "force-dynamic";
 
 const NOTICES: Record<string, { ok: boolean; text: string }> = {
   "paiement:ok": { ok: true, text: "Merci ! Ton abonnement est en cours d'activation (quelques secondes)." },
+  "paiement:retour": { ok: true, text: "Merci ! Si ton paiement a abouti, l'illimité s'active dans quelques secondes : recharge la page si besoin." },
   "paiement:annule": { ok: false, text: "Paiement annulé : rien n'a été prélevé." },
   "etudiant:ok": { ok: true, text: "Statut étudiant confirmé pour un an ✅ Tu peux maintenant choisir l'offre Étudiant." },
   "etudiant:expire": { ok: false, text: "Ce lien a expiré. Redemande un e-mail de vérification." },
@@ -54,10 +55,10 @@ export default async function PricingPage({ searchParams }: Props) {
         loggedIn={status.loggedIn}
         premium={status.premium}
         currentPlan={status.plan}
-        hasBilling={Boolean(sub?.stripe_customer_id)}
+        hasBilling={Boolean(sub?.mollie_subscription_id)}
         cancelAtPeriodEnd={Boolean(sub?.cancel_at_period_end)}
         periodEnd={sub?.current_period_end ?? null}
-        salesOpen={STRIPE_ENABLED}
+        salesOpen={MOLLIE_ENABLED}
         studentCheckOpen={EMAIL_ENABLED}
         student={student}
       />

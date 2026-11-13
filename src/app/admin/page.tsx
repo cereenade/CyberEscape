@@ -5,7 +5,7 @@ import { grantFreeAccess, resetTodayTokens, revokeFreeAccess, verifyStudentManua
 import { PLANS, TOTAL_ROOMS } from "@/data/meta";
 import { EMAIL_ENABLED } from "@/server/email";
 import { isAdmin, getSessionUser, todayInParis } from "@/server/player";
-import { STRIPE_ENABLED } from "@/server/stripe";
+import { MOLLIE_ENABLED } from "@/server/mollie";
 import { getAdminSupabase } from "@/server/supabase-admin";
 
 export const metadata: Metadata = { title: "Administration", robots: { index: false, follow: false } };
@@ -19,7 +19,7 @@ const LINKS = [
   { href: "https://vercel.com/dashboard", label: "▲ Hébergement et logs (Vercel)" },
   { href: "https://github.com/cereenade/CyberEscape", label: "🐙 Code source (GitHub)" },
   { href: "https://github.dev/cereenade/CyberEscape", label: "✏️ Éditer le code en ligne (github.dev)" },
-  { href: "https://dashboard.stripe.com", label: "💳 Paiements (Stripe)" },
+  { href: "https://my.mollie.com/dashboard", label: "💳 Paiements (Mollie)" },
   { href: "https://resend.com/emails", label: "✉️ E-mails envoyés (Resend)" },
 ];
 
@@ -101,7 +101,7 @@ export default async function AdminPage({ searchParams }: Props) {
         </div>
         <p className="muted small">
           {PLANS.etudiant.name} : {countPlan("etudiant")} · {PLANS.standard.name} : {countPlan("standard")} · Offerts : {countPlan("offert")} · Paiement{" "}
-          {STRIPE_ENABLED ? "✅ activé" : "⏸️ non configuré"} · E-mails {EMAIL_ENABLED ? "✅ activés" : "⏸️ non configurés"}
+          {MOLLIE_ENABLED ? "✅ activé" : "⏸️ non configuré"} · E-mails {EMAIL_ENABLED ? "✅ activés" : "⏸️ non configurés"}
         </p>
       </section>
 
