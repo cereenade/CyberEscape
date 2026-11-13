@@ -39,7 +39,8 @@ export function Header() {
           </Link>
         ))}
 
-        {auth.enabled && !auth.loading && (
+        {/* Toujours visibles : sans Supabase, les pages expliquent que les comptes arrivent bientôt. */}
+        {!auth.loading && (
           <span className="nav-account">
             {auth.user ? (
               <Link href="/compte" className={isActive(pathname, "/compte") ? "nav-link active" : "nav-link"}>
