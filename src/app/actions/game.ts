@@ -4,7 +4,7 @@ import { ROOMS } from "@/data/game";
 import { LESSONS } from "@/data/lessons";
 import { TOKENS_PER_DAY } from "@/data/meta";
 import { checkSubmission } from "@/server/game-logic";
-import { GUEST_STATUS, getPlayerStatus, getSessionUser, getSubscription, isActive } from "@/server/player";
+import { GUEST_STATUS, getPlayerStatus, getSessionUser, hasUnlimitedAccess } from "@/server/player";
 import { getAdminSupabase } from "@/server/supabase-admin";
 import type { PlayerStatus, Submission, SubmitResult } from "@/lib/types";
 
@@ -47,7 +47,7 @@ export async function submitAnswer(roomId: string, submission: Submission): Prom
     return { correct: false, explanations: check.explanations, missing: check.missing };
   }
 
-  const premium = isActive(await getSubscription(user.id));
+  const premium = await hasUnlimitedAccess(user.id);
   const { data, error } = await admin.rpc("consume_room", {
     p_user: user.id,
     p_room: room.id,

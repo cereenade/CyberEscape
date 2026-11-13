@@ -225,7 +225,9 @@ export interface Progress {
 export interface PlayerStatus {
   loggedIn: boolean;
   premium: boolean;
-  plan: "etudiant" | "standard" | "offert" | null;
+  plan: "etudiant" | "standard" | "offert" | "admin" | null;
+  /** Compte administrateur (accès à /admin et salles illimitées). */
+  isAdmin: boolean;
   tokensLeft: number;
   tokensPerDay: number;
   progress: Progress;

@@ -11,6 +11,7 @@ export const GUEST_STATUS: PlayerStatus = {
   loggedIn: false,
   premium: false,
   plan: null,
+  isAdmin: false,
   tokensLeft: 0,
   tokensPerDay: TOKENS_PER_DAY,
   progress: EMPTY_PROGRESS,
@@ -62,24 +63,34 @@ export async function isAdmin(userId: string): Promise<boolean> {
   return Boolean(data);
 }
 
+/** Accès illimité : abonnement actif ou compte administrateur. */
+export async function hasUnlimitedAccess(userId: string): Promise<boolean> {
+  const [sub, adminAccess] = await Promise.all([getSubscription(userId), isAdmin(userId)]);
+  return adminAccess || isActive(sub);
+}
+
 export async function getPlayerStatus(user: User | null): Promise<PlayerStatus> {
   const admin = getAdminSupabase();
   if (!user || !admin) return GUEST_STATUS;
 
-  const [progressRes, usageRes, sub] = await Promise.all([
+  const [progressRes, usageRes, sub, adminAccess] = await Promise.all([
     admin.from("progress").select("cards, solved_rooms, lessons_done").eq("user_id", user.id).maybeSingle(),
     admin.from("daily_usage").select("tokens_used").eq("user_id", user.id).eq("day", todayInParis()).maybeSingle(),
     getSubscription(user.id),
+    isAdmin(user.id),
   ]);
 
-  const premium = isActive(sub);
+  // Les administrateurs ont toujours l'accès illimité, sans abonnement.
+  const subscribed = isActive(sub);
+  const premium = subscribed || adminAccess;
   const used = (usageRes.data?.tokens_used as number | undefined) ?? 0;
   const row = progressRes.data as { cards: string[]; solved_rooms: string[]; lessons_done: string[] } | null;
 
   return {
     loggedIn: true,
     premium,
-    plan: premium && sub ? sub.plan : null,
+    plan: adminAccess ? "admin" : subscribed && sub ? sub.plan : null,
+    isAdmin: adminAccess,
     tokensLeft: premium ? TOKENS_PER_DAY : Math.max(0, TOKENS_PER_DAY - used),
     tokensPerDay: TOKENS_PER_DAY,
     progress: row ? { cards: row.cards, solvedRooms: row.solved_rooms, lessonsDone: row.lessons_done } : EMPTY_PROGRESS,

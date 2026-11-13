@@ -9,7 +9,7 @@ import { PLANS, TOKENS_PER_DAY, type PaidPlan } from "@/data/meta";
 interface Props {
   loggedIn: boolean;
   premium: boolean;
-  currentPlan: "etudiant" | "standard" | "offert" | null;
+  currentPlan: "etudiant" | "standard" | "offert" | "admin" | null;
   hasBilling: boolean;
   cancelAtPeriodEnd: boolean;
   periodEnd: string | null;
@@ -68,7 +68,7 @@ export function Plans(props: Props) {
       {premium && (
         <div className="feedback feedback-success">
           <p>
-            Tu profites de l&apos;illimité ({currentPlan === "offert" ? "accès offert" : `offre ${PLANS[currentPlan as PaidPlan]?.name ?? ""}`})
+            Tu profites de l&apos;illimité ({currentPlan === "admin" ? "accès administrateur" : currentPlan === "offert" ? "accès offert" : `offre ${PLANS[currentPlan as PaidPlan]?.name ?? ""}`})
             {props.periodEnd ? ` jusqu'au ${DATE.format(new Date(props.periodEnd))}` : ""}
             {props.cancelAtPeriodEnd ? " — résiliation programmée, aucun nouveau prélèvement." : "."}
           </p>
