@@ -1,0 +1,33 @@
+# Dépendances
+/node_modules
+/.pnp
+.pnp.js
+
+# Build Next.js
+/.next/
+/out/
+/build
+
+# Environnement
+.env*
+!.env.example
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Système
+.DS_Store
+Thumbs.db
+
+# Éditeurs
+.vscode/
+.idea/
