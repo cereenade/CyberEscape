@@ -1,17 +1,16 @@
 import Link from "next/link";
-import { MiniPuzzle } from "@/components/home/MiniPuzzle";
-import { CARDS, LEVELS, ROOMS } from "@/data/game";
+import { LEVELS, PLANS, TOKENS_PER_DAY, TOTAL_CARDS, TOTAL_ROOMS } from "@/data/meta";
 import { LESSONS } from "@/data/lessons";
 
 const FEATURES = [
   {
     icon: "🚪",
-    title: `${ROOMS.length} salles piégées`,
+    title: `${TOTAL_ROOMS} salles piégées`,
     text: "Mot de passe dans le code source, message chiffré, faux mail, logs d'attaque… chaque porte cache une énigme.",
   },
   {
     icon: "🃏",
-    title: `${CARDS.length} cyber-cartes`,
+    title: `${TOTAL_CARDS} cyber-cartes`,
     text: "Une carte par salle. Chacune t'apprend une vraie notion de cyber et te donne la clé pour avancer.",
   },
   {
@@ -38,9 +37,9 @@ const STEPS = [
     text: "Décode un message, démasque un faux mail, analyse un log… et la porte s'ouvre sur la salle suivante.",
   },
   {
-    icon: "🏆",
-    title: "Progresse",
-    text: "Ton deck grandit, tes niveaux avancent, et tu peux approfondir chaque thème dans la salle de cours.",
+    icon: "🪙",
+    title: "Progresse chaque jour",
+    text: `${TOKENS_PER_DAY} jetons gratuits par jour : 1 jeton par salle réussie. Ton deck grandit, et les cours restent en accès libre.`,
   },
 ];
 
@@ -104,8 +103,6 @@ export default async function HomePage({ searchParams }: Props) {
         ))}
       </section>
 
-      <MiniPuzzle />
-
       <section className="levels-preview">
         <h2>{LEVELS.length} niveaux, du premier réflexe au boss final</h2>
         <ol className="levels-list">
@@ -120,13 +117,16 @@ export default async function HomePage({ searchParams }: Props) {
 
       <section className="home-cta">
         <h2>Prêt(e) à t&apos;échapper ?</h2>
-        <p className="muted">C&apos;est gratuit, sans inscription obligatoire, et ta progression est sauvegardée.</p>
+        <p className="muted">
+          Compte gratuit : {TOKENS_PER_DAY} salles par jour. Envie d&apos;aller plus vite ? Illimité dès {PLANS.etudiant.price}/mois pour les
+          étudiants, {PLANS.standard.price}/mois pour tous.
+        </p>
         <div className="actions">
-          <Link href="/jeu" className="btn btn-primary btn-large">
-            Commencer la partie
+          <Link href="/inscription" className="btn btn-primary btn-large">
+            Créer un compte gratuit
           </Link>
-          <Link href="/inscription" className="btn btn-ghost btn-large">
-            Créer un compte
+          <Link href="/abonnement" className="btn btn-ghost btn-large">
+            Voir les offres
           </Link>
         </div>
       </section>
