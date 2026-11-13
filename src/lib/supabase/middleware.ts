@@ -2,8 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { AUTH_ENABLED, SUPABASE_KEY, SUPABASE_URL } from "./config";
 
-/** Pages réservées aux joueurs connectés. */
-const PROTECTED_PATHS = ["/compte"];
+/** Pages réservées aux joueurs connectés (le serveur revérifie de toute façon à chaque action). */
+const PROTECTED_PATHS = ["/compte", "/jeu/", "/deck", "/admin"];
 /** Pages inutiles quand on est déjà connecté. */
 const GUEST_ONLY_PATHS = ["/connexion", "/inscription"];
 
@@ -47,7 +47,8 @@ export async function updateSession(request: NextRequest) {
     return redirect;
   };
 
-  if (!user && PROTECTED_PATHS.some((p) => pathname.startsWith(p))) {
+  const isProtected = PROTECTED_PATHS.some((p) => (p.endsWith("/") ? pathname.startsWith(p) : pathname === p || pathname.startsWith(`${p}/`)));
+  if (!user && isProtected) {
     return redirectTo("/connexion", { suite: pathname });
   }
   if (user && GUEST_ONLY_PATHS.includes(pathname)) {

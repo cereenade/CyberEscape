@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { safeNext } from "@/lib/auth";
 
 export const metadata: Metadata = { title: "Connexion" };
 
 interface Props {
   searchParams: Promise<{ suite?: string; erreur?: string }>;
-}
-
-function safeNext(value: string | undefined): string {
-  return value && value.startsWith("/") && !value.startsWith("//") ? value : "/compte";
 }
 
 export default async function LoginPage({ searchParams }: Props) {

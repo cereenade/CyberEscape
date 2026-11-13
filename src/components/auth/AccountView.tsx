@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CARDS, LEVELS, ROOMS } from "@/data/game";
+import { deleteAccount } from "@/app/actions/account";
+import { openBillingPortal } from "@/app/actions/billing";
+import { LEVELS, PLANS, ROOMS_PER_LEVEL, TOTAL_CARDS, TOTAL_ROOMS } from "@/data/meta";
 import { LESSONS } from "@/data/lessons";
 import { translateAuthError, validatePseudo } from "@/lib/auth";
 import { solvedCount } from "@/lib/progress";
@@ -17,7 +19,7 @@ const DATE_FORMAT = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "l
 export function AccountView() {
   const router = useRouter();
   const { user, profile, loading, refreshProfile, signOut } = useAuth();
-  const { save } = useGame();
+  const { save, status } = useGame();
 
   if (loading) return <p className="loading">Chargement de ton compte…</p>;
   if (!user) {
@@ -47,13 +49,13 @@ export function AccountView() {
       <section className="account-section">
         <h2>Ma progression</h2>
         <div className="stats">
-          <Stat value={`${save.solvedRooms.length} / ${ROOMS.length}`} label="salles ouvertes" />
-          <Stat value={`${save.cards.length} / ${CARDS.length}`} label="cyber-cartes" />
+          <Stat value={`${save.solvedRooms.length} / ${TOTAL_ROOMS}`} label="salles ouvertes" />
+          <Stat value={`${save.cards.length} / ${TOTAL_CARDS}`} label="cyber-cartes" />
           <Stat value={`${save.lessonsDone.length} / ${LESSONS.length}`} label="leçons validées" />
         </div>
         <ul className="account-levels">
           {LEVELS.map((level) => {
-            const total = ROOMS.filter((room) => room.level === level.id).length;
+            const total = ROOMS_PER_LEVEL;
             const solved = solvedCount(save, level.id);
             return (
               <li key={level.id}>
@@ -71,6 +73,11 @@ export function AccountView() {
           })}
         </ul>
         <p className="muted small">Ta progression est sauvegardée sur ton compte : retrouve-la sur n&apos;importe quel appareil.</p>
+      </section>
+
+      <section className="account-section">
+        <h2>Mon offre</h2>
+        <SubscriptionInfo premium={status.premium} plan={status.plan} tokensLeft={status.tokensLeft} tokensPerDay={status.tokensPerDay} />
       </section>
 
       <section className="account-section">
@@ -109,6 +116,53 @@ export function AccountView() {
         />
       </section>
     </div>
+  );
+}
+
+function SubscriptionInfo({ premium, plan, tokensLeft, tokensPerDay }: { premium: boolean; plan: string | null; tokensLeft: number; tokensPerDay: number }) {
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+
+  if (!premium) {
+    return (
+      <>
+        <p>
+          Offre gratuite : il te reste <strong>{tokensLeft}</strong> jeton{tokensLeft > 1 ? "s" : ""} sur {tokensPerDay} aujourd&apos;hui.
+        </p>
+        <Link href="/abonnement" className="btn btn-primary btn-small">
+          Passer à l&apos;illimité
+        </Link>
+      </>
+    );
+  }
+
+  const name = plan === "offert" ? "Accès offert" : PLANS[plan as keyof typeof PLANS]?.name ?? "Illimité";
+  return (
+    <>
+      <p>
+        ∞ Salles illimitées · <strong>{name}</strong>
+      </p>
+      {plan !== "offert" && (
+        <button
+          type="button"
+          className="btn btn-ghost btn-small"
+          disabled={pending}
+          onClick={async () => {
+            setPending(true);
+            setError(null);
+            const result = await openBillingPortal().catch(() => ({ url: undefined, error: "Connexion perdue." }));
+            if (result.url) window.location.assign(result.url);
+            else {
+              setError(result.error ?? "Indisponible pour le moment.");
+              setPending(false);
+            }
+          }}
+        >
+          {pending ? "Ouverture…" : "Gérer mon abonnement (carte, factures, résiliation)"}
+        </button>
+      )}
+      {error && <p className="feedback feedback-error">{error}</p>}
+    </>
   );
 }
 
@@ -178,19 +232,23 @@ function DeleteAccount({ onDeleted }: { onDeleted: () => Promise<void> }) {
   const [pending, setPending] = useState(false);
 
   async function handleDelete() {
-    const supabase = getBrowserSupabase();
-    if (!supabase) return;
     setPending(true);
-    const { error: rpcError } = await supabase.rpc("delete_own_account");
-    setPending(false);
-    if (rpcError) return setError(translateAuthError(rpcError.message));
-    await onDeleted();
+    setError(null);
+    try {
+      const result = await deleteAccount(confirmText);
+      if (!result.ok) return setError(result.error ?? "La suppression a échoué.");
+      await onDeleted();
+    } catch {
+      setError("Connexion perdue. Réessaie.");
+    } finally {
+      setPending(false);
+    }
   }
 
   if (!open) {
     return (
       <>
-        <p className="muted">Supprime définitivement ton compte, ton pseudo et ta progression en ligne.</p>
+        <p className="muted">Supprime définitivement ton compte, ton pseudo et ta progression. Un abonnement en cours est résilié immédiatement.</p>
         <button type="button" className="btn btn-danger" onClick={() => setOpen(true)}>
           Supprimer mon compte
         </button>

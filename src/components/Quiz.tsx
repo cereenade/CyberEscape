@@ -25,7 +25,7 @@ export function Quiz({ slug, questions }: Props) {
 
   function check() {
     setChecked(true);
-    if (score === questions.length) completeLesson(slug);
+    if (score === questions.length) completeLesson(slug).catch(() => undefined);
   }
 
   function retry() {

@@ -1,28 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { isCorrectAnswer } from "@/lib/text";
+import type { Submission } from "@/lib/types";
 
 interface Props {
-  answers: string[];
   label: string;
   placeholder?: string;
-  strict?: boolean;
-  onSolved: () => void;
+  pending: boolean;
+  onSubmit: (submission: Submission) => void;
+  onChange: () => void;
 }
 
-export function AnswerForm({ answers, label, placeholder = "Ta réponse", strict = false, onSolved }: Props) {
+export function AnswerForm({ label, placeholder = "Ta réponse", pending, onSubmit, onChange }: Props) {
   const [value, setValue] = useState("");
-  const [error, setError] = useState(false);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (isCorrectAnswer(value, answers, strict)) {
-      setError(false);
-      onSolved();
-    } else {
-      setError(true);
-    }
+    if (value.trim()) onSubmit({ kind: "answer", value: value.slice(0, 300) });
   }
 
   return (
@@ -35,23 +29,19 @@ export function AnswerForm({ answers, label, placeholder = "Ta réponse", strict
           id="answer"
           className="input"
           value={value}
+          maxLength={300}
           onChange={(event) => {
             setValue(event.target.value);
-            setError(false);
+            onChange();
           }}
           placeholder={placeholder}
           autoComplete="off"
           spellCheck={false}
         />
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary" disabled={pending || !value.trim()}>
           Valider
         </button>
       </div>
-      {error && (
-        <p className="feedback feedback-error" role="alert">
-          Accès refusé. Ce n&apos;est pas la bonne réponse.
-        </p>
-      )}
     </form>
   );
 }

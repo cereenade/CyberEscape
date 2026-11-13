@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LevelGame } from "@/components/LevelGame";
-import { LEVELS, getLevel } from "@/data/game";
+import { getLevelRooms } from "@/data/game";
+import { LEVELS, getLevel } from "@/data/meta";
+import { toPublicRoom } from "@/server/game-logic";
 
 interface Props {
   params: Promise<{ niveau: string }>;
@@ -22,5 +24,7 @@ export default async function LevelPage({ params }: Props) {
   const level = getLevel(niveau);
   if (!level) notFound();
 
-  return <LevelGame levelId={level.id} />;
+  // Seule la version « publique » des salles part vers le navigateur : jamais les réponses.
+  const rooms = getLevelRooms(level.id).map(toPublicRoom);
+  return <LevelGame levelId={level.id} rooms={rooms} />;
 }

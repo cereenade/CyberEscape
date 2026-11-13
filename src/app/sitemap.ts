@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { LEVELS } from "@/data/game";
+import { LEVELS } from "@/data/meta";
 import { LESSONS } from "@/data/lessons";
 import { SITE_URL } from "@/lib/site";
 

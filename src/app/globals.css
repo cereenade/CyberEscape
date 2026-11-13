@@ -1567,10 +1567,6 @@ a.level-card:hover {
   font-size: 1.8rem;
 }
 
-.mini-puzzle .puzzle {
-  margin-top: 1.25rem;
-}
-
 .home-cta {
   margin: 3.5rem 0 1rem;
   padding: 2rem;
@@ -1584,4 +1580,116 @@ a.level-card:hover {
 
 .home-cta .actions {
   justify-content: center;
+}
+
+/* ---------- Jetons et offres ---------- */
+
+.level-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.token-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.token-badge-premium {
+  border-color: var(--violet);
+  color: var(--violet);
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.plan-featured {
+  border-color: var(--violet);
+}
+
+.plan h2 {
+  margin: 0;
+}
+
+.plan-price {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.plan-price small {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.plan ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+}
+
+.plan .btn {
+  margin-top: auto;
+}
+
+.plan-note {
+  margin-top: 1.5rem;
+}
+
+.consent {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.admin-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.legal h2 {
+  margin-top: 2rem;
 }

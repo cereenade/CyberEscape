@@ -1,11 +1,7 @@
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
+import { safeNext } from "@/lib/auth";
 import { getServerSupabase } from "@/lib/supabase/server";
-
-/** N'accepte que des chemins internes, pour éviter les redirections ouvertes. */
-function safeNext(value: string | null): string {
-  return value && value.startsWith("/") && !value.startsWith("//") ? value : "/compte";
-}
 
 /**
  * Point d'arrivée des liens envoyés par mail (confirmation d'inscription,

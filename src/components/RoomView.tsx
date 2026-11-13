@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { getCard } from "@/data/game";
-import type { Room } from "@/lib/types";
+import { submitAnswer } from "@/app/actions/game";
+import type { PublicRoom, Submission } from "@/lib/types";
 import { CyberCardView } from "./CyberCardView";
 import { useGame } from "./GameProvider";
 import { PuzzleView } from "./puzzles/PuzzleView";
@@ -10,23 +10,25 @@ import { PuzzleView } from "./puzzles/PuzzleView";
 type Phase = "explore" | "card" | "puzzle" | "solved";
 
 interface Props {
-  room: Room;
+  room: PublicRoom;
   /** Appelé au moment où l'énigme est résolue. */
   onSolved: () => void;
   onNext: () => void;
 }
 
 export function RoomView({ room, onSolved, onNext }: Props) {
-  const { save, collectCard, solveRoom } = useGame();
-  const card = getCard(room.id);
+  const { save, collectCard, setStatus } = useGame();
+  const card = room.card;
 
   const [phase, setPhase] = useState<Phase>(() => (save.cards.includes(room.id) ? "puzzle" : "explore"));
   const [showHint, setShowHint] = useState(false);
+  const [successText, setSuccessText] = useState("");
 
-  function handleSolved() {
-    onSolved();
-    solveRoom(room.id);
-    setPhase("solved");
+  async function handleSubmit(submission: Submission) {
+    const result = await submitAnswer(room.id, submission);
+    // En cas de succès, l'état est mis à jour dans onSolved (même rendu que l'affichage du succès).
+    if (!result.correct && result.status) setStatus(result.status);
+    return result;
   }
 
   return (
@@ -40,7 +42,7 @@ export function RoomView({ room, onSolved, onNext }: Props) {
         </button>
       )}
 
-      {phase === "card" && card && (
+      {phase === "card" && (
         <div className="card-found">
           <p className="card-found-label">Tu as trouvé une cyber-carte !</p>
           <CyberCardView card={card} detailed />
@@ -48,7 +50,7 @@ export function RoomView({ room, onSolved, onNext }: Props) {
             type="button"
             className="btn btn-primary"
             onClick={() => {
-              collectCard(card.id);
+              collectCard(room.id).catch(() => undefined);
               setPhase("puzzle");
             }}
           >
@@ -59,29 +61,36 @@ export function RoomView({ room, onSolved, onNext }: Props) {
 
       {phase === "puzzle" && (
         <>
-          <PuzzleView puzzle={room.puzzle} onSolved={handleSolved} />
-          {card && (
-            <div className="hint">
-              {showHint ? (
-                <p>
-                  <strong>
-                    {card.icon} {card.title} :
-                  </strong>{" "}
-                  {card.hint}
-                </p>
-              ) : (
-                <button type="button" className="btn btn-ghost btn-small" onClick={() => setShowHint(true)}>
-                  🃏 Utiliser la carte « {card.title} »
-                </button>
-              )}
-            </div>
-          )}
+          <PuzzleView
+            puzzle={room.puzzle}
+            onSubmit={handleSubmit}
+            onSolved={(result) => {
+              setSuccessText(result.successText ?? "Salle ouverte !");
+              onSolved();
+              setPhase("solved");
+              if (result.status) setStatus(result.status);
+            }}
+          />
+          <div className="hint">
+            {showHint ? (
+              <p>
+                <strong>
+                  {card.icon} {card.title} :
+                </strong>{" "}
+                {card.hint}
+              </p>
+            ) : (
+              <button type="button" className="btn btn-ghost btn-small" onClick={() => setShowHint(true)}>
+                🃏 Utiliser la carte « {card.title} »
+              </button>
+            )}
+          </div>
         </>
       )}
 
       {phase === "solved" && (
         <div className="success">
-          <p className="feedback feedback-success">✅ {room.successText}</p>
+          <p className="feedback feedback-success">✅ {successText}</p>
           <button type="button" className="btn btn-primary" onClick={onNext}>
             Porte suivante →
           </button>

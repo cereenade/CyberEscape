@@ -49,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/mentions-legales">Mentions légales</Link>
                 <Link href="/confidentialite">Confidentialité</Link>
                 <Link href="/conditions">Conditions d&apos;utilisation</Link>
+                <Link href="/cgv">CGV</Link>
                 <a href="https://github.com/cereenade/CyberEscape" target="_blank" rel="noopener noreferrer">
                   GitHub
                 </a>
