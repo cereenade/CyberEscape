@@ -285,7 +285,7 @@ Algorithme      : RSA 2048 / SHA-256`,
   {
     id: "tres-difficile-20",
     name: "La matrice",
-    story: "Dernière salle du niveau. Pour ton rapport, chaque action du pirate doit être classée selon la matrice utilisée par tous les SOC du monde.",
+    story: "Pour ton rapport, chaque action du pirate doit être classée selon la matrice utilisée par tous les SOC du monde.",
     card: {
       title: "MITRE ATT&CK",
       category: "Défense",

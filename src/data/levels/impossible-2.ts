@@ -285,7 +285,7 @@ Teams           REG_SZ  "C:\\Users\\marie\\AppData\\Local\\Microsoft\\Teams\\Upd
     id: "impossible-20",
     name: "La chasse finale",
     story:
-      "Le pirate a laissé une dernière énigme avant de disparaître pour de bon. Quatre couches, aucune indication. Tout ce que tu as appris jusqu'ici te sera utile.",
+      "Le pirate a laissé une énigme redoutable avant de s'enfoncer plus loin dans le serveur. Quatre couches, aucune indication. Tout ce que tu as appris jusqu'ici te sera utile.",
     card: {
       title: "Le threat hunting",
       category: "Défense",

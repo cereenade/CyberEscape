@@ -1,0 +1,38 @@
+# Ajout quotidien de salles
+
+Chaque jour, **10 nouvelles salles** sont ajoutées : **2 par niveau**. Une tâche automatique prépare une pull request ; il reste à la relire et à la fusionner.
+
+## Règles de contenu
+
+- Une salle = une notion de cybersécurité **nouvelle** : son titre de carte ne doit exister nulle part ailleurs (la CI le vérifie).
+- Le niveau de difficulté doit correspondre au niveau :
+  - **Facile** : réflexes du quotidien (arnaques, mots de passe, téléphone, réseaux sociaux).
+  - **Moyen** : lire des indices (encodages simples, réseau de base, journaux, web).
+  - **Difficile** : penser comme un attaquant (failles web, crypto, Linux/Windows, réseau).
+  - **Très difficile** : analyste SOC (journaux Windows, EDR, Active Directory, cloud, détection).
+  - **Impossible** : expert (crypto avancée, attaques complexes, gouvernance, enquêtes en plusieurs étapes).
+- Français, tutoiement, ton bienveillant, phrases courtes. Noms d'entreprises fictifs (serveur-corp.fr, example.com…).
+- Uniquement de la sensibilisation et de la défense : pas de code d'exploitation réutilisable, pas de vraie adresse malveillante.
+- Varier les types d'énigmes : `choice` (exactement une bonne réponse), `multi` (bonnes ET mauvaises options), `order` (au moins 3 étapes, ordre non ambigu), `answer` (réponses acceptées sans accents ni casse), `phishing` (exactement un mail piégé).
+- Pour une énigme de décodage (`tools` + `workshopInput`), calculer la valeur encodée avec les fonctions de `src/lib/crypto.ts` (toBase64, toHex, toXorHex, vigenereEncode…) et vérifier qu'`applyRecipe` redonne bien la réponse.
+
+## Où écrire
+
+1. Les salles 41 et suivantes sont écrites avec les raccourcis de `src/data/levels/_build.ts` (`room`, `card`, `choice`, `multi`, `order`, `answer`, `phishing`).
+2. Les fichiers contiennent 20 salles : `facile-4.ts` (41–60), `facile-5.ts` (61–80), `facile-6.ts` (81–100), puis `facile-7.ts` (101–120), etc.
+3. Ajouter les nouvelles salles à la fin du dernier fichier du niveau. S'il contient déjà 20 salles, créer le fichier suivant et l'ajouter dans `src/data/game.ts` (import + liste `CONTENT` du niveau).
+4. Les identifiants continuent la numérotation : `facile-101`, `facile-102`… La salle de sortie (`<niveau>-100`) reste automatiquement la dernière du niveau.
+5. Mettre à jour `ROOM_COUNTS` dans `src/data/meta.ts` (+2 par niveau).
+
+## Vérifier
+
+```bash
+npm run typecheck
+npm run check:content
+```
+
+## Git
+
+- Branche `feat/salles-du-jour-AAAA-MM-JJ` depuis `main` à jour.
+- Un commit par niveau : `feat(salles): 2 nouvelles salles <Niveau> (<ids>)`, puis un commit `chore(salles): compteurs du jour`.
+- Ouvrir une pull request vers `main` avec la liste des 10 salles (titre et notion). Ne jamais fusionner soi-même : la relecture est humaine.

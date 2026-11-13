@@ -306,7 +306,7 @@ note sur le mur : ${MORSE_NOTE}`,
     id: "impossible-10",
     name: "Le noyau",
     story:
-      "La dernière porte. Le pirate a laissé un fichier contenant le code d'arrêt de son attaque, protégé par trois couches. Il a signé son passage dans le log. C'est le moment de tout utiliser.",
+      "Une porte blindée. Le pirate a laissé un fichier contenant le code d'arrêt de son attaque, protégé par trois couches. Il a signé son passage dans le log. C'est le moment de tout utiliser.",
     card: {
       title: "La réponse à incident",
       category: "Défense",

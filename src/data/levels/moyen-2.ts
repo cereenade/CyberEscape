@@ -275,7 +275,7 @@ Lille      50.6292 N  3.0573 E`,
   {
     id: "moyen-20",
     name: "Le compte du quotidien",
-    story: "Dernière salle du niveau. L'admin utilise son compte administrateur pour lire ses mails et naviguer. Le pirate adore ça.",
+    story: "L'admin utilise son compte administrateur pour lire ses mails et naviguer. Le pirate adore ça.",
     card: {
       title: "Le moindre privilège",
       category: "Défense",

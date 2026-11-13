@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { deleteAccount } from "@/app/actions/account";
 import { openBillingPortal } from "@/app/actions/billing";
-import { LEVELS, PLANS, ROOMS_PER_LEVEL, TOTAL_CARDS, TOTAL_ROOMS } from "@/data/meta";
+import { LEVELS, PLANS, TOTAL_CARDS, TOTAL_ROOMS, roomCount } from "@/data/meta";
 import { LESSONS } from "@/data/lessons";
 import { translateAuthError, validatePseudo } from "@/lib/auth";
 import { solvedCount } from "@/lib/progress";
@@ -55,7 +55,7 @@ export function AccountView() {
         </div>
         <ul className="account-levels">
           {LEVELS.map((level) => {
-            const total = ROOMS_PER_LEVEL;
+            const total = roomCount(level.id);
             const solved = solvedCount(save, level.id);
             return (
               <li key={level.id}>

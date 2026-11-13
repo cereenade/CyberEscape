@@ -1,0 +1,313 @@
+import type { RoomContent } from "@/lib/types";
+import { answer, card, choice, multi, order, room } from "./_build";
+
+/** Salles 41 à 60 du niveau Moyen. */
+export const MOYEN_4: RoomContent[] = [
+  room(
+    "moyen-41",
+    "Les accents cassés",
+    "Sur la page d'accueil piratée, un texte s'affiche bizarrement : « SÃ©curitÃ© rÃ©seau ». Le pirate a mal configuré quelque chose.",
+    card("UTF-8 et les encodages de caractères", "Système", "🔤", "Un même texte peut être codé de plusieurs façons ; mal lu, il devient illisible.", [
+      "ASCII ne connaît que 128 caractères, sans accents.",
+      "UTF-8 code les accents sur plusieurs octets : « é » devient deux octets (C3 A9).",
+      "Si ces deux octets sont lus comme du Latin-1, on obtient « Ã© » : c'est le mojibake.",
+    ], "« é » en UTF-8 fait deux octets. Lus un par un, ils donnent…"),
+    choice("Que s'est-il passé ?", [
+      ["Du texte UTF-8 a été lu comme du Latin-1", true, "Chaque « é » (2 octets) s'affiche comme deux caractères : « Ã© »."],
+      ["Le texte a été chiffré", false, "Un texte chiffré serait totalement illisible, pas juste les accents."],
+      ["Le clavier du pirate était cassé", false, "Le problème vient de la lecture des octets, pas de la saisie."],
+    ]),
+    "Encodage corrigé en UTF-8. Les accents sont de retour.",
+  ),
+  room(
+    "moyen-42",
+    "Le fichier déguisé",
+    "Un fichier « photo_vacances.jpg » refuse de s'ouvrir. Tu regardes ses premiers octets avec un éditeur hexadécimal.",
+    card("Les signatures de fichiers", "Système", "🧬", "Les premiers octets d'un fichier révèlent son vrai type, quelle que soit l'extension.", [
+      "On les appelle « magic numbers » : 25 50 44 46 = « %PDF », 4D 5A = « MZ » (programme Windows), 50 4B = « PK » (ZIP).",
+      "Une extension se change en un clic ; la signature, elle, ne ment pas.",
+      "Les outils d'analyse (commande file sous Linux) lisent cette signature.",
+    ], "Décode les octets en texte avec l'atelier."),
+    answer("Quel est le vrai type de ce fichier ?", ["pdf", "un pdf", "document pdf"], {
+      intro: "Premiers octets du fichier :",
+      content: "25 50 44 46 2d 31 2e 37 0a 25 e2 e3 cf d3",
+      contentLabel: "photo_vacances.jpg (hex)",
+      tools: ["hex"],
+      workshopInput: "25 50 44 46 2d 31 2e 37",
+      placeholder: "Type de fichier",
+    }),
+    "C'était un PDF déguisé en photo. L'extension mentait, pas les octets.",
+  ),
+  room(
+    "moyen-43",
+    "Le fabricant de la carte réseau",
+    "Dans les journaux du routeur, un appareil inconnu apparaît avec l'adresse 00:1A:2B:3C:4D:5E. Tu veux savoir de quoi il s'agit.",
+    card("L'adresse MAC", "Réseau", "🏷️", "L'identifiant matériel d'une carte réseau, sur le réseau local.", [
+      "Elle s'écrit en 6 octets hexadécimaux : 00:1A:2B:3C:4D:5E.",
+      "Les 3 premiers octets (OUI) identifient le fabricant.",
+      "Elle peut être modifiée par logiciel : ce n'est pas une preuve d'identité.",
+    ], "Quelle partie de l'adresse identifie le fabricant ?"),
+    multi("Quelles affirmations sont vraies ?", [
+      ["Les 3 premiers octets indiquent le fabricant", true, "C'est l'OUI, attribué par l'IEEE."],
+      ["Une adresse MAC peut être falsifiée", true, "On peut la changer facilement par logiciel."],
+      ["L'adresse MAC circule sur Internet jusqu'au site visité", false, "Elle reste sur le réseau local."],
+      ["Elle est écrite en hexadécimal", true, "6 octets en base 16."],
+    ]),
+    "Fabricant identifié : c'était l'imprimante neuve du 2e étage.",
+  ),
+  room(
+    "moyen-44",
+    "Le masque mystère",
+    "La configuration réseau indique : 192.168.10.25/24. Le pirate se demande combien de machines il peut viser sur ce réseau.",
+    card("Le masque de sous-réseau", "Réseau", "🧮", "Le /24 indique quelle partie de l'adresse désigne le réseau.", [
+      "/24 = les 24 premiers bits sont fixés (réseau), il reste 8 bits pour les machines.",
+      "8 bits = 256 adresses, moins l'adresse du réseau et celle de diffusion : 254 machines.",
+      "/24 s'écrit aussi 255.255.255.0.",
+    ], "8 bits libres = 2^8 adresses, moins 2."),
+    answer("Combien d'adresses de machines utilisables dans un /24 ?", ["254"], { placeholder: "Un nombre" }),
+    "254 machines au maximum. Le pirate sait que le réseau est petit.",
+  ),
+  room(
+    "moyen-45",
+    "L'adresse à rallonge",
+    "Le journal du serveur montre une connexion depuis 2001:db8:85a3::8a2e:370:7334. Ton collègue croit à une erreur.",
+    card("IPv6", "Réseau", "6️⃣", "La nouvelle génération d'adresses IP, bien plus nombreuses.", [
+      "IPv4 compte environ 4 milliards d'adresses : il n'y en a plus assez.",
+      "IPv6 utilise 128 bits, écrits en 8 groupes hexadécimaux séparés par « : ».",
+      "« :: » remplace une suite de groupes à zéro, une seule fois par adresse.",
+    ], "Combien de bits pour une adresse IPv6 ?"),
+    choice("Que vois-tu dans ce journal ?", [
+      ["Une adresse IPv6 valide", true, "8 groupes hexadécimaux, dont certains abrégés par « :: »."],
+      ["Une adresse MAC", false, "Une MAC a 6 octets, pas cette forme."],
+      ["Une erreur du journal", false, "C'est une écriture normale en IPv6."],
+    ]),
+    "Rien d'anormal : le serveur accepte aussi l'IPv6. Pense à le surveiller aussi !",
+  ),
+  room(
+    "moyen-46",
+    "Le serveur qui répond",
+    "Avant d'attaquer, le pirate tape « ping 10.0.0.5 » et reçoit des réponses. Il sait désormais que la machine est allumée.",
+    card("Ping et ICMP", "Réseau", "🏓", "Ping envoie un petit message pour vérifier qu'une machine répond.", [
+      "Ping utilise le protocole ICMP (echo request / echo reply).",
+      "Il mesure aussi le temps aller-retour (latence).",
+      "Beaucoup de pare-feux bloquent le ping depuis Internet pour ne pas aider la reconnaissance.",
+    ], "Quel protocole utilise ping ?"),
+    answer("Quel protocole la commande ping utilise-t-elle ? (son sigle)", ["icmp"], { placeholder: "Sigle en 4 lettres" }),
+    "ICMP bloqué depuis l'extérieur. Le pirate ne sait plus ce qui est allumé.",
+  ),
+  room(
+    "moyen-47",
+    "Le chemin des paquets",
+    "Le site interne est lent. Tu lances une commande qui liste tous les routeurs traversés jusqu'au serveur, avec le temps de chacun.",
+    card("Traceroute", "Réseau", "🗺️", "Afficher chaque étape (routeur) entre toi et une destination.", [
+      "Sous Windows : tracert ; sous Linux/macOS : traceroute.",
+      "Il joue sur la durée de vie des paquets (TTL) pour faire répondre chaque routeur.",
+      "Utile pour trouver où ça bloque ou ralentit.",
+    ], "Sous Windows, la commande est raccourcie."),
+    choice("Quelle commande as-tu utilisée sous Windows ?", [
+      ["tracert", true, "Elle liste chaque routeur traversé."],
+      ["ipconfig", false, "Elle affiche ta propre configuration réseau."],
+      ["netstat", false, "Elle liste les connexions en cours de ta machine."],
+    ]),
+    "Le 7e routeur répond en 900 ms : le problème est trouvé.",
+  ),
+  room(
+    "moyen-48",
+    "Qui a cette adresse ?",
+    "Ton ordinateur veut parler à 192.168.1.1 sur le réseau local, mais il ne connaît que son adresse IP. Il crie à tout le monde : « Qui a 192.168.1.1 ? »",
+    card("Le protocole ARP", "Réseau", "📣", "ARP trouve l'adresse MAC qui correspond à une adresse IP sur le réseau local.", [
+      "La machine envoie une question à tous ; la bonne machine répond avec sa MAC.",
+      "La réponse est mémorisée dans le cache ARP (commande arp -a).",
+      "ARP ne vérifie rien : un pirate peut répondre à la place du routeur (empoisonnement ARP).",
+    ], "Il faut passer de l'IP à…"),
+    choice("Que cherche ton ordinateur ?", [
+      ["L'adresse MAC correspondant à l'IP", true, "C'est le rôle d'ARP."],
+      ["Le nom de domaine du routeur", false, "Ça, c'est le rôle du DNS."],
+      ["Le mot de passe du Wi-Fi", false, "Aucun rapport."],
+    ]),
+    "Réponse reçue : 192.168.1.1 est à aa:bb:cc:11:22:33.",
+  ),
+  room(
+    "moyen-49",
+    "L'adresse distribuée",
+    "Un nouvel ordinateur se branche et obtient automatiquement une adresse IP, une passerelle et un serveur DNS.",
+    card("DHCP", "Réseau", "🎟️", "Le service qui distribue automatiquement les adresses IP sur un réseau.", [
+      "DHCP donne une adresse IP pour une durée limitée (le bail).",
+      "Il fournit aussi la passerelle (routeur) et les serveurs DNS.",
+      "Un faux serveur DHCP pirate peut rediriger tout le trafic : on parle de « rogue DHCP ».",
+    ], "Quel service attribue les adresses automatiquement ?"),
+    answer("Quel protocole a fourni cette configuration ? (sigle)", ["dhcp"], { placeholder: "Sigle en 4 lettres" }),
+    "DHCP surveillé : aucun faux serveur ne distribuera d'adresses piégées.",
+  ),
+  room(
+    "moyen-50",
+    "Une seule adresse pour tous",
+    "Les 40 ordinateurs du bureau ont des adresses 192.168.x.x. Pourtant, vu d'Internet, ils ont tous la même adresse IP.",
+    card("Le NAT", "Réseau", "🔀", "La box traduit les adresses privées en une seule adresse publique.", [
+      "Le NAT (traduction d'adresses) permet à tout un réseau de partager une IP publique.",
+      "La box se souvient de qui a fait chaque demande pour renvoyer la réponse.",
+      "Effet secondaire : une machine interne n'est pas joignable directement depuis Internet, sauf redirection de port.",
+    ], "Qui « traduit » les adresses à la sortie du réseau ?"),
+    choice("Quel mécanisme explique ça ?", [
+      ["Le NAT de la box ou du routeur", true, "Les adresses privées sont traduites en une adresse publique unique."],
+      ["Le DNS", false, "Le DNS traduit des noms en adresses, pas des adresses entre elles."],
+      ["Le VPN", false, "Pas nécessaire pour ce phénomène."],
+    ]),
+    "Mystère résolu : c'est le NAT de la box.",
+  ),
+  room(
+    "moyen-51",
+    "Fiable ou rapide ?",
+    "Le pirate hésite : pour son outil, il veut un protocole qui garantit que tout arrive dans l'ordre. Pour la vidéo, il préfère la vitesse.",
+    card("TCP et UDP", "Réseau", "🚚", "TCP garantit la livraison, UDP privilégie la vitesse.", [
+      "TCP établit une connexion, numérote les paquets et renvoie ceux qui sont perdus (web, mail).",
+      "UDP envoie sans vérifier : plus rapide, idéal pour la vidéo, les jeux, le DNS.",
+      "Un scan de ports UDP est plus lent et moins fiable, car UDP ne répond pas toujours.",
+    ], "Lequel renvoie les paquets perdus ?"),
+    multi("Quelles affirmations sont vraies ?", [
+      ["TCP garantit que les données arrivent dans l'ordre", true, "Il numérote et renvoie ce qui manque."],
+      ["UDP est souvent utilisé pour la vidéo en direct", true, "Mieux vaut une image perdue qu'un retard."],
+      ["Le DNS utilise surtout UDP", true, "Sur le port 53."],
+      ["UDP établit une connexion avant d'envoyer", false, "C'est TCP qui fait ça."],
+    ]),
+    "TCP pour l'outil, UDP pour la vidéo. Bien choisi.",
+  ),
+  room(
+    "moyen-52",
+    "La poignée de main",
+    "Dans une capture réseau, tu vois trois paquets entre le client et le serveur avant le moindre échange de données.",
+    card("La poignée de main TCP", "Réseau", "🤝", "SYN, SYN-ACK, ACK : les trois étapes d'ouverture d'une connexion TCP.", [
+      "Le client envoie SYN (« on se connecte ? »).",
+      "Le serveur répond SYN-ACK (« d'accord »), puis le client confirme par ACK.",
+      "Une avalanche de SYN sans ACK, c'est une attaque SYN flood.",
+    ], "Qui parle en premier ?"),
+    order("Remets la poignée de main dans l'ordre.", ["SYN (client → serveur)", "SYN-ACK (serveur → client)", "ACK (client → serveur)"]),
+    "Connexion établie. Tu lis maintenant les captures comme un pro.",
+  ),
+  room(
+    "moyen-53",
+    "Les verbes du web",
+    "Le formulaire de connexion du pirate envoie le mot de passe dans l'adresse : /login?user=admin&pass=Secret123. Il apparaît dans tous les journaux.",
+    card("GET et POST", "Web", "📮", "GET met les paramètres dans l'URL, POST les envoie dans le corps de la requête.", [
+      "Une URL est enregistrée dans l'historique, les journaux du serveur et des proxys.",
+      "Les données sensibles (mots de passe) doivent partir en POST, et en HTTPS.",
+      "GET sert à lire, POST à envoyer ou modifier des données.",
+    ], "Quelle méthode n'affiche pas les données dans l'URL ?"),
+    choice("Quelle méthode fallait-il utiliser pour ce formulaire ?", [
+      ["GET", false, "C'est le problème : le mot de passe est dans l'URL."],
+      ["POST", true, "Les données passent dans le corps de la requête, pas dans l'URL."],
+      ["HEAD", false, "HEAD ne renvoie que les en-têtes, sans données."],
+    ]),
+    "Formulaire passé en POST. Les mots de passe ne traînent plus dans les journaux.",
+  ),
+  room(
+    "moyen-54",
+    "D'où viens-tu ?",
+    "Dans les journaux du site, une requête porte l'en-tête « Referer: https://forum-pirates.example/cibles ». Intéressant…",
+    card("L'en-tête Referer", "Web", "↩️", "Il indique la page d'où vient le visiteur.", [
+      "Le navigateur envoie souvent l'adresse de la page précédente.",
+      "Il peut révéler des informations sensibles contenues dans une URL (jetons, identifiants).",
+      "L'en-tête Referrer-Policy permet de limiter ce qui est envoyé.",
+    ], "Que révèle cet en-tête sur le visiteur ?"),
+    choice("Que t'apprend cet en-tête ?", [
+      ["Le visiteur arrivait d'une page listant des cibles sur un forum", true, "Le site est sûrement visé par une campagne."],
+      ["Le mot de passe du visiteur", false, "Le Referer n'envoie pas de mot de passe."],
+      ["La position GPS du visiteur", false, "Aucune position dans cet en-tête."],
+    ]),
+    "Le site est sur une liste de cibles : la surveillance est renforcée.",
+  ),
+  room(
+    "moyen-55",
+    "Les paramètres de l'URL",
+    "Le pirate observe l'adresse : https://boutique.example/commande?id=1042&lang=fr. Il se demande ce qu'il peut modifier.",
+    card("Les paramètres d'URL", "Web", "🔧", "Tout ce qui suit le « ? » est contrôlé par le visiteur.", [
+      "Les paramètres s'écrivent nom=valeur, séparés par « & ».",
+      "Un visiteur peut les modifier librement : le serveur ne doit jamais leur faire confiance aveuglément.",
+      "Changer id=1042 en id=1043 et voir la commande d'un autre, c'est une faille (IDOR).",
+    ], "Que vient après le « ? » ?"),
+    answer("Quelle est la valeur du paramètre « lang » ?", ["fr"], { placeholder: "Valeur" }),
+    "Bien lu. Et le serveur vérifie désormais que la commande t'appartient.",
+  ),
+  room(
+    "moyen-56",
+    "Le nom derrière l'adresse",
+    "Une adresse IP attaque le serveur : 203.0.113.45. Une recherche DNS inverse renvoie « vpn-sortie.hebergeur.example ».",
+    card("Le DNS inverse", "Réseau", "🔁", "Retrouver un nom à partir d'une adresse IP (enregistrement PTR).", [
+      "Le DNS classique donne l'IP d'un nom ; le DNS inverse fait l'inverse.",
+      "Il révèle souvent l'hébergeur, le fournisseur d'accès ou le type de service.",
+      "Tout le monde n'en configure pas, et il peut être trompeur : c'est un indice, pas une preuve.",
+    ], "Quel type d'enregistrement DNS fait correspondre une IP à un nom ?"),
+    choice("Que t'apprend ce résultat ?", [
+      ["L'attaquant passe probablement par un VPN chez un hébergeur", true, "L'IP n'est sans doute pas celle de son domicile."],
+      ["Le nom exact et l'adresse de l'attaquant", false, "Le DNS inverse ne donne pas l'identité d'une personne."],
+      ["Que l'attaque est terminée", false, "Le DNS inverse ne dit rien de ça."],
+    ]),
+    "Sortie VPN identifiée. L'IP sera bloquée, mais l'enquête continue.",
+  ),
+  room(
+    "moyen-57",
+    "Qui reçoit le courrier ?",
+    "Le pirate interroge le DNS du domaine serveur-corp.fr pour savoir quels serveurs reçoivent les mails de l'entreprise.",
+    card("Les enregistrements DNS", "Réseau", "📇", "Le DNS stocke plusieurs types d'informations sur un domaine.", [
+      "A : l'adresse IPv4 d'un nom ; AAAA : son adresse IPv6.",
+      "MX : les serveurs qui reçoivent les mails du domaine.",
+      "TXT : du texte libre, souvent utilisé pour SPF, DKIM et les vérifications de domaine.",
+    ], "M comme mail…"),
+    answer("Quel type d'enregistrement a-t-il demandé ?", ["mx"], { placeholder: "Deux lettres" }),
+    "Enregistrement MX trouvé. Les serveurs mail sont bien protégés.",
+  ),
+  room(
+    "moyen-58",
+    "La ligne du journal web",
+    "Une ligne attire ton attention dans le journal du serveur web.",
+    card("Lire un journal d'accès web", "Défense", "📜", "Chaque visite laisse une ligne : IP, date, requête, code de réponse.", [
+      "Format courant : IP - - [date] \"MÉTHODE /chemin HTTP/1.1\" code taille.",
+      "Le code 200 = succès, 404 = introuvable, 403 = interdit, 500 = erreur serveur.",
+      "Des centaines de 404 depuis une même IP indiquent souvent un scan.",
+    ], "Le code de réponse est juste après la requête."),
+    answer("Quel code HTTP le serveur a-t-il renvoyé ?", ["200"], {
+      content: '198.51.100.23 - - [12/Mar/2026:03:14:07 +0100] "GET /admin/backup.zip HTTP/1.1" 200 48211337',
+      contentLabel: "access.log",
+      placeholder: "Code à 3 chiffres",
+    }),
+    "Code 200 : la sauvegarde a bien été téléchargée à 3 h du matin. Alerte !",
+  ),
+  room(
+    "moyen-59",
+    "Les échecs à répétition",
+    "Le journal d'authentification du serveur Linux se remplit de lignes identiques.",
+    card("Le journal d'authentification Linux", "Système", "🐧", "/var/log/auth.log enregistre les connexions réussies et ratées.", [
+      "« Failed password » = mot de passe refusé, « Accepted » = connexion réussie.",
+      "Des centaines d'échecs depuis une IP = attaque par force brute sur SSH.",
+      "Un « Accepted » juste après une série d'échecs est très inquiétant.",
+    ], "Cherche la ligne qui n'est pas un échec."),
+    answer("Avec quel compte le pirate a-t-il fini par se connecter ?", ["backup"], {
+      content: [
+        "Mar 12 03:01:12 srv sshd[811]: Failed password for root from 45.155.205.9 port 51122 ssh2",
+        "Mar 12 03:01:14 srv sshd[811]: Failed password for root from 45.155.205.9 port 51130 ssh2",
+        "Mar 12 03:01:19 srv sshd[813]: Failed password for admin from 45.155.205.9 port 51160 ssh2",
+        "Mar 12 03:02:41 srv sshd[820]: Failed password for backup from 45.155.205.9 port 51312 ssh2",
+        "Mar 12 03:02:44 srv sshd[820]: Accepted password for backup from 45.155.205.9 port 51318 ssh2",
+      ].join("\n"),
+      contentLabel: "/var/log/auth.log",
+      placeholder: "Nom du compte",
+    }),
+    "Compte « backup » compromis. Il est bloqué et son mot de passe changé.",
+  ),
+  room(
+    "moyen-60",
+    "Le fuseau trompeur",
+    "Le journal du serveur indique 02:30Z ; l'alerte du SIEM dit 03:30 heure de Paris (hiver). Ton collègue pense à deux événements différents.",
+    card("UTC et les fuseaux horaires", "Défense", "🕰️", "En enquête, toutes les heures doivent être ramenées sur le même fuseau.", [
+      "Le « Z » (Zoulou) signifie UTC, l'heure de référence universelle.",
+      "Paris est à UTC+1 en hiver et UTC+2 en été.",
+      "La norme ISO 8601 (2026-03-12T02:30:00Z) évite les ambiguïtés.",
+    ], "Paris en hiver = UTC + combien ?"),
+    choice("Ces deux heures désignent-elles le même moment ?", [
+      ["Oui : 02:30 UTC = 03:30 à Paris en hiver", true, "C'est le même événement, vu dans deux fuseaux."],
+      ["Non : il y a une heure d'écart, donc deux événements", false, "L'écart vient du fuseau, pas du temps réel."],
+      ["Impossible à savoir", false, "Le Z indique clairement UTC."],
+    ]),
+    "Un seul événement, deux fuseaux. La chronologie est enfin cohérente.",
+  ),
+];

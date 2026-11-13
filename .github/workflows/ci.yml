@@ -31,5 +31,8 @@ jobs:
       - name: Vérifier les types
         run: npm run typecheck
 
+      - name: Vérifier le contenu (salles, cartes, leçons)
+        run: npm run check:content
+
       - name: Construire le site
         run: npm run build

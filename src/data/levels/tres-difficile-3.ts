@@ -584,7 +584,7 @@ level: high`,
   {
     id: "tres-difficile-40",
     name: "Le patient zéro",
-    story: "Dernière salle du niveau Très difficile. Trois sources de journaux, trois vues partielles. En les croisant, trouve la première machine infectée.",
+    story: "Trois sources de journaux, trois vues partielles. En les croisant, trouve la première machine infectée.",
     card: {
       title: "La corrélation d'événements",
       category: "Défense",
@@ -608,6 +608,6 @@ PROXY       09:41  PC-RH-11     → meteo-sync.net`,
       question: "Quelle est la première machine infectée ?",
       answers: ["PC-COMPTA-03"],
     },
-    successText: "Patient zéro identifié : PC-COMPTA-03. Niveau Très difficile entièrement terminé !",
+    successText: "Patient zéro identifié : PC-COMPTA-03. Un cap est franchi, la suite t'attend !",
   },
 ];

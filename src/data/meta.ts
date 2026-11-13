@@ -42,9 +42,23 @@ export const LEVELS: Level[] = [
   },
 ];
 
-/** Nombre de salles par niveau (vérifié au démarrage du serveur par src/data/game.ts). */
-export const ROOMS_PER_LEVEL = 40;
-export const TOTAL_ROOMS = LEVELS.length * ROOMS_PER_LEVEL;
+/**
+ * Nombre de salles par niveau (vérifié au démarrage du serveur par src/data/game.ts).
+ * À mettre à jour à chaque ajout de salles.
+ */
+export const ROOM_COUNTS: Record<LevelId, number> = {
+  facile: 100,
+  moyen: 100,
+  difficile: 100,
+  "tres-difficile": 100,
+  impossible: 100,
+};
+
+export function roomCount(levelId: LevelId): number {
+  return ROOM_COUNTS[levelId];
+}
+
+export const TOTAL_ROOMS = LEVELS.reduce((sum, level) => sum + ROOM_COUNTS[level.id], 0);
 /** Une carte par salle. */
 export const TOTAL_CARDS = TOTAL_ROOMS;
 
