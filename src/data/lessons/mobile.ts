@@ -4,8 +4,15 @@ export const MOBILE: Lesson = {
   slug: "mobile",
   title: "Smartphone, Wi-Fi et objets connectés",
   icon: "📱",
+  theme: "bases",
+  level: "debutant",
   summary: "Ton téléphone est ton ordinateur le plus intime. Protège-le comme tel.",
   duration: "6 min",
+  objectives: [
+    "Sécuriser son smartphone",
+    "Repérer smishing, quishing et vishing",
+    "Utiliser un Wi-Fi public sans danger",
+  ],
   sections: [
     {
       title: "Le téléphone, une cible de choix",
@@ -42,6 +49,12 @@ export const MOBILE: Lesson = {
         "Des millions d'objets piratés forment des botnets utilisés pour des attaques DDoS. Change toujours le mot de passe par défaut.",
       ],
     },
+  ],
+  keyPoints: [
+    "Le téléphone reçoit tes codes de double authentification : protège-le comme un coffre.",
+    "Une appli ne doit demander que les autorisations utiles à sa fonction.",
+    "Ne communique jamais un code reçu par SMS.",
+    "Sur un Wi-Fi public, préfère la 4G/5G ou un VPN, et change les mots de passe par défaut des objets connectés.",
   ],
   quiz: [
     {

@@ -285,7 +285,7 @@ Teams           REG_SZ  "C:\\Users\\marie\\AppData\\Local\\Microsoft\\Teams\\Upd
     id: "impossible-20",
     name: "La chasse finale",
     story:
-      "Le pirate a laissé une dernière énigme avant de disparaître pour de bon. Quatre couches, aucune indication. Tout ce que tu as appris dans les 99 salles précédentes te sera utile.",
+      "Le pirate a laissé une dernière énigme avant de disparaître pour de bon. Quatre couches, aucune indication. Tout ce que tu as appris jusqu'ici te sera utile.",
     card: {
       title: "Le threat hunting",
       category: "Défense",
@@ -306,6 +306,6 @@ Teams           REG_SZ  "C:\\Users\\marie\\AppData\\Local\\Microsoft\\Teams\\Upd
       question: "Quel est le dernier mot ?",
       answers: ["aurore"],
     },
-    successText: "AURORE. Les 100 salles sont ouvertes : tu es officiellement un(e) chasseur(se) de menaces. Bravo !",
+    successText: "AURORE. Tu es officiellement un(e) chasseur(se) de menaces… mais le pirate a laissé un dernier étage. Retiens bien ce mot !",
   },
 ];

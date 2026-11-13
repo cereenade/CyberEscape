@@ -4,8 +4,15 @@ export const INCIDENT: Lesson = {
   slug: "incident",
   title: "Malwares et réponse à incident",
   icon: "🚨",
+  theme: "soc",
+  level: "intermediaire",
   summary: "Les familles de logiciels malveillants, et comment une équipe SOC réagit à une attaque.",
   duration: "8 min",
+  objectives: [
+    "Connaître les grandes familles de malwares",
+    "Comprendre le rôle d'un SOC",
+    "Suivre les étapes de la réponse à incident",
+  ],
   sections: [
     {
       title: "Les familles de malwares",
@@ -35,6 +42,12 @@ export const INCIDENT: Lesson = {
         "Chaque étape est une chance de détecter et de casser la chaîne. Plus c'est tôt, moins il y a de dégâts.",
       ],
     },
+  ],
+  keyPoints: [
+    "Virus, ver, cheval de Troie, rançongiciel, spyware, backdoor : chaque famille a son mode d'action.",
+    "Le SOC surveille, trie les alertes et déclenche la réponse.",
+    "Ordre de la réponse : préparer, détecter, confiner, éradiquer, restaurer, tirer les leçons.",
+    "Plus la Kill Chain est cassée tôt, moins il y a de dégâts.",
   ],
   quiz: [
     {

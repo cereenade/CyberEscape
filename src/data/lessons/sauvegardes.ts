@@ -4,8 +4,15 @@ export const SAUVEGARDES: Lesson = {
   slug: "sauvegardes",
   title: "Sauvegardes et continuité",
   icon: "💾",
+  theme: "bases",
+  level: "debutant",
   summary: "La dernière ligne de défense quand tout le reste a échoué.",
   duration: "5 min",
+  objectives: [
+    "Appliquer la règle 3-2-1",
+    "Comprendre pourquoi une sauvegarde hors ligne résiste aux rançongiciels",
+    "Vérifier qu'une sauvegarde fonctionne vraiment",
+  ],
   sections: [
     {
       title: "Pourquoi sauvegarder",
@@ -35,6 +42,12 @@ export const SAUVEGARDES: Lesson = {
         "On définit aussi la perte de données acceptable (RPO) et le temps de remise en service visé (RTO) : ce sont eux qui fixent la fréquence des sauvegardes.",
       ],
     },
+  ],
+  keyPoints: [
+    "3 copies, 2 supports, 1 hors site ou hors ligne.",
+    "Un rançongiciel chiffre tout ce qui est accessible depuis le réseau.",
+    "Une sauvegarde non testée n'est pas une sauvegarde.",
+    "Le RPO fixe la perte de données acceptable, le RTO la durée d'interruption visée.",
   ],
   quiz: [
     {

@@ -308,6 +308,6 @@ Algorithme      : RSA 2048 / SHA-256`,
         { label: "Impact", correct: false, explanation: "L'impact vise à détruire ou perturber (ex. rançongiciel)." },
       ],
     },
-    successText: "Rapport classé selon ATT&CK. Niveau très difficile entièrement terminé !",
+    successText: "Rapport classé selon ATT&CK. Encore 20 salles avant la sortie du niveau !",
   },
 ];

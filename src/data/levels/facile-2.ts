@@ -278,6 +278,6 @@ export const FACILE_2: RoomContent[] = [
         { label: "Je scanne mais je ne paie pas", correct: false, explanation: "Ouvrir le lien peut déjà t'exposer à un site piégé." },
       ],
     },
-    successText: "Faux QR code démasqué. Niveau facile entièrement terminé !",
+    successText: "Faux QR code démasqué. Encore 20 salles avant la sortie du niveau !",
   },
 ];

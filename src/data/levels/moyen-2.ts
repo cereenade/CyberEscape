@@ -297,6 +297,6 @@ Lille      50.6292 N  3.0573 E`,
         { label: "Le compte d'un collègue", correct: false, explanation: "Partager un compte empêche de savoir qui fait quoi." },
       ],
     },
-    successText: "Comptes séparés. Niveau moyen entièrement terminé !",
+    successText: "Comptes séparés. Encore 20 salles avant la sortie du niveau !",
   },
 ];

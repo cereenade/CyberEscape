@@ -4,8 +4,15 @@ export const SYSTEME: Lesson = {
   slug: "systeme",
   title: "Systèmes et journaux",
   icon: "🖥️",
+  theme: "systeme",
+  level: "intermediaire",
   summary: "Permissions, processus et logs : là où les traces d'une attaque se cachent.",
   duration: "7 min",
+  objectives: [
+    "Lire les permissions d'un fichier Linux",
+    "Repérer un processus suspect",
+    "Exploiter les journaux pour reconstituer une attaque",
+  ],
   sections: [
     {
       title: "Les permissions",
@@ -36,6 +43,12 @@ export const SYSTEME: Lesson = {
         "Toujours tout remettre sur la même heure (UTC) pour reconstituer la chronologie.",
       ],
     },
+  ],
+  keyPoints: [
+    "rwx pour propriétaire, groupe et autres : attention au w dans le dernier bloc.",
+    "Le chemin d'un processus trahit souvent un imposteur.",
+    "4624 = connexion réussie, 4625 = échec, 4720 = compte créé.",
+    "Tout remettre en UTC avant de construire une chronologie.",
   ],
   quiz: [
     {

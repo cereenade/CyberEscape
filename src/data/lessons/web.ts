@@ -4,8 +4,15 @@ export const WEB: Lesson = {
   slug: "web",
   title: "Le web et ses failles",
   icon: "🌐",
+  theme: "web",
+  level: "intermediaire",
   summary: "HTTP, cookies et les grandes failles des sites : injection SQL, XSS, IDOR.",
   duration: "8 min",
+  objectives: [
+    "Comprendre le dialogue HTTP entre navigateur et serveur",
+    "Expliquer l'injection SQL, le XSS et l'IDOR",
+    "Connaître les parades de chaque faille",
+  ],
   sections: [
     {
       title: "HTTP et HTTPS",
@@ -43,6 +50,12 @@ export const WEB: Lesson = {
         "Traversée de répertoires : utiliser ../ dans un nom de fichier pour sortir du dossier prévu et lire des fichiers système.",
       ],
     },
+  ],
+  keyPoints: [
+    "Tout ce qui vient du navigateur (formulaires, cookies, URL) peut être modifié par l'utilisateur.",
+    "Injection SQL → requêtes préparées. XSS → échappement des sorties.",
+    "IDOR → vérifier les droits côté serveur à chaque requête.",
+    "HTTPS chiffre l'échange, mais ne garantit pas que le site est honnête.",
   ],
   quiz: [
     {

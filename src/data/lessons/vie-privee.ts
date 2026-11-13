@@ -4,8 +4,15 @@ export const VIE_PRIVEE: Lesson = {
   slug: "vie-privee",
   title: "Vie privée et données personnelles",
   icon: "🕶️",
+  theme: "humain",
+  level: "debutant",
   summary: "Ce que tu laisses en ligne, ce que les autres en font, et tes droits.",
   duration: "6 min",
+  objectives: [
+    "Mesurer ce que révèle ton empreinte numérique",
+    "Repérer les données cachées dans les fichiers",
+    "Connaître tes droits grâce au RGPD",
+  ],
   sections: [
     {
       title: "L'empreinte numérique",
@@ -36,6 +43,12 @@ export const VIE_PRIVEE: Lesson = {
         "Vérifie si tes comptes ont fuité sur des services comme haveibeenpwned.com et change les mots de passe concernés.",
       ],
     },
+  ],
+  keyPoints: [
+    "Des infos anodines, une fois recoupées, dessinent un portrait précis.",
+    "Photos et documents contiennent des métadonnées (GPS, auteur…).",
+    "Le RGPD te donne un droit d'accès, de rectification et d'effacement.",
+    "Une fuite doit être notifiée à la CNIL sous 72 heures.",
   ],
   quiz: [
     {

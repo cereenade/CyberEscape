@@ -1340,3 +1340,248 @@ a.level-card:hover {
 .auth-form > .btn:not(.btn-block) {
   align-self: flex-start;
 }
+
+/* ---------- Salle de cours : thèmes, niveaux, structure des leçons ---------- */
+
+.lesson-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.filter-btn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  color: var(--text);
+  border-color: var(--violet);
+}
+
+.filter-btn.active {
+  background: #6d3fd6;
+  border-color: #6d3fd6;
+  color: #ffffff;
+}
+
+.theme-section {
+  margin-top: 2.25rem;
+}
+
+.theme-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.theme-header p {
+  margin: 0.3rem 0 1rem;
+}
+
+.theme-count {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.level-pill,
+.theme-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.level-pill-debutant {
+  color: #7ee2a8;
+  border-color: rgba(126, 226, 168, 0.4);
+}
+
+.level-pill-intermediaire {
+  color: var(--yellow);
+  border-color: rgba(255, 209, 102, 0.4);
+}
+
+.level-pill-avance {
+  color: var(--red);
+  border-color: rgba(255, 84, 112, 0.4);
+}
+
+.theme-pill {
+  color: var(--violet-light);
+  border-color: rgba(157, 107, 255, 0.4);
+}
+
+.lesson-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lesson-card .lesson-title {
+  font-size: 1rem;
+}
+
+.lesson-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lesson-box {
+  margin: 1.5rem 0;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.lesson-box h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+}
+
+.lesson-box ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.lesson-box li + li {
+  margin-top: 0.35rem;
+}
+
+.objectives {
+  border-left: 4px solid var(--violet);
+}
+
+.key-points {
+  border-left: 4px solid var(--pink);
+  background: linear-gradient(90deg, rgba(236, 92, 255, 0.06), var(--bg-elevated));
+}
+
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  margin-right: 0.35rem;
+  border-radius: 50%;
+  background: rgba(157, 107, 255, 0.15);
+  color: var(--violet-light);
+  font-size: 0.9rem;
+}
+
+.lesson-example {
+  margin: 1rem 0 0;
+}
+
+.lesson-example figcaption {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.lesson-example .code-block {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* ---------- Accueil : sections supplémentaires ---------- */
+
+.home-section {
+  margin-top: 3.5rem;
+}
+
+.home-section h2,
+.home-cta h2 {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.section-kicker {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--violet);
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1rem;
+  counter-reset: none;
+}
+
+.step {
+  position: relative;
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.step h3 {
+  margin: 0.6rem 0 0.35rem;
+  font-size: 1rem;
+}
+
+.step p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.step-number {
+  position: absolute;
+  top: 0.9rem;
+  right: 1rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--violet);
+}
+
+.step-icon {
+  font-size: 1.8rem;
+}
+
+.mini-puzzle .puzzle {
+  margin-top: 1.25rem;
+}
+
+.home-cta {
+  margin: 3.5rem 0 1rem;
+  padding: 2rem;
+  text-align: center;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(157, 107, 255, 0.12), transparent 70%),
+    var(--bg-elevated);
+}
+
+.home-cta .actions {
+  justify-content: center;
+}

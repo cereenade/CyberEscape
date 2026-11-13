@@ -4,8 +4,15 @@ export const DETECTION: Lesson = {
   slug: "detection",
   title: "Détecter les attaques : le quotidien d'un SOC",
   icon: "🔎",
+  theme: "soc",
+  level: "avance",
   summary: "SIEM, EDR, YARA, ATT&CK : les outils et méthodes des analystes pour repérer les attaquants.",
   duration: "8 min",
+  objectives: [
+    "Écrire une règle de détection simple",
+    "Distinguer IOC et comportements suspects",
+    "Utiliser ATT&CK et le threat hunting",
+  ],
   sections: [
     {
       title: "Les outils du SOC",
@@ -43,6 +50,12 @@ export const DETECTION: Lesson = {
         "Le threat hunting consiste à partir d'une hypothèse et à chercher activement des traces, sans attendre une alerte. Chaque chasse réussie devient une nouvelle règle.",
       ],
     },
+  ],
+  keyPoints: [
+    "Une règle combine un filtre, un regroupement et un seuil.",
+    "Les IOC (IP, domaines, hashs) détectent le connu ; les comportements détectent aussi l'inédit.",
+    "ATT&CK classe les techniques des attaquants par tactique.",
+    "Chaque chasse réussie devient une nouvelle règle automatique.",
   ],
   quiz: [
     {

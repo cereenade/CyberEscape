@@ -4,8 +4,15 @@ export const PHISHING: Lesson = {
   slug: "phishing",
   title: "Phishing et ingénierie sociale",
   icon: "🎣",
+  theme: "humain",
+  level: "debutant",
   summary: "Les pirates piratent d'abord les humains. Apprends à reconnaître leurs techniques.",
   duration: "6 min",
+  objectives: [
+    "Reconnaître les leviers de l'ingénierie sociale",
+    "Repérer un mail de phishing",
+    "Savoir quoi faire face à un message suspect",
+  ],
   sections: [
     {
       title: "L'ingénierie sociale",
@@ -36,6 +43,12 @@ export const PHISHING: Lesson = {
         "En cas de doute, contacte l'organisme par un autre canal (son site officiel, le numéro habituel) et signale le message au service sécurité.",
       ],
     },
+  ],
+  keyPoints: [
+    "L'urgence, la peur, l'autorité et la curiosité sont les leviers favoris des attaquants.",
+    "Vérifie toujours le vrai domaine de l'expéditeur et des liens.",
+    "Aucun service légitime ne te demande ton mot de passe.",
+    "En cas de doute : autre canal pour vérifier, et signalement à l'équipe sécurité.",
   ],
   quiz: [
     {
