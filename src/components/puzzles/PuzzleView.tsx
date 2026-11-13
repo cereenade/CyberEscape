@@ -3,6 +3,8 @@
 import type { Puzzle } from "@/lib/types";
 import { AnswerForm } from "./AnswerForm";
 import { ChoicePuzzle } from "./ChoicePuzzle";
+import { MultiPuzzle } from "./MultiPuzzle";
+import { OrderPuzzle } from "./OrderPuzzle";
 import { PhishingPuzzle } from "./PhishingPuzzle";
 import { Workshop } from "./Workshop";
 
@@ -42,6 +44,10 @@ export function PuzzleView({ puzzle, onSolved }: Props) {
         <ChoicePuzzle question={puzzle.question} options={puzzle.options} onSolved={onSolved} />
       )}
       {puzzle.kind === "phishing" && <PhishingPuzzle emails={puzzle.emails} onSolved={onSolved} />}
+      {puzzle.kind === "multi" && (
+        <MultiPuzzle question={puzzle.question} options={puzzle.options} onSolved={onSolved} />
+      )}
+      {puzzle.kind === "order" && <OrderPuzzle question={puzzle.question} items={puzzle.items} onSolved={onSolved} />}
     </div>
   );
 }
