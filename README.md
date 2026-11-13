@@ -25,7 +25,7 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 - **Une cyber-carte par salle** (500 au total) : elle explique une notion et sert d'indice.
 - **5 types d'énigmes** : réponse libre, choix unique, choix multiples, remise dans l'ordre et chasse au phishing.
 - **Un atelier de décodage** : on empile des opérations (Base64, César, XOR, Vigenère…) pour décoder les messages.
-- **La salle de cours** : 60 leçons rangées par thème (7) et par niveau (débutant, intermédiaire, avancé). Chaque leçon a des objectifs, des explications pas à pas avec exemples, un encadré « À retenir » et un mini-quiz.
+- **La salle de cours** : 83 leçons rangées par thème (10, dont pentest, infrastructure et GRC) et par niveau (débutant, intermédiaire, avancé). Chaque leçon a des objectifs, des explications pas à pas avec exemples, un encadré « À retenir » et un mini-quiz.
 
 - **Comptes joueurs** : inscription, connexion, mot de passe oublié, page « Mon compte » (pseudo, statistiques, offre, mot de passe, suppression du compte). Un compte est nécessaire pour jouer ; les cours restent libres.
 - **Jetons** : 5 par jour (non cumulables, remis à zéro à minuit), 1 jeton par salle réussie.

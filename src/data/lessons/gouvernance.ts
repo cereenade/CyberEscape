@@ -4,7 +4,7 @@ export const GOUVERNANCE: Lesson = {
   slug: "gouvernance",
   title: "Risques, normes et réglementations",
   icon: "📑",
-  theme: "soc",
+  theme: "grc",
   level: "intermediaire",
   summary: "EBIOS, ISO 27001, NIS 2, RGPD : le cadre qui organise la sécurité d'une organisation.",
   duration: "9 min",
