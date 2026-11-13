@@ -42,7 +42,7 @@ export function LessonList() {
           <section key={theme.id} className="theme-section">
             <header className="theme-header">
               <h2>
-                <span aria-hidden>{theme.icon}</span> {theme.name}
+                {theme.name}
                 <span className="muted theme-count">
                   {" "}
                   · {themeDone}/{lessons.length}
@@ -56,9 +56,6 @@ export function LessonList() {
                 return (
                   <Link key={lesson.slug} href={`/cours/${lesson.slug}`} className="lesson-card">
                     <div className="lesson-card-top">
-                      <span className="lesson-icon" aria-hidden>
-                        {lesson.icon}
-                      </span>
                       <span className={`level-pill level-pill-${lesson.level}`}>{levelName(lesson.level)}</span>
                     </div>
                     <h3 className="lesson-title">{lesson.title}</h3>
@@ -66,7 +63,7 @@ export function LessonList() {
                     <div className="lesson-card-bottom">
                       <span className="lesson-meta">{lesson.duration}</span>
                       <span className={isDone ? "lesson-status done" : "lesson-status"}>
-                        {isDone ? "✅ Validée" : "À découvrir"}
+                        {isDone ? "Validée" : "À découvrir"}
                       </span>
                     </div>
                   </Link>
