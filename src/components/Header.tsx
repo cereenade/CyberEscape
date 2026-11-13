@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CARDS } from "@/data/game";
+import { useAuth } from "./AuthProvider";
 import { useGame } from "./GameProvider";
 
 const LINKS = [
@@ -19,6 +20,7 @@ function isActive(pathname: string, href: string): boolean {
 export function Header() {
   const pathname = usePathname();
   const { save, loaded } = useGame();
+  const auth = useAuth();
 
   return (
     <header className="header">
@@ -36,6 +38,28 @@ export function Header() {
             )}
           </Link>
         ))}
+
+        {auth.enabled && !auth.loading && (
+          <span className="nav-account">
+            {auth.user ? (
+              <Link href="/compte" className={isActive(pathname, "/compte") ? "nav-link active" : "nav-link"}>
+                <span className="avatar avatar-small" aria-hidden>
+                  {(auth.profile?.pseudo ?? "?").slice(0, 1).toUpperCase()}
+                </span>
+                {auth.profile?.pseudo ?? "Mon compte"}
+              </Link>
+            ) : (
+              <>
+                <Link href="/connexion" className={isActive(pathname, "/connexion") ? "nav-link active" : "nav-link"}>
+                  Connexion
+                </Link>
+                <Link href="/inscription" className="btn btn-primary btn-small">
+                  S&apos;inscrire
+                </Link>
+              </>
+            )}
+          </span>
+        )}
       </nav>
     </header>
   );
