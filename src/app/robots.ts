@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
       // Pages personnelles ou techniques : inutile de les indexer.
-      disallow: ["/compte", "/auth/", "/reinitialiser-mot-de-passe"],
+      disallow: ["/compte", "/auth/", "/reinitialiser-mot-de-passe", "/admin", "/api/", "/etudiant/"],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

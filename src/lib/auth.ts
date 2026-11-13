@@ -1,5 +1,16 @@
 /** Règles de validation et messages d'erreur des comptes, en français. */
 
+/**
+ * N'accepte que des chemins internes au site après une connexion (évite les redirections
+ * ouvertes du type « //site-pirate.com » ou « /\\site-pirate.com »).
+ */
+export function safeNext(value: string | null | undefined, fallback = "/compte"): string {
+  if (!value || value.length > 200) return fallback;
+  if (!value.startsWith("/") || value.startsWith("//") || value.includes("\\")) return fallback;
+  if (/[\u0000-\u001f\u007f]/.test(value)) return fallback;
+  return value;
+}
+
 export const PSEUDO_RULE = /^[A-Za-z0-9_-]{3,20}$/;
 export const PASSWORD_MIN_LENGTH = 8;
 
