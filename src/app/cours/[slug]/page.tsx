@@ -86,6 +86,21 @@ export default async function LessonPage({ params }: Props) {
         </ul>
       </aside>
 
+      {lesson.sources && lesson.sources.length > 0 && (
+        <aside className="lesson-box lesson-sources" aria-labelledby="sources">
+          <h2 id="sources">📚 Sources et pour aller plus loin</h2>
+          <ul>
+            {lesson.sources.map((source) => (
+              <li key={source.url}>
+                <a href={source.url} target="_blank" rel="noopener noreferrer">
+                  {source.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
+
       <Quiz slug={lesson.slug} questions={lesson.quiz} />
 
       <div className="actions">

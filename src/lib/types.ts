@@ -133,7 +133,7 @@ export interface QuizQuestion {
   explanation: string;
 }
 
-export type LessonTheme = "bases" | "humain" | "web" | "crypto" | "reseau" | "systeme" | "soc";
+export type LessonTheme = "bases" | "humain" | "web" | "crypto" | "reseau" | "systeme" | "soc" | "pentest" | "infra" | "grc";
 export type LessonLevel = "debutant" | "intermediaire" | "avance";
 
 export interface Lesson {
@@ -150,6 +150,8 @@ export interface Lesson {
   /** Les points essentiels, résumés avant le quiz. */
   keyPoints: string[];
   quiz: QuizQuestion[];
+  /** Références officielles pour vérifier et aller plus loin. */
+  sources?: { label: string; url: string }[];
 }
 
 /* ---------- Données envoyées au navigateur (sans les réponses) ---------- */
