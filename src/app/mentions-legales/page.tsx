@@ -9,7 +9,7 @@ export default function LegalNoticePage() {
 
       <h2>Éditeur</h2>
       <p>
-        CyberEscape est un projet personnel et non commercial édité par Ceren Yikilmaz. Contact :{" "}
+        CyberEscape est édité par Ceren Yikilmaz, entrepreneuse individuelle (micro-entreprise, SIRET en cours d&apos;attribution). Contact :{" "}
         <a href="https://github.com/cereenade/CyberEscape/issues" target="_blank" rel="noopener noreferrer">
           via GitHub
         </a>
@@ -25,6 +25,10 @@ export default function LegalNoticePage() {
         ). Comptes et base de données : Supabase Inc. (
         <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">
           supabase.com
+        </a>
+        ). Paiements : Stripe Payments Europe Ltd (
+        <a href="https://stripe.com" target="_blank" rel="noopener noreferrer">
+          stripe.com
         </a>
         ).
       </p>
