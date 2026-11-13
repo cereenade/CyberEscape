@@ -27,9 +27,12 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 - **Un atelier de décodage** : on empile des opérations (Base64, César, XOR, Vigenère…) pour décoder les messages.
 - **La salle de cours** : 30 leçons rangées par thème (7) et par niveau (débutant, intermédiaire, avancé). Chaque leçon a des objectifs, des explications pas à pas avec exemples, un encadré « À retenir » et un mini-quiz.
 
-- **Comptes joueurs** (facultatifs) : inscription, connexion, mot de passe oublié, page « Mon compte » (pseudo, statistiques, mot de passe, suppression du compte). La progression est synchronisée sur le compte.
+- **Comptes joueurs** : inscription, connexion, mot de passe oublié, page « Mon compte » (pseudo, statistiques, offre, mot de passe, suppression du compte). Un compte est nécessaire pour jouer ; les cours restent libres.
+- **Jetons** : 5 par jour (non cumulables, remis à zéro à minuit), 1 jeton par salle réussie.
+- **Abonnement illimité** : 2,99 €/mois pour les étudiants (vérification par lien envoyé à l'e-mail de l'école), 4,99 €/mois pour tous, via Stripe.
+- **Espace admin** (`/admin`) : statistiques, joueurs, accès offert, liens vers Supabase, Vercel, GitHub, Stripe et Resend.
 
-Sans compte, la progression est sauvegardée dans le navigateur (`localStorage`). En se connectant, elle est fusionnée avec celle du compte.
+Les réponses ne sont jamais envoyées au navigateur : chaque réponse est vérifiée sur le serveur.
 
 ## Technologies
 
@@ -38,6 +41,7 @@ Sans compte, la progression est sauvegardée dans le navigateur (`localStorage`)
 - TypeScript
 - CSS natif, sans dépendance
 - [Supabase](https://supabase.com/) pour les comptes et la base de données (`@supabase/ssr`)
+- [Stripe](https://stripe.com/) pour les abonnements, [Resend](https://resend.com/) pour les e-mails (appelés en REST, sans SDK)
 
 ## Lancer le projet en local
 
@@ -69,14 +73,17 @@ Chaque push sur `main` redéploie le site automatiquement, et chaque pull reques
 
 ## Activer les comptes (Supabase)
 
-Le site fonctionne sans cette étape : les liens de connexion sont simplement masqués. Pour activer les comptes :
+Les comptes sont indispensables pour jouer. Pour les activer :
 
 1. **Créer la base** : sur Vercel, ouvre le projet → onglet **Storage** → **Supabase** → crée la base et connecte-la au projet. Les variables `NEXT_PUBLIC_SUPABASE_URL` et la clé publique sont ajoutées automatiquement.
 2. **Créer les tables** : dans Supabase → **SQL Editor** → **New query**, colle le contenu de [`supabase/schema.sql`](supabase/schema.sql) puis clique sur **Run**.
 3. **Autoriser les redirections** : dans Supabase → **Authentication** → **URL Configuration** :
    - *Site URL* : `https://ton-site.vercel.app`
    - *Redirect URLs* : `https://ton-site.vercel.app/auth/callback` et `http://localhost:3000/auth/callback`
-4. **Redéployer** : sur Vercel → **Deployments** → **Redeploy**, pour que les nouvelles variables soient prises en compte.
+4. **Clé secrète** : vérifie que `SUPABASE_SECRET_KEY` (ou `SUPABASE_SERVICE_ROLE_KEY`) est bien dans les variables Vercel.
+5. **Redéployer** : sur Vercel → **Deployments** → **Redeploy**, pour que les nouvelles variables soient prises en compte.
+
+Paiements (Stripe), e-mails étudiants (Resend) et droits admin : voir la [mise en route du guide de maintenance](docs/MAINTENANCE.md#mise-en-route-à-faire-une-fois).
 
 En local, copie `.env.example` en `.env.local` et remplis-le avec les valeurs de Supabase → **Project Settings** → **API**.
 
@@ -85,8 +92,10 @@ En local, copie `.env.example` en `.env.local` et remplis-le avec les valeurs de
 ### Sécurité
 
 - Les mots de passe sont gérés et hachés par Supabase, jamais stockés par le site.
-- Chaque table est protégée par des règles RLS : un joueur ne peut lire et modifier que sa propre progression.
-- La suppression de compte passe par une fonction SQL qui ne peut supprimer que le compte connecté.
+- Chaque table est protégée par des règles RLS : un joueur ne peut que lire ses propres données ; toutes les écritures (progression, jetons, abonnements) passent par le serveur.
+- Jetons consommés de façon atomique en SQL, 30 essais maximum par salle et par jour.
+- Webhook Stripe vérifié par signature, Content-Security-Policy, HSTS, redirections sûres.
+- La suppression de compte résilie l'abonnement Stripe puis efface toutes les données.
 
 ## Maintenance
 
@@ -107,12 +116,18 @@ src/
 │   ├── deck/page.tsx         # Collection de cyber-cartes
 │   ├── inscription/, connexion/, mot-de-passe-oublie/, reinitialiser-mot-de-passe/
 │   ├── compte/page.tsx       # Mon compte
+│   ├── abonnement/page.tsx   # Offres et vérification étudiante
+│   ├── admin/page.tsx        # Espace d'administration
+│   ├── actions/              # Server actions : jeu, paiement, étudiant, compte, admin
+│   ├── api/stripe/webhook/   # Notifications de paiement Stripe
+│   ├── etudiant/verifier/    # Lien de vérification de l'e-mail d'école
 │   ├── auth/callback/        # Arrivée des liens envoyés par mail
-│   ├── conditions/, confidentialite/, mentions-legales/
+│   ├── conditions/, confidentialite/, mentions-legales/, cgv/
 │   ├── layout.tsx, not-found.tsx, globals.css
 ├── components/
 │   ├── AuthProvider.tsx      # Joueur connecté et profil
-│   ├── GameProvider.tsx      # État du jeu, sauvegarde locale et synchronisation du compte
+│   ├── GameProvider.tsx      # État du joueur (progression, jetons, abonnement) lu sur le serveur
+│   ├── billing/              # Cartes des offres et formulaire étudiant
 │   ├── auth/                 # Formulaires de compte et page Mon compte
 │   ├── LevelSelect.tsx       # Grille des niveaux
 │   ├── LevelGame.tsx         # Enchaînement des salles d'un niveau
@@ -120,7 +135,8 @@ src/
 │   ├── Quiz.tsx, LessonList.tsx, Deck.tsx, CyberCardView.tsx, Header.tsx, ProgressBar.tsx
 │   └── puzzles/              # Énigmes : réponse, choix, choix multiples, ordre, phishing, atelier
 ├── data/
-│   ├── game.ts               # Niveaux, salles et cartes assemblés
+│   ├── meta.ts               # Niveaux, jetons et prix (utilisable dans le navigateur)
+│   ├── game.ts               # Salles et cartes assemblées (serveur uniquement : contient les réponses)
 │   ├── levels/               # Trois fiches par niveau (salles 1–10, 11–20, 21–40, avec leurs cartes)
 │   └── lessons/              # Une fiche par leçon
 └── lib/
@@ -128,10 +144,10 @@ src/
     ├── crypto.ts             # Encodages et chiffrements (Base64, César, XOR…)
     ├── progress.ts           # Avancement par niveau, salle en cours
     ├── text.ts               # Comparaison des réponses
-    ├── storage.ts            # Sauvegarde localStorage
     ├── auth.ts               # Validation et messages d'erreur des comptes
     └── supabase/             # Clients Supabase (navigateur, serveur, middleware)
-src/middleware.ts             # Rafraîchit la session, protège /compte
+src/server/                   # Code serveur : vérification des réponses, joueur, Stripe, e-mails, étudiants
+src/middleware.ts             # Rafraîchit la session, protège /compte, /jeu/*, /deck et /admin
 supabase/schema.sql           # Tables, règles RLS et fonctions
 ```
 
