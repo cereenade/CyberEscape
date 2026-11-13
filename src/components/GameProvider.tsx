@@ -25,6 +25,7 @@ const GUEST: PlayerStatus = {
   loggedIn: false,
   premium: false,
   plan: null,
+  isAdmin: false,
   tokensLeft: 0,
   tokensPerDay: TOKENS_PER_DAY,
   progress: { cards: [], solvedRooms: [], lessonsDone: [] },

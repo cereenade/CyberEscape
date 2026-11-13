@@ -136,13 +136,18 @@ function SubscriptionInfo({ premium, plan, tokensLeft, tokensPerDay }: { premium
     );
   }
 
-  const name = plan === "offert" ? "Accès offert" : PLANS[plan as keyof typeof PLANS]?.name ?? "Illimité";
+  const name = plan === "admin" ? "Accès administrateur" : plan === "offert" ? "Accès offert" : PLANS[plan as keyof typeof PLANS]?.name ?? "Illimité";
   return (
     <>
       <p>
         ∞ Salles illimitées · <strong>{name}</strong>
       </p>
-      {plan !== "offert" && (
+      {plan === "admin" && (
+        <Link href="/admin" className="btn btn-primary btn-small">
+          🛠️ Ouvrir l&apos;administration
+        </Link>
+      )}
+      {plan !== "offert" && plan !== "admin" && (
         <button
           type="button"
           className="btn btn-ghost btn-small"
