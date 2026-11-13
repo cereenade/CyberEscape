@@ -26,9 +26,9 @@ export default function LegalNoticePage() {
         <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">
           supabase.com
         </a>
-        ). Paiements : Stripe Payments Europe Ltd (
-        <a href="https://stripe.com" target="_blank" rel="noopener noreferrer">
-          stripe.com
+        ). Paiements : Mollie B.V., Keizersgracht 126, 1015 CW Amsterdam, Pays-Bas (
+        <a href="https://www.mollie.com" target="_blank" rel="noopener noreferrer">
+          mollie.com
         </a>
         ).
       </p>

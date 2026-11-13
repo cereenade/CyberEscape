@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { deleteAccount } from "@/app/actions/account";
-import { openBillingPortal } from "@/app/actions/billing";
+import { CancelSubscription } from "@/components/billing/CancelSubscription";
 import { LEVELS, PLANS, TOTAL_CARDS, TOTAL_ROOMS, roomCount } from "@/data/meta";
 import { LESSONS } from "@/data/lessons";
 import { translateAuthError, validatePseudo } from "@/lib/auth";
@@ -120,9 +120,6 @@ export function AccountView() {
 }
 
 function SubscriptionInfo({ premium, plan, tokensLeft, tokensPerDay }: { premium: boolean; plan: string | null; tokensLeft: number; tokensPerDay: number }) {
-  const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
-
   if (!premium) {
     return (
       <>
@@ -148,25 +145,10 @@ function SubscriptionInfo({ premium, plan, tokensLeft, tokensPerDay }: { premium
         </Link>
       )}
       {plan !== "offert" && plan !== "admin" && (
-        <button
-          type="button"
-          className="btn btn-ghost btn-small"
-          disabled={pending}
-          onClick={async () => {
-            setPending(true);
-            setError(null);
-            const result = await openBillingPortal().catch(() => ({ url: undefined, error: "Connexion perdue." }));
-            if (result.url) window.location.assign(result.url);
-            else {
-              setError(result.error ?? "Indisponible pour le moment.");
-              setPending(false);
-            }
-          }}
-        >
-          {pending ? "Ouverture…" : "Gérer mon abonnement (carte, factures, résiliation)"}
-        </button>
+        <p>
+          <Link href="/abonnement">Gérer mon abonnement</Link>
+        </p>
       )}
-      {error && <p className="feedback feedback-error">{error}</p>}
     </>
   );
 }

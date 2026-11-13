@@ -1,70 +1,93 @@
 "use server";
 
-import type { PaidPlan } from "@/data/meta";
+import { revalidatePath } from "next/cache";
+import { PLANS, type PaidPlan } from "@/data/meta";
 import { SITE_URL } from "@/lib/site";
+import { MOLLIE_ENABLED, PLAN_AMOUNTS, WEBHOOK_URL, mollie, type MolliePayment } from "@/server/mollie";
 import { getSessionUser, getSubscription, isActive } from "@/server/player";
-import { STRIPE_ENABLED, priceFor, stripe } from "@/server/stripe";
 import { isVerifiedStudent } from "@/server/student";
+import { getAdminSupabase } from "@/server/supabase-admin";
 
 interface RedirectResult {
   url?: string;
   error?: string;
 }
 
-/** Crée une page de paiement Stripe pour l'abonnement choisi. */
+/**
+ * Démarre l'abonnement : un premier paiement Mollie (1er mois) qui crée aussi le mandat
+ * de prélèvement. Le webhook crée ensuite l'abonnement mensuel.
+ */
 export async function startCheckout(plan: PaidPlan, waiverAccepted: boolean): Promise<RedirectResult> {
   const user = await getSessionUser();
-  if (!user) return { error: "Connecte-toi pour t'abonner." };
-  if (!STRIPE_ENABLED) return { error: "Le paiement sera bientôt disponible." };
+  const admin = getAdminSupabase();
+  if (!user || !admin) return { error: "Connecte-toi pour t'abonner." };
+  if (!MOLLIE_ENABLED) return { error: "Le paiement sera bientôt disponible." };
   if (plan !== "etudiant" && plan !== "standard") return { error: "Offre inconnue." };
   if (waiverAccepted !== true) return { error: "Coche la case pour accéder tout de suite au contenu." };
 
   const sub = await getSubscription(user.id);
-  if (isActive(sub)) return { error: "Tu as déjà un abonnement actif." };
+  if (isActive(sub)) {
+    return { error: sub?.cancel_at_period_end ? "Ton abonnement résilié reste actif jusqu'à la fin du mois payé : tu pourras te réabonner ensuite." : "Tu as déjà un abonnement actif." };
+  }
   if (plan === "etudiant" && !(await isVerifiedStudent(user.id))) {
     return { error: "Vérifie d'abord ton adresse e-mail d'école pour l'offre étudiante." };
   }
 
   try {
-    const session = await stripe<{ url: string }>("POST", "/checkout/sessions", {
-      mode: "subscription",
-      "line_items[0][price]": priceFor(plan),
-      "line_items[0][quantity]": 1,
-      success_url: `${SITE_URL}/abonnement?paiement=ok`,
-      cancel_url: `${SITE_URL}/abonnement?paiement=annule`,
-      client_reference_id: user.id,
-      customer: sub?.stripe_customer_id ?? undefined,
-      customer_email: sub?.stripe_customer_id ? undefined : user.email,
-      locale: "fr",
-      allow_promotion_codes: true,
-      "metadata[user_id]": user.id,
-      "metadata[plan]": plan,
-      "metadata[waiver_accepted_at]": new Date().toISOString(),
-      "subscription_data[metadata][user_id]": user.id,
-      "subscription_data[metadata][plan]": plan,
+    let customerId = sub?.mollie_customer_id ?? null;
+    if (!customerId) {
+      const customer = await mollie<{ id: string }>("POST", "/customers", {
+        email: user.email,
+        locale: "fr_FR",
+        metadata: { user_id: user.id },
+      });
+      customerId = customer.id;
+      // On garde le client Mollie, sans donner d'accès tant que le paiement n'est pas confirmé.
+      await admin.from("subscriptions").upsert(
+        { user_id: user.id, plan, status: "incomplete", mollie_customer_id: customerId, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" },
+      );
+    }
+
+    const payment = await mollie<MolliePayment>("POST", "/payments", {
+      amount: { currency: "EUR", value: PLAN_AMOUNTS[plan] },
+      description: `CyberEscape – abonnement ${PLANS[plan].name} (1er mois)`,
+      customerId,
+      sequenceType: "first",
+      redirectUrl: `${SITE_URL}/abonnement?paiement=retour`,
+      cancelUrl: `${SITE_URL}/abonnement?paiement=annule`,
+      webhookUrl: WEBHOOK_URL,
+      locale: "fr_FR",
+      metadata: { user_id: user.id, plan, kind: "first", waiver_accepted_at: new Date().toISOString() },
     });
-    return { url: session.url };
+    const url = payment._links?.checkout?.href;
+    return url ? { url } : { error: "Le paiement est momentanément indisponible." };
   } catch {
     return { error: "Le paiement est momentanément indisponible. Réessaie plus tard." };
   }
 }
 
-/** Ouvre l'espace client Stripe (changer de carte, résilier, factures). */
-export async function openBillingPortal(): Promise<RedirectResult> {
+/** Résilie l'abonnement : plus aucun prélèvement, l'accès reste jusqu'à la fin du mois payé. */
+export async function cancelSubscription(): Promise<{ ok: boolean; error?: string }> {
   const user = await getSessionUser();
-  if (!user) return { error: "Connecte-toi d'abord." };
-  if (!STRIPE_ENABLED) return { error: "Le paiement n'est pas encore activé." };
+  const admin = getAdminSupabase();
+  if (!user || !admin) return { ok: false, error: "Connecte-toi d'abord." };
+  if (!MOLLIE_ENABLED) return { ok: false, error: "Le paiement n'est pas encore activé." };
 
   const sub = await getSubscription(user.id);
-  if (!sub?.stripe_customer_id) return { error: "Aucun abonnement payant trouvé sur ce compte." };
+  if (!sub?.mollie_customer_id || !sub.mollie_subscription_id) return { ok: false, error: "Aucun abonnement payant trouvé sur ce compte." };
+  if (sub.cancel_at_period_end) return { ok: true };
+
   try {
-    const session = await stripe<{ url: string }>("POST", "/billing_portal/sessions", {
-      customer: sub.stripe_customer_id,
-      return_url: `${SITE_URL}/compte`,
-      locale: "fr",
-    });
-    return { url: session.url };
-  } catch {
-    return { error: "L'espace de facturation est momentanément indisponible." };
+    await mollie("DELETE", `/customers/${encodeURIComponent(sub.mollie_customer_id)}/subscriptions/${encodeURIComponent(sub.mollie_subscription_id)}`);
+  } catch (error) {
+    // Déjà résilié côté Mollie : on met simplement la base à jour.
+    if (!/canceled|not found|404/i.test(String(error))) return { ok: false, error: "La résiliation a échoué. Réessaie plus tard." };
   }
+  await admin
+    .from("subscriptions")
+    .update({ cancel_at_period_end: true, updated_at: new Date().toISOString() })
+    .eq("user_id", user.id);
+  revalidatePath("/abonnement");
+  return { ok: true };
 }

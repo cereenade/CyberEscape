@@ -29,8 +29,8 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 
 - **Comptes joueurs** : inscription, connexion, mot de passe oublié, page « Mon compte » (pseudo, statistiques, offre, mot de passe, suppression du compte). Un compte est nécessaire pour jouer ; les cours restent libres.
 - **Jetons** : 5 par jour (non cumulables, remis à zéro à minuit), 1 jeton par salle réussie.
-- **Abonnement illimité** : 2,99 €/mois pour les étudiants (vérification par lien envoyé à l'e-mail de l'école), 4,99 €/mois pour tous, via Stripe.
-- **Espace admin** (`/admin`) : statistiques, joueurs, accès offert, liens vers Supabase, Vercel, GitHub, Stripe et Resend.
+- **Abonnement illimité** : 2,99 €/mois pour les étudiants (vérification par lien envoyé à l'e-mail de l'école), 4,99 €/mois pour tous, via Mollie.
+- **Espace admin** (`/admin`) : statistiques, joueurs, accès offert, liens vers Supabase, Vercel, GitHub, Mollie et Resend.
 
 Les réponses ne sont jamais envoyées au navigateur : chaque réponse est vérifiée sur le serveur.
 
@@ -41,7 +41,7 @@ Les réponses ne sont jamais envoyées au navigateur : chaque réponse est véri
 - TypeScript
 - CSS natif, sans dépendance
 - [Supabase](https://supabase.com/) pour les comptes et la base de données (`@supabase/ssr`)
-- [Stripe](https://stripe.com/) pour les abonnements, [Resend](https://resend.com/) pour les e-mails (appelés en REST, sans SDK)
+- [Mollie](https://www.mollie.com/) pour les abonnements, [Resend](https://resend.com/) pour les e-mails (appelés en REST, sans SDK)
 
 ## Lancer le projet en local
 
@@ -83,7 +83,7 @@ Les comptes sont indispensables pour jouer. Pour les activer :
 4. **Clé secrète** : vérifie que `SUPABASE_SECRET_KEY` (ou `SUPABASE_SERVICE_ROLE_KEY`) est bien dans les variables Vercel.
 5. **Redéployer** : sur Vercel → **Deployments** → **Redeploy**, pour que les nouvelles variables soient prises en compte.
 
-Paiements (Stripe), e-mails étudiants (Resend) et droits admin : voir la [mise en route du guide de maintenance](docs/MAINTENANCE.md#mise-en-route-à-faire-une-fois).
+Paiements (Mollie), e-mails étudiants (Resend) et droits admin : voir la [mise en route du guide de maintenance](docs/MAINTENANCE.md#mise-en-route-à-faire-une-fois).
 
 En local, copie `.env.example` en `.env.local` et remplis-le avec les valeurs de Supabase → **Project Settings** → **API**.
 
@@ -94,8 +94,8 @@ En local, copie `.env.example` en `.env.local` et remplis-le avec les valeurs de
 - Les mots de passe sont gérés et hachés par Supabase, jamais stockés par le site.
 - Chaque table est protégée par des règles RLS : un joueur ne peut que lire ses propres données ; toutes les écritures (progression, jetons, abonnements) passent par le serveur.
 - Jetons consommés de façon atomique en SQL, 30 essais maximum par salle et par jour.
-- Webhook Stripe vérifié par signature, Content-Security-Policy, HSTS, redirections sûres.
-- La suppression de compte résilie l'abonnement Stripe puis efface toutes les données.
+- Webhook Mollie revérifié auprès de l'API (statut relu chez Mollie), Content-Security-Policy, HSTS, redirections sûres.
+- La suppression de compte résilie l'abonnement Mollie puis efface toutes les données.
 
 ## Maintenance
 
@@ -119,7 +119,7 @@ src/
 │   ├── abonnement/page.tsx   # Offres et vérification étudiante
 │   ├── admin/page.tsx        # Espace d'administration
 │   ├── actions/              # Server actions : jeu, paiement, étudiant, compte, admin
-│   ├── api/stripe/webhook/   # Notifications de paiement Stripe
+│   ├── api/mollie/webhook/   # Notifications de paiement Mollie
 │   ├── etudiant/verifier/    # Lien de vérification de l'e-mail d'école
 │   ├── auth/callback/        # Arrivée des liens envoyés par mail
 │   ├── conditions/, confidentialite/, mentions-legales/, cgv/
@@ -146,7 +146,7 @@ src/
     ├── text.ts               # Comparaison des réponses
     ├── auth.ts               # Validation et messages d'erreur des comptes
     └── supabase/             # Clients Supabase (navigateur, serveur, middleware)
-src/server/                   # Code serveur : vérification des réponses, joueur, Stripe, e-mails, étudiants
+src/server/                   # Code serveur : vérification des réponses, joueur, Mollie, e-mails, étudiants
 src/middleware.ts             # Rafraîchit la session, protège /compte, /jeu/*, /deck et /admin
 supabase/schema.sql           # Tables, règles RLS et fonctions
 ```

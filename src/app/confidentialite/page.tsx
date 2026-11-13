@@ -14,7 +14,7 @@ export default function PrivacyPage() {
         <li>ton adresse e-mail (pour te connecter et réinitialiser ton mot de passe) ;</li>
         <li>ton pseudo ;</li>
         <li>ta progression dans le jeu (salles résolues, cartes, leçons validées) et tes jetons utilisés chaque jour ;</li>
-        <li>si tu t&apos;abonnes : l&apos;offre choisie, son statut et les identifiants techniques Stripe (jamais ta carte bancaire) ;</li>
+        <li>si tu t&apos;abonnes : l&apos;offre choisie, son statut et les identifiants techniques Mollie (jamais ta carte bancaire) ;</li>
         <li>si tu demandes l&apos;offre Étudiant : ton adresse e-mail d&apos;école et la date de vérification.</li>
       </ul>
       <p>Ton mot de passe n&apos;est jamais stocké en clair : il est haché par notre prestataire d&apos;authentification.</p>
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
 
       <h2>Où elles sont stockées</h2>
       <p>
-        Les comptes et la progression sont hébergés par Supabase ; le site est hébergé par Vercel ; les paiements sont traités par Stripe et les e-mails de vérification envoyés par Resend. Ces prestataires
+        Les comptes et la progression sont hébergés par Supabase ; le site est hébergé par Vercel ; les paiements sont traités par Mollie et les e-mails de vérification envoyés par Resend. Ces prestataires
         traitent les données pour notre compte.
       </p>
 
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
       </p>
 
       <h2>Durée de conservation</h2>
-      <p>Tes données sont conservées tant que ton compte existe, et supprimées quand tu le supprimes (l&apos;abonnement est alors résilié). Les factures sont conservées par Stripe pendant la durée légale.</p>
+      <p>Tes données sont conservées tant que ton compte existe, et supprimées quand tu le supprimes (l&apos;abonnement est alors résilié). Les factures sont conservées par Mollie pendant la durée légale.</p>
 
       <h2>Tes droits</h2>
       <p>
