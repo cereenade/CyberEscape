@@ -88,6 +88,12 @@ En local, copie `.env.example` en `.env.local` et remplis-le avec les valeurs de
 - Chaque table est protégée par des règles RLS : un joueur ne peut lire et modifier que sa propre progression.
 - La suppression de compte passe par une fonction SQL qui ne peut supprimer que le compte connecté.
 
+## Maintenance
+
+Tout ce qu'il faut pour gérer le projet (travailler en local, corriger un bug, revenir en arrière, gérer la base) est dans le [guide de maintenance](docs/MAINTENANCE.md).
+
+À chaque push et pull request, GitHub Actions vérifie les types et le build (`.github/workflows/ci.yml`). Dependabot propose les mises à jour des dépendances chaque semaine.
+
 ## Structure
 
 ```

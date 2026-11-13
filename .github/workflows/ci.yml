@@ -1,0 +1,35 @@
+# Vérifie automatiquement le code à chaque push et à chaque pull request :
+# si les types ou le build échouent, GitHub affiche une croix rouge avant même que Vercel déploie.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verifier:
+    name: Types et build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Installer les dépendances
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Vérifier les types
+        run: npm run typecheck
+
+      - name: Construire le site
+        run: npm run build
