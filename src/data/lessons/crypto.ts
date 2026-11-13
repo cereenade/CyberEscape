@@ -4,8 +4,15 @@ export const CRYPTO: Lesson = {
   slug: "crypto",
   title: "Encoder, chiffrer, hacher",
   icon: "🔐",
+  theme: "crypto",
+  level: "debutant",
   summary: "Trois opérations qu'on confond souvent, et qui n'ont rien à voir.",
   duration: "7 min",
+  objectives: [
+    "Distinguer encodage, chiffrement et hachage",
+    "Reconnaître Base64, hexadécimal et les hashs courants",
+    "Savoir quelle opération s'inverse et comment",
+  ],
   sections: [
     {
       title: "Encoder : changer de format",
@@ -36,6 +43,12 @@ export const CRYPTO: Lesson = {
         "32 caractères hexa : un hash MD5 ; 64 : SHA-256 ; un préfixe $2b$ : bcrypt.",
       ],
     },
+  ],
+  keyPoints: [
+    "Encoder change le format, sans clé : tout le monde peut décoder.",
+    "Chiffrer protège avec une clé : sans elle, le message est illisible.",
+    "Hacher produit une empreinte à sens unique, impossible à inverser.",
+    "= à la fin : souvent du Base64. 0–9 et a–f seulement : de l'hexadécimal.",
   ],
   quiz: [
     {

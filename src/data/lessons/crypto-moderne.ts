@@ -4,8 +4,15 @@ export const CRYPTO_MODERNE: Lesson = {
   slug: "crypto-moderne",
   title: "Cryptographie moderne et certificats",
   icon: "🔏",
+  theme: "crypto",
+  level: "intermediaire",
   summary: "AES, RSA, signatures et certificats : ce qui protège vraiment tes connexions.",
   duration: "8 min",
+  objectives: [
+    "Expliquer chiffrement symétrique et asymétrique",
+    "Comprendre le fonctionnement de HTTPS",
+    "Lire et vérifier un certificat",
+  ],
   sections: [
     {
       title: "Symétrique : rapide, mais une clé à partager",
@@ -42,6 +49,12 @@ export const CRYPTO_MODERNE: Lesson = {
         "Les programmes signés, les mises à jour et les mails (DKIM) l'utilisent. Une empreinte SHA-256 publiée permet aussi de vérifier l'intégrité d'un téléchargement.",
       ],
     },
+  ],
+  keyPoints: [
+    "Symétrique (AES) : rapide, une seule clé à partager.",
+    "Asymétrique (RSA, courbes elliptiques) : clé publique pour chiffrer, clé privée pour déchiffrer.",
+    "HTTPS combine les deux : l'asymétrique pour s'accorder sur une clé, le symétrique pour les données.",
+    "Un certificat doit correspondre au domaine, être signé par une autorité reconnue et être valide.",
   ],
   quiz: [
     {

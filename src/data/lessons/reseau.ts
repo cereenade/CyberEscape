@@ -4,8 +4,15 @@ export const RESEAU: Lesson = {
   slug: "reseau",
   title: "Les réseaux",
   icon: "📡",
+  theme: "reseau",
+  level: "debutant",
   summary: "Adresses IP, ports, DNS, pare-feu : comment les machines se parlent, et comment on les attaque.",
   duration: "7 min",
+  objectives: [
+    "Comprendre adresses IP, ports et DNS",
+    "Lire une règle de pare-feu",
+    "Reconnaître les grandes attaques réseau",
+  ],
   sections: [
     {
       title: "Adresses IP et ports",
@@ -36,6 +43,12 @@ export const RESEAU: Lesson = {
         "Le scan de ports : chercher les services ouverts pour trouver une porte d'entrée. Le déni de service (DDoS) : saturer un serveur pour le rendre indisponible.",
       ],
     },
+  ],
+  keyPoints: [
+    "Une IP désigne une machine, un port désigne un service.",
+    "Le DNS traduit les noms de domaine en adresses IP.",
+    "Un pare-feu doit tout refuser par défaut et n'ouvrir que le nécessaire.",
+    "MITM, scan de ports et DDoS sont les attaques réseau les plus courantes.",
   ],
   quiz: [
     {

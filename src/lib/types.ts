@@ -133,13 +133,22 @@ export interface QuizQuestion {
   explanation: string;
 }
 
+export type LessonTheme = "bases" | "humain" | "web" | "crypto" | "reseau" | "systeme" | "soc";
+export type LessonLevel = "debutant" | "intermediaire" | "avance";
+
 export interface Lesson {
   slug: string;
   title: string;
   icon: string;
+  theme: LessonTheme;
+  level: LessonLevel;
   summary: string;
   duration: string;
+  /** Ce que la leçon permet de savoir faire, affiché en tête. */
+  objectives: string[];
   sections: LessonSection[];
+  /** Les points essentiels, résumés avant le quiz. */
+  keyPoints: string[];
   quiz: QuizQuestion[];
 }
 

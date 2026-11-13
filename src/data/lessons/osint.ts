@@ -4,8 +4,15 @@ export const OSINT: Lesson = {
   slug: "osint",
   title: "Reconnaissance et OSINT",
   icon: "🔭",
+  theme: "reseau",
+  level: "intermediaire",
   summary: "Avant d'attaquer, on observe. Découvre ce qu'on peut apprendre sans rien pirater.",
   duration: "6 min",
+  objectives: [
+    "Comprendre ce qu'est l'OSINT",
+    "Savoir ce qu'un attaquant trouve sur une organisation",
+    "Réduire son exposition",
+  ],
   sections: [
     {
       title: "L'OSINT, c'est quoi ?",
@@ -36,6 +43,12 @@ export const OSINT: Lesson = {
         "Faire régulièrement sa propre reconnaissance pour voir son organisation avec les yeux d'un attaquant.",
       ],
     },
+  ],
+  keyPoints: [
+    "L'OSINT exploite uniquement des sources publiques.",
+    "C'est l'étape de reconnaissance d'une attaque.",
+    "robots.txt, dépôts publics et offres d'emploi en disent souvent trop.",
+    "Scanner un système sans autorisation est illégal.",
   ],
   quiz: [
     {

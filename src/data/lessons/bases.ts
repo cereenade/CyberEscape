@@ -4,8 +4,15 @@ export const BASES: Lesson = {
   slug: "bases",
   title: "Les bases de la cybersécurité",
   icon: "🛡️",
+  theme: "bases",
+  level: "debutant",
   summary: "Ce qu'on protège, contre qui, et pourquoi tout le monde est concerné.",
   duration: "5 min",
+  objectives: [
+    "Expliquer ce que protège la cybersécurité (confidentialité, intégrité, disponibilité)",
+    "Distinguer menace, vulnérabilité et risque",
+    "Appliquer les réflexes d'hygiène numérique de base",
+  ],
   sections: [
     {
       title: "Ce qu'on protège : le triangle CIA",
@@ -36,6 +43,12 @@ export const BASES: Lesson = {
         "Ces quelques gestes bloquent l'immense majorité des attaques courantes.",
       ],
     },
+  ],
+  keyPoints: [
+    "La cybersécurité protège la confidentialité, l'intégrité et la disponibilité des données.",
+    "Risque = une menace qui exploite une vulnérabilité, avec un impact.",
+    "La plupart des attaques sont automatisées : tout le monde est une cible.",
+    "Mots de passe uniques, double authentification, mises à jour et sauvegardes bloquent la majorité des attaques.",
   ],
   quiz: [
     {

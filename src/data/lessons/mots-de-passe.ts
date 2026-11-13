@@ -4,8 +4,15 @@ export const MOTS_DE_PASSE: Lesson = {
   slug: "mots-de-passe",
   title: "Mots de passe et authentification",
   icon: "🔑",
+  theme: "bases",
+  level: "debutant",
   summary: "Comment les mots de passe sont cassés, et comment les rendre vraiment solides.",
   duration: "6 min",
+  objectives: [
+    "Comprendre comment les pirates devinent les mots de passe",
+    "Créer une phrase de passe solide",
+    "Utiliser un gestionnaire de mots de passe et la double authentification",
+  ],
   sections: [
     {
       title: "Comment un pirate devine un mot de passe",
@@ -43,6 +50,12 @@ export const MOTS_DE_PASSE: Lesson = {
         "Un sel aléatoire est ajouté pour que deux mots de passe identiques ne donnent pas le même hash.",
       ],
     },
+  ],
+  keyPoints: [
+    "La longueur compte plus que la complexité : vise une phrase de passe de plusieurs mots.",
+    "Un mot de passe différent par service, grâce à un gestionnaire.",
+    "La double authentification bloque l'attaquant même si ton mot de passe fuite.",
+    "Côté serveur, un mot de passe se stocke haché et salé, avec bcrypt ou Argon2.",
   ],
   quiz: [
     {
