@@ -1,3 +1,4 @@
+import { THEME_SCRIPT } from "@/components/theme";
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { AuthProvider } from "@/components/AuthProvider";
@@ -37,7 +38,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body>
         <AuthProvider>
           <GameProvider>

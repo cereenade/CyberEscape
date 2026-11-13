@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { TOTAL_CARDS } from "@/data/meta";
 import { useAuth } from "./AuthProvider";
 import { useGame } from "./GameProvider";
+import { UserMenu } from "./UserMenu";
 
 const LINKS = [
   { href: "/", label: "Accueil" },
@@ -44,12 +45,7 @@ export function Header() {
         {!auth.loading && (
           <span className="nav-account">
             {auth.user ? (
-              <Link href="/compte" className={isActive(pathname, "/compte") ? "nav-link active" : "nav-link"}>
-                <span className="avatar avatar-small" aria-hidden>
-                  {(auth.profile?.pseudo ?? "?").slice(0, 1).toUpperCase()}
-                </span>
-                {auth.profile?.pseudo ?? "Mon compte"}
-              </Link>
+              <UserMenu />
             ) : (
               <>
                 <Link href="/connexion" className={isActive(pathname, "/connexion") ? "nav-link active" : "nav-link"}>
