@@ -60,7 +60,7 @@ export function AccountView() {
             return (
               <li key={level.id}>
                 <span>
-                  {level.name}
+                  {level.icon} {level.name}
                 </span>
                 <div className="progress-track">
                   <div className="progress-fill" style={{ width: `${(solved / total) * 100}%` }} />
