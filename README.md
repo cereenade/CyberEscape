@@ -12,7 +12,7 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 
 ## Le jeu
 
-**50 salles réparties en 5 niveaux.** Terminer un niveau débloque le suivant.
+**50 salles réparties en 5 niveaux.** Le joueur choisit librement son niveau.
 
 | Niveau | Thème | Exemples d'énigmes |
 |---|---|---|
@@ -89,7 +89,7 @@ src/
 └── lib/
     ├── types.ts              # Types partagés
     ├── crypto.ts             # Encodages et chiffrements (Base64, César, XOR…)
-    ├── progress.ts           # Niveaux débloqués, salle en cours
+    ├── progress.ts           # Avancement par niveau, salle en cours
     ├── text.ts               # Comparaison des réponses
     └── storage.ts            # Sauvegarde localStorage
 ```

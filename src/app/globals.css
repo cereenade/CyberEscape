@@ -726,11 +726,6 @@ a.level-card:hover {
   transform: translateY(-2px);
 }
 
-.level-card.locked {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .level-moyen {
   --accent: var(--yellow);
 }
