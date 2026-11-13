@@ -310,6 +310,6 @@ Nov 13 08:02:40 srv sshd: Accepted password for karim from 10.0.0.22`,
       question: "Quelle est la vraie extension de ce fichier ?",
       answers: ["exe", ".exe"],
     },
-    successText: "Programme bloqué avant d'être lancé. Niveau moyen terminé !",
+    successText: "Programme bloqué avant d'être lancé. Mi-parcours du niveau atteint !",
   },
 ];

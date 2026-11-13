@@ -300,6 +300,6 @@ nora  | 9e381d9dde6c70a436b323a7bf9f0951`,
       answers: ["08:16:02", "8:16:02"],
       placeholder: "HH:MM:SS",
     },
-    successText: "Heure confirmée, rapport d'incident lancé. Niveau très difficile terminé !",
+    successText: "Heure confirmée, rapport d'incident lancé. Mi-parcours du niveau atteint !",
   },
 ];

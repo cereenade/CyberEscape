@@ -333,6 +333,6 @@ ${FINAL}`,
       question: "Quel est le code d'arrêt du pirate ?",
       answers: ["renaissance"],
     },
-    successText: "Code d'arrêt envoyé. Le pirate est éjecté, le serveur est libre. Tu as terminé CyberEscape !",
+    successText: "Code d'arrêt envoyé… mais le pirate a laissé d'autres pièges derrière lui. La chasse continue !",
   },
 ];
