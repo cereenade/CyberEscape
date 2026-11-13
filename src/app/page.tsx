@@ -1,15 +1,15 @@
 import Link from "next/link";
-import { LEVELS } from "@/data/game";
+import { CARDS, LEVELS, ROOMS } from "@/data/game";
 
 const FEATURES = [
   {
     icon: "🚪",
-    title: "50 salles piégées",
+    title: `${ROOMS.length} salles piégées`,
     text: "Mot de passe dans le code source, message chiffré, faux mail, logs d'attaque… chaque porte cache une énigme.",
   },
   {
     icon: "🃏",
-    title: "50 cyber-cartes",
+    title: `${CARDS.length} cyber-cartes`,
     text: "Une carte par salle. Chacune t'apprend une vraie notion de cyber et te donne la clé pour avancer.",
   },
   {

@@ -34,7 +34,7 @@ export function LevelGame({ levelId }: { levelId: LevelId }) {
         <h1>{next ? `Niveau ${level.name} terminé !` : "Tu t'es échappé du serveur !"}</h1>
         <p>
           {next
-            ? `Les 10 salles sont ouvertes et 10 nouvelles cyber-cartes ont rejoint ton deck. Prêt pour le niveau ${next.name} ?`
+            ? `Les ${rooms.length} salles sont ouvertes et ${rooms.length} cyber-cartes ont rejoint ton deck. Prêt pour le niveau ${next.name} ?`
             : "Le pirate est éjecté et le serveur est libre. Bravo, tu as battu le niveau le plus dur du jeu !"}
         </p>
         <div className="actions">
