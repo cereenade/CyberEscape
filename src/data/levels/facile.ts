@@ -329,6 +329,6 @@ export const FACILE: RoomContent[] = [
         { label: "Je ne fais jamais de mises à jour, c'est trop risqué", correct: false, explanation: "Un système jamais mis à jour garde toutes ses failles connues." },
       ],
     },
-    successText: "Système à jour, faux fichier évité. Niveau facile terminé !",
+    successText: "Système à jour, faux fichier évité. Mi-parcours du niveau atteint !",
   },
 ];

@@ -12,19 +12,20 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 
 ## Le jeu
 
-**50 salles réparties en 5 niveaux.** Le joueur choisit librement son niveau.
+**100 salles réparties en 5 niveaux de 20 salles.** Le joueur choisit librement son niveau.
 
 | Niveau | Thème | Exemples d'énigmes |
 |---|---|---|
-| 🟢 Facile | Les bons réflexes | Code source, César, phishing, clé USB piégée, double authentification |
-| 🟡 Moyen | Lire les indices | Binaire, hexadécimal, en-têtes de mail, ports, logs de connexion |
-| 🟠 Difficile | Penser comme un attaquant | Vigenère, hachage MD5, injection SQL, XSS, règles de pare-feu |
-| 🔴 Très difficile | Dans la peau d'un analyste SOC | XOR, JWT, traversée de répertoires, exfiltration DNS, Event IDs Windows |
-| 💀 Impossible | Réservé aux experts | Décodages en 4 couches, persistance, IDOR, Cyber Kill Chain, boss final |
+| 🟢 Facile | Les bons réflexes | Code source, phishing, smishing, vishing, clé USB, QR code piégé, sauvegardes 3-2-1 |
+| 🟡 Moyen | Lire les indices | Binaire, Atbash, morse, en-têtes de mail, DNS, métadonnées EXIF, scan nmap |
+| 🟠 Difficile | Penser comme un attaquant | Vigenère, hachage, injection SQL, XSS, CSRF, robots.txt, élévation de privilèges |
+| 🔴 Très difficile | Dans la peau d'un analyste SOC | XOR, JWT, YARA, SIEM, beaconing, macros, capture réseau, MITRE ATT&CK |
+| 💀 Impossible | Réservé aux experts | Décodages en plusieurs couches, chronologie d'incident, SSRF, deepfakes, chasse finale |
 
-- **Une cyber-carte par salle** (50 au total) : elle explique une notion et sert d'indice.
+- **Une cyber-carte par salle** (100 au total) : elle explique une notion et sert d'indice.
+- **5 types d'énigmes** : réponse libre, choix unique, choix multiples, remise dans l'ordre et chasse au phishing.
 - **Un atelier de décodage** : on empile des opérations (Base64, César, XOR, Vigenère…) pour décoder les messages.
-- **La salle de cours** : 8 leçons par thème, chacune avec un mini-quiz.
+- **La salle de cours** : 14 leçons par thème, chacune avec un mini-quiz.
 
 La progression, le deck et les leçons validées sont sauvegardés dans le navigateur (`localStorage`).
 
@@ -70,7 +71,7 @@ src/
 ├── app/                      # Pages (App Router)
 │   ├── page.tsx              # Accueil
 │   ├── jeu/page.tsx          # Choix du niveau
-│   ├── jeu/[niveau]/page.tsx # Un niveau de 10 salles
+│   ├── jeu/[niveau]/page.tsx # Un niveau de 20 salles
 │   ├── cours/page.tsx        # Salle de cours
 │   ├── cours/[slug]/page.tsx # Une leçon + son quiz
 │   ├── deck/page.tsx         # Collection de cyber-cartes
@@ -81,10 +82,10 @@ src/
 │   ├── LevelGame.tsx         # Enchaînement des salles d'un niveau
 │   ├── RoomView.tsx          # Une salle : exploration, carte, énigme
 │   ├── Quiz.tsx, LessonList.tsx, Deck.tsx, CyberCardView.tsx, Header.tsx, ProgressBar.tsx
-│   └── puzzles/              # Énigmes : réponse libre, choix, phishing, atelier de décodage
+│   └── puzzles/              # Énigmes : réponse, choix, choix multiples, ordre, phishing, atelier
 ├── data/
 │   ├── game.ts               # Niveaux, salles et cartes assemblés
-│   ├── levels/               # Une fiche par niveau (10 salles + 10 cartes)
+│   ├── levels/               # Deux fiches par niveau (salles 1–10 et 11–20, avec leurs cartes)
 │   └── lessons/              # Une fiche par leçon
 └── lib/
     ├── types.ts              # Types partagés
@@ -96,7 +97,7 @@ src/
 
 ### Ajouter du contenu
 
-- **Une salle** : ajoute-la dans le fichier du niveau (`src/data/levels/`), avec sa carte et son énigme (`answer`, `choice` ou `phishing`). Ajoute `tools` pour afficher l'atelier de décodage.
+- **Une salle** : ajoute-la dans le fichier du niveau (`src/data/levels/`), avec sa carte et son énigme (`answer`, `choice`, `multi`, `order` ou `phishing`). Ajoute `tools` pour afficher l'atelier de décodage.
 - **Une leçon** : crée un fichier dans `src/data/lessons/` et ajoute-le à la liste dans `index.ts`.
 
 ## Branches

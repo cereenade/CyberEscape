@@ -1,9 +1,14 @@
 import type { CyberCard, Level, LevelId, Room, RoomContent } from "@/lib/types";
 import { DIFFICILE } from "./levels/difficile";
+import { DIFFICILE_2 } from "./levels/difficile-2";
 import { FACILE } from "./levels/facile";
+import { FACILE_2 } from "./levels/facile-2";
 import { IMPOSSIBLE } from "./levels/impossible";
+import { IMPOSSIBLE_2 } from "./levels/impossible-2";
 import { MOYEN } from "./levels/moyen";
+import { MOYEN_2 } from "./levels/moyen-2";
 import { TRES_DIFFICILE } from "./levels/tres-difficile";
+import { TRES_DIFFICILE_2 } from "./levels/tres-difficile-2";
 
 export const LEVELS: Level[] = [
   {
@@ -11,44 +16,45 @@ export const LEVELS: Level[] = [
     name: "Facile",
     icon: "🟢",
     tagline: "Les bons réflexes",
-    description: "Mots de passe, faux mails, clés USB : les pièges du quotidien.",
+    description: "Mots de passe, faux mails, SMS piégés, Wi-Fi public : les pièges du quotidien.",
   },
   {
     id: "moyen",
     name: "Moyen",
     icon: "🟡",
     tagline: "Lire les indices",
-    description: "Encodages, adresses web, en-têtes de mails et premiers journaux.",
+    description: "Encodages, adresses web, DNS, métadonnées, scans et premiers journaux.",
   },
   {
     id: "difficile",
     name: "Difficile",
     icon: "🟠",
     tagline: "Penser comme un attaquant",
-    description: "Chiffrements, hachage, failles web et configurations dangereuses.",
+    description: "Chiffrements, hachage, failles web (SQL, XSS, CSRF) et configurations dangereuses.",
   },
   {
     id: "tres-difficile",
     name: "Très difficile",
     icon: "🔴",
     tagline: "Dans la peau d'un analyste SOC",
-    description: "XOR, jetons JWT, logs d'attaque, exfiltration et processus suspects.",
+    description: "XOR, JWT, YARA, SIEM, macros, beaconing et analyse de trafic.",
   },
   {
     id: "impossible",
     name: "Impossible",
     icon: "💀",
     tagline: "Réservé aux experts",
-    description: "Énigmes en plusieurs couches, enquêtes complètes et le boss final.",
+    description: "Énigmes en plusieurs couches, enquêtes complètes, SSRF, deepfakes et la chasse finale.",
   },
 ];
 
+/** 20 salles par niveau : les 10 premières, puis la suite. */
 const CONTENT: Record<LevelId, RoomContent[]> = {
-  facile: FACILE,
-  moyen: MOYEN,
-  difficile: DIFFICILE,
-  "tres-difficile": TRES_DIFFICILE,
-  impossible: IMPOSSIBLE,
+  facile: [...FACILE, ...FACILE_2],
+  moyen: [...MOYEN, ...MOYEN_2],
+  difficile: [...DIFFICILE, ...DIFFICILE_2],
+  "tres-difficile": [...TRES_DIFFICILE, ...TRES_DIFFICILE_2],
+  impossible: [...IMPOSSIBLE, ...IMPOSSIBLE_2],
 };
 
 export const ROOMS: Room[] = LEVELS.flatMap((level) =>

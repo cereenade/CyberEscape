@@ -1055,3 +1055,29 @@ a.level-card:hover {
 .deck-level-title {
   font-size: 1.1rem;
 }
+
+/* ---------- Énigmes : choix multiples et ordre ---------- */
+
+.small {
+  font-size: 0.85rem;
+  margin-top: -0.25rem;
+}
+
+.multi-submit {
+  margin-top: 1rem;
+}
+
+.feedback p {
+  margin: 0.25rem 0;
+}
+
+.order-sequence {
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem 0.75rem 2.2rem;
+  border-radius: 10px;
+  border: 1px dashed var(--violet);
+  background: var(--bg-sunken);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}

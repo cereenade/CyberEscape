@@ -333,6 +333,6 @@ Cookie: session=7f3a91; role=dXNlcg==`,
       question: "Quel fichier n'importe qui peut-il modifier ?",
       answers: ["backup.sh"],
     },
-    successText: "Droits corrigés en rwxr-x---. Niveau difficile terminé !",
+    successText: "Droits corrigés en rwxr-x---. Mi-parcours du niveau atteint !",
   },
 ];

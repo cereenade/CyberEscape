@@ -86,7 +86,19 @@ export type Puzzle =
       strict?: boolean;
     })
   | (PuzzleBase & { kind: "phishing"; emails: Email[] })
-  | (PuzzleBase & { kind: "choice"; question: string; options: ChoiceOption[] });
+  | (PuzzleBase & { kind: "choice"; question: string; options: ChoiceOption[] })
+  | (PuzzleBase & {
+      kind: "multi";
+      /** Cocher toutes les bonnes réponses (et seulement elles). */
+      question: string;
+      options: ChoiceOption[];
+    })
+  | (PuzzleBase & {
+      kind: "order";
+      /** Remettre les étapes dans l'ordre ; `items` est écrit dans le BON ordre. */
+      question: string;
+      items: string[];
+    });
 
 /* ---------- Salles ---------- */
 
@@ -101,7 +113,7 @@ export interface RoomContent {
 
 export interface Room extends RoomContent {
   level: LevelId;
-  /** Position dans le niveau, de 0 à 9. */
+  /** Position dans le niveau, à partir de 0. */
   index: number;
 }
 
