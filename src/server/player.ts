@@ -34,8 +34,8 @@ export interface Subscription {
   plan: "etudiant" | "standard" | "offert";
   status: string;
   current_period_end: string | null;
-  stripe_customer_id: string | null;
-  stripe_subscription_id: string | null;
+  mollie_customer_id: string | null;
+  mollie_subscription_id: string | null;
   cancel_at_period_end: boolean;
 }
 
@@ -44,7 +44,7 @@ export async function getSubscription(userId: string): Promise<Subscription | nu
   if (!admin) return null;
   const { data } = await admin
     .from("subscriptions")
-    .select("plan, status, current_period_end, stripe_customer_id, stripe_subscription_id, cancel_at_period_end")
+    .select("plan, status, current_period_end, mollie_customer_id, mollie_subscription_id, cancel_at_period_end")
     .eq("user_id", userId)
     .maybeSingle();
   return (data as Subscription | null) ?? null;
@@ -52,7 +52,8 @@ export async function getSubscription(userId: string): Promise<Subscription | nu
 
 export function isActive(sub: Subscription | null): boolean {
   if (!sub) return false;
-  if (!["active", "trialing"].includes(sub.status)) return false;
+  // past_due : prélèvement refusé, l'accès dure jusqu'à la fin de la période déjà payée.
+  if (!["active", "trialing", "past_due"].includes(sub.status)) return false;
   return !sub.current_period_end || new Date(sub.current_period_end).getTime() > Date.now();
 }
 

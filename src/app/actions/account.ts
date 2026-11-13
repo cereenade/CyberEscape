@@ -1,12 +1,12 @@
 "use server";
 
 import { getSessionUser, getSubscription } from "@/server/player";
-import { STRIPE_ENABLED, stripe } from "@/server/stripe";
+import { MOLLIE_ENABLED, mollie } from "@/server/mollie";
 import { getAdminSupabase } from "@/server/supabase-admin";
 
 /**
- * Supprime définitivement le compte : l'abonnement Stripe est résilié d'abord
- * (plus aucun prélèvement), puis l'utilisateur et toutes ses données sont effacés.
+ * Supprime définitivement le compte : le client Mollie est supprimé d'abord (abonnement et mandat résiliés,
+ * donc plus aucun prélèvement), puis l'utilisateur et toutes ses données sont effacés.
  */
 export async function deleteAccount(confirm: string): Promise<{ ok: boolean; error?: string }> {
   if (confirm !== "SUPPRIMER") return { ok: false, error: "Tape SUPPRIMER pour confirmer." };
@@ -15,12 +15,13 @@ export async function deleteAccount(confirm: string): Promise<{ ok: boolean; err
   if (!user || !admin) return { ok: false, error: "Connecte-toi d'abord." };
 
   const sub = await getSubscription(user.id);
-  if (sub?.stripe_subscription_id && STRIPE_ENABLED && sub.status !== "canceled") {
+  if (sub?.mollie_customer_id && MOLLIE_ENABLED) {
     try {
-      await stripe("DELETE", `/subscriptions/${encodeURIComponent(sub.stripe_subscription_id)}`);
+      // Supprimer le client Mollie résilie ses abonnements et ses mandats de prélèvement.
+      await mollie("DELETE", `/customers/${encodeURIComponent(sub.mollie_customer_id)}`);
     } catch (error) {
-      // Abonnement déjà supprimé côté Stripe : on peut continuer.
-      if (!String(error).includes("No such subscription"))
+      // Client déjà supprimé côté Mollie : on peut continuer.
+      if (!/not found|404|gone/i.test(String(error)))
         return { ok: false, error: "Impossible de résilier ton abonnement pour le moment. Réessaie plus tard." };
     }
   }

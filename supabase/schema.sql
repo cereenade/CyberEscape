@@ -87,15 +87,26 @@ revoke all on public.room_attempts from anon, authenticated;
 
 create table if not exists public.subscriptions (
   user_id uuid primary key references auth.users (id) on delete cascade,
-  -- 'etudiant' et 'standard' : payants via Stripe ; 'offert' : accordé depuis l'espace admin.
+  -- 'etudiant' et 'standard' : payants via Mollie ; 'offert' : accordé depuis l'espace admin.
   plan text not null check (plan in ('etudiant', 'standard', 'offert')),
   status text not null,
   current_period_end timestamptz,
-  stripe_customer_id text,
-  stripe_subscription_id text unique,
+  mollie_customer_id text,
+  mollie_subscription_id text unique,
   cancel_at_period_end boolean not null default false,
   updated_at timestamptz not null default now()
 );
+
+-- Passage de Stripe à Mollie (sans effet si c'est déjà fait).
+alter table public.subscriptions add column if not exists mollie_customer_id text;
+alter table public.subscriptions add column if not exists mollie_subscription_id text;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'subscriptions_mollie_subscription_id_key') then
+    alter table public.subscriptions add constraint subscriptions_mollie_subscription_id_key unique (mollie_subscription_id);
+  end if;
+end $$;
+alter table public.subscriptions drop column if exists stripe_customer_id;
+alter table public.subscriptions drop column if exists stripe_subscription_id;
 
 alter table public.subscriptions enable row level security;
 
@@ -255,5 +266,5 @@ grant execute on function public.add_progress_item(uuid, text, text) to service_
 
 -- ---------- Suppression de son propre compte ----------
 
--- La suppression passe désormais par le serveur (qui résilie aussi l'abonnement Stripe).
+-- La suppression passe désormais par le serveur (qui résilie aussi l'abonnement Mollie).
 drop function if exists public.delete_own_account();
