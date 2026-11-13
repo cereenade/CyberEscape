@@ -1,26 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { getCard } from "@/data/cards";
+import { getCard } from "@/data/game";
 import type { Room } from "@/lib/types";
 import { CyberCardView } from "./CyberCardView";
 import { useGame } from "./GameProvider";
-import { PuzzleRenderer } from "./puzzles/PuzzleRenderer";
+import { PuzzleView } from "./puzzles/PuzzleView";
 
 type Phase = "explore" | "card" | "puzzle" | "solved";
 
-export function RoomView({ room }: { room: Room }) {
-  const { save, collectCard, solveRoom, goToNextRoom } = useGame();
-  const card = getCard(room.cardId);
+interface Props {
+  room: Room;
+  /** Appelé au moment où l'énigme est résolue. */
+  onSolved: () => void;
+  onNext: () => void;
+}
 
-  const [phase, setPhase] = useState<Phase>(() => {
-    if (save.solvedRooms.includes(room.id)) return "solved";
-    if (save.cards.includes(room.cardId)) return "puzzle";
-    return "explore";
-  });
+export function RoomView({ room, onSolved, onNext }: Props) {
+  const { save, collectCard, solveRoom } = useGame();
+  const card = getCard(room.id);
+
+  const [phase, setPhase] = useState<Phase>(() => (save.cards.includes(room.id) ? "puzzle" : "explore"));
   const [showHint, setShowHint] = useState(false);
 
   function handleSolved() {
+    onSolved();
     solveRoom(room.id);
     setPhase("solved");
   }
@@ -55,7 +59,7 @@ export function RoomView({ room }: { room: Room }) {
 
       {phase === "puzzle" && (
         <>
-          <PuzzleRenderer puzzle={room.puzzle} onSolved={handleSolved} />
+          <PuzzleView puzzle={room.puzzle} onSolved={handleSolved} />
           {card && (
             <div className="hint">
               {showHint ? (
@@ -78,7 +82,7 @@ export function RoomView({ room }: { room: Room }) {
       {phase === "solved" && (
         <div className="success">
           <p className="feedback feedback-success">✅ {room.successText}</p>
-          <button type="button" className="btn btn-primary" onClick={goToNextRoom}>
+          <button type="button" className="btn btn-primary" onClick={onNext}>
             Porte suivante →
           </button>
         </div>

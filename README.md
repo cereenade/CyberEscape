@@ -12,15 +12,21 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 
 ## Le jeu
 
-| Salle | Énigme | Cyber-carte |
-|---|---|---|
-| 1. Le terminal d'accueil | Trouver un mot de passe oublié dans le code source | 🧾 Le code source |
-| 2. La salle des messages | Déchiffrer un message codé | 🏛️ Le chiffre de César |
-| 3. La boîte de réception | Démasquer un faux mail | 🎣 Le phishing |
-| 4. Le coffre encodé | Décoder une chaîne cachée | 🔤 Base64 |
-| 5. Le cœur du serveur | Choisir un mot de passe solide | 🔑 Les mots de passe robustes |
+**50 salles réparties en 5 niveaux.** Terminer un niveau débloque le suivant.
 
-La progression et le deck sont sauvegardés dans le navigateur (`localStorage`).
+| Niveau | Thème | Exemples d'énigmes |
+|---|---|---|
+| 🟢 Facile | Les bons réflexes | Code source, César, phishing, clé USB piégée, double authentification |
+| 🟡 Moyen | Lire les indices | Binaire, hexadécimal, en-têtes de mail, ports, logs de connexion |
+| 🟠 Difficile | Penser comme un attaquant | Vigenère, hachage MD5, injection SQL, XSS, règles de pare-feu |
+| 🔴 Très difficile | Dans la peau d'un analyste SOC | XOR, JWT, traversée de répertoires, exfiltration DNS, Event IDs Windows |
+| 💀 Impossible | Réservé aux experts | Décodages en 4 couches, persistance, IDOR, Cyber Kill Chain, boss final |
+
+- **Une cyber-carte par salle** (50 au total) : elle explique une notion et sert d'indice.
+- **Un atelier de décodage** : on empile des opérations (Base64, César, XOR, Vigenère…) pour décoder les messages.
+- **La salle de cours** : 8 leçons par thème, chacune avec un mini-quiz.
+
+La progression, le deck et les leçons validées sont sauvegardés dans le navigateur (`localStorage`).
 
 ## Technologies
 
@@ -61,37 +67,37 @@ Chaque push sur `main` redéploie le site automatiquement, et chaque pull reques
 
 ```
 src/
-├── app/                  # Pages (App Router)
-│   ├── layout.tsx        # Mise en page commune
-│   ├── page.tsx          # Accueil
-│   ├── jeu/page.tsx      # Le jeu
-│   ├── deck/page.tsx     # Collection de cyber-cartes
-│   ├── not-found.tsx     # Page 404
-│   └── globals.css       # Styles
+├── app/                      # Pages (App Router)
+│   ├── page.tsx              # Accueil
+│   ├── jeu/page.tsx          # Choix du niveau
+│   ├── jeu/[niveau]/page.tsx # Un niveau de 10 salles
+│   ├── cours/page.tsx        # Salle de cours
+│   ├── cours/[slug]/page.tsx # Une leçon + son quiz
+│   ├── deck/page.tsx         # Collection de cyber-cartes
+│   ├── layout.tsx, not-found.tsx, globals.css
 ├── components/
-│   ├── GameProvider.tsx  # État du jeu + sauvegarde
-│   ├── Game.tsx          # Enchaînement des salles
-│   ├── RoomView.tsx      # Une salle : exploration, carte, énigme
-│   ├── Deck.tsx          # Grille des cartes
-│   ├── CyberCardView.tsx # Affichage d'une carte
-│   ├── Header.tsx
-│   ├── ProgressBar.tsx
-│   └── puzzles/          # Un composant par type d'énigme
+│   ├── GameProvider.tsx      # État du jeu + sauvegarde
+│   ├── LevelSelect.tsx       # Grille des niveaux
+│   ├── LevelGame.tsx         # Enchaînement des salles d'un niveau
+│   ├── RoomView.tsx          # Une salle : exploration, carte, énigme
+│   ├── Quiz.tsx, LessonList.tsx, Deck.tsx, CyberCardView.tsx, Header.tsx, ProgressBar.tsx
+│   └── puzzles/              # Énigmes : réponse libre, choix, phishing, atelier de décodage
 ├── data/
-│   ├── cards.ts          # Contenu des cyber-cartes
-│   └── rooms.ts          # Contenu des salles et énigmes
+│   ├── game.ts               # Niveaux, salles et cartes assemblés
+│   ├── levels/               # Une fiche par niveau (10 salles + 10 cartes)
+│   └── lessons/              # Une fiche par leçon
 └── lib/
-    ├── types.ts          # Types partagés
-    ├── crypto.ts         # César, Base64
-    ├── text.ts           # Comparaison des réponses
-    └── storage.ts        # Sauvegarde localStorage
+    ├── types.ts              # Types partagés
+    ├── crypto.ts             # Encodages et chiffrements (Base64, César, XOR…)
+    ├── progress.ts           # Niveaux débloqués, salle en cours
+    ├── text.ts               # Comparaison des réponses
+    └── storage.ts            # Sauvegarde localStorage
 ```
 
-### Ajouter une salle
+### Ajouter du contenu
 
-1. Ajoute une carte dans `src/data/cards.ts`.
-2. Ajoute une salle dans `src/data/rooms.ts` avec un `puzzle` d'un type existant (`source`, `cipher`, `phishing`, `base64`, `choice`).
-3. Pour un nouveau type d'énigme : crée un composant dans `src/components/puzzles/`, ajoute le type dans `src/lib/types.ts` et branche-le dans `PuzzleRenderer.tsx`.
+- **Une salle** : ajoute-la dans le fichier du niveau (`src/data/levels/`), avec sa carte et son énigme (`answer`, `choice` ou `phishing`). Ajoute `tools` pour afficher l'atelier de décodage.
+- **Une leçon** : crée un fichier dans `src/data/lessons/` et ajoute-le à la liste dans `index.ts`.
 
 ## Branches
 

@@ -22,7 +22,7 @@ export function ChoicePuzzle({ question, options, onSolved }: Props) {
   }
 
   return (
-    <div className="puzzle">
+    <div className="puzzle-body">
       <p className="puzzle-intro">{question}</p>
       <div className="choices">
         {options.map((option) => (

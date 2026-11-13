@@ -1,7 +1,30 @@
-export type CardCategory = "Web" | "Crypto" | "Social" | "Mots de passe";
+import type { Op } from "./crypto";
 
-export interface CyberCard {
-  id: string;
+/* ---------- Niveaux ---------- */
+
+export type LevelId = "facile" | "moyen" | "difficile" | "tres-difficile" | "impossible";
+
+export interface Level {
+  id: LevelId;
+  name: string;
+  icon: string;
+  tagline: string;
+  description: string;
+}
+
+/* ---------- Cyber-cartes ---------- */
+
+export type CardCategory =
+  | "Web"
+  | "Crypto"
+  | "Social"
+  | "Mots de passe"
+  | "Réseau"
+  | "Système"
+  | "Défense";
+
+/** Contenu d'une carte tel qu'il est écrit dans une salle. */
+export interface CardContent {
   title: string;
   category: CardCategory;
   icon: string;
@@ -9,9 +32,17 @@ export interface CyberCard {
   summary: string;
   /** Explication détaillée de la notion. */
   details: string[];
-  /** Indice utilisé pour résoudre l'énigme de la salle. */
+  /** Indice pour résoudre l'énigme de la salle. */
   hint: string;
 }
+
+/** Carte complète : son identifiant est celui de la salle où on la trouve. */
+export interface CyberCard extends CardContent {
+  id: string;
+  level: LevelId;
+}
+
+/* ---------- Énigmes ---------- */
 
 export interface Email {
   id: string;
@@ -32,27 +63,79 @@ export interface ChoiceOption {
   explanation: string;
 }
 
-export type Puzzle =
-  | { kind: "source"; code: string; answer: string }
-  | { kind: "cipher"; ciphertext: string; answer: string }
-  | { kind: "phishing"; emails: Email[] }
-  | { kind: "base64"; encoded: string; answer: string }
-  | { kind: "choice"; question: string; options: ChoiceOption[] };
+interface PuzzleBase {
+  /** Texte d'introduction de l'énigme. */
+  intro?: string;
+  /** Document à analyser (code, log, message…), affiché en police mono. */
+  content?: string;
+  contentLabel?: string;
+  /** Outils disponibles dans l'atelier de décodage (aucun = pas d'atelier). */
+  tools?: Op[];
+  /** Texte placé au départ dans l'atelier de décodage. */
+  workshopInput?: string;
+}
 
-export interface Room {
+export type Puzzle =
+  | (PuzzleBase & {
+      kind: "answer";
+      question: string;
+      /** Réponses acceptées (comparées sans accents, casse ni ponctuation). */
+      answers: string[];
+      placeholder?: string;
+      /** Comparaison stricte : seuls la casse et les espaces sont ignorés (utile pour du code). */
+      strict?: boolean;
+    })
+  | (PuzzleBase & { kind: "phishing"; emails: Email[] })
+  | (PuzzleBase & { kind: "choice"; question: string; options: ChoiceOption[] });
+
+/* ---------- Salles ---------- */
+
+export interface RoomContent {
   id: string;
   name: string;
   story: string;
-  /** Carte trouvée en explorant la salle. */
-  cardId: string;
+  card: CardContent;
   puzzle: Puzzle;
   successText: string;
 }
 
+export interface Room extends RoomContent {
+  level: LevelId;
+  /** Position dans le niveau, de 0 à 9. */
+  index: number;
+}
+
+/* ---------- Salle de cours ---------- */
+
+export interface LessonSection {
+  title: string;
+  paragraphs: string[];
+  example?: string;
+}
+
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  /** Index de la bonne réponse dans `options`. */
+  correct: number;
+  explanation: string;
+}
+
+export interface Lesson {
+  slug: string;
+  title: string;
+  icon: string;
+  summary: string;
+  duration: string;
+  sections: LessonSection[];
+  quiz: QuizQuestion[];
+}
+
+/* ---------- Sauvegarde ---------- */
+
 export interface GameSave {
-  version: 1;
-  /** Index de la salle en cours (égal au nombre de salles une fois le jeu fini). */
-  currentRoom: number;
+  version: 2;
   cards: string[];
   solvedRooms: string[];
+  lessonsDone: string[];
 }

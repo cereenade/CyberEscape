@@ -26,7 +26,7 @@ export function PhishingPuzzle({ emails, onSolved }: Props) {
   }
 
   return (
-    <div className="puzzle">
+    <div className="puzzle-body">
       <p className="puzzle-intro">Lis chaque mail attentivement, puis signale celui qui est un piège.</p>
 
       <div className="inbox">

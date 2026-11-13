@@ -4,19 +4,20 @@ import { useState } from "react";
 import { isCorrectAnswer } from "@/lib/text";
 
 interface Props {
-  expected: string;
+  answers: string[];
   label: string;
   placeholder?: string;
+  strict?: boolean;
   onSolved: () => void;
 }
 
-export function AnswerForm({ expected, label, placeholder = "Ta réponse", onSolved }: Props) {
+export function AnswerForm({ answers, label, placeholder = "Ta réponse", strict = false, onSolved }: Props) {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (isCorrectAnswer(value, expected)) {
+    if (isCorrectAnswer(value, answers, strict)) {
       setError(false);
       onSolved();
     } else {
@@ -48,7 +49,7 @@ export function AnswerForm({ expected, label, placeholder = "Ta réponse", onSol
       </div>
       {error && (
         <p className="feedback feedback-error" role="alert">
-          Accès refusé. Ce n&apos;est pas le bon mot.
+          Accès refusé. Ce n&apos;est pas la bonne réponse.
         </p>
       )}
     </form>
