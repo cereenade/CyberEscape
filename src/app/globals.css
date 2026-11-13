@@ -10,9 +10,9 @@
   --text: #ece8f5;
   --muted: #9c94b3;
   /* Accent principal (violet) et secondaire (fuchsia) */
-  --violet: #8b5cf6;
-  --violet-light: #a78bfa;
-  --pink: #d946ef;
+  --violet: #9d6bff;
+  --violet-light: #b893ff;
+  --pink: #ec5cff;
   --red: #ff5470;
   --yellow: #ffd166;
   --indigo: #818cf8;
@@ -38,8 +38,8 @@ body {
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 20% 0%, rgba(139, 92, 246, 0.14), transparent 40%),
-    radial-gradient(circle at 100% 30%, rgba(217, 70, 239, 0.09), transparent 40%),
+    radial-gradient(circle at 20% 0%, rgba(157, 107, 255, 0.2), transparent 40%),
+    radial-gradient(circle at 100% 30%, rgba(236, 92, 255, 0.13), transparent 40%),
     var(--bg);
   color: var(--text);
   font-family: var(--sans);
@@ -122,7 +122,7 @@ pre {
   font-size: 0.75rem;
   padding: 0.05rem 0.45rem;
   border-radius: 999px;
-  background: rgba(139, 92, 246, 0.15);
+  background: rgba(157, 107, 255, 0.15);
   color: var(--violet);
 }
 
@@ -194,14 +194,14 @@ pre {
 
 .btn-primary {
   /* Dégradé violet → magenta, assez foncé pour un bon contraste avec le texte blanc */
-  background: linear-gradient(135deg, #6d28d9, #a21caf);
+  background: linear-gradient(135deg, #7c3aed, #c026d3);
   color: #ffffff;
-  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 4px 22px rgba(157, 107, 255, 0.5);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #7c3aed, #c026d3);
-  box-shadow: 0 6px 24px rgba(217, 70, 239, 0.4);
+  background: linear-gradient(135deg, #8b5cf6, #d946ef);
+  box-shadow: 0 6px 28px rgba(236, 92, 255, 0.55);
 }
 
 .btn-ghost {
@@ -272,7 +272,7 @@ pre {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 24px rgba(139, 92, 246, 0.35));
+  filter: drop-shadow(0 0 28px rgba(157, 107, 255, 0.5));
 }
 
 .hero-text {
@@ -454,8 +454,8 @@ pre {
 }
 
 .feedback-success {
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.35);
+  background: rgba(157, 107, 255, 0.1);
+  border: 1px solid rgba(157, 107, 255, 0.35);
   color: #d8cdee;
 }
 
@@ -829,7 +829,7 @@ a.level-card:hover {
 }
 
 .workshop {
-  border-color: rgba(217, 70, 239, 0.35);
+  border-color: rgba(236, 92, 255, 0.35);
 }
 
 .tool-title {
@@ -902,12 +902,12 @@ a.level-card:hover {
 
 .choice-selected {
   border-color: var(--pink);
-  background: rgba(217, 70, 239, 0.08);
+  background: rgba(236, 92, 255, 0.08);
 }
 
 .choice-right {
   border-color: var(--violet);
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(157, 107, 255, 0.08);
 }
 
 .choice:disabled {
