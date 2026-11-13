@@ -10,9 +10,9 @@
   --text: #ece8f5;
   --muted: #9c94b3;
   /* Accent principal (violet) et secondaire (fuchsia) */
-  --violet: #a855f7;
-  --violet-light: #c084fc;
-  --pink: #e879f9;
+  --violet: #9580c9;
+  --violet-light: #ad9cd9;
+  --pink: #a98bbf;
   --red: #ff5470;
   --yellow: #ffd166;
   --indigo: #818cf8;
@@ -38,8 +38,8 @@ body {
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 20% 0%, rgba(168, 85, 247, 0.08), transparent 40%),
-    radial-gradient(circle at 100% 30%, rgba(232, 121, 249, 0.06), transparent 40%),
+    radial-gradient(circle at 20% 0%, rgba(110, 84, 168, 0.07), transparent 40%),
+    radial-gradient(circle at 100% 30%, rgba(130, 96, 150, 0.04), transparent 40%),
     var(--bg);
   color: var(--text);
   font-family: var(--sans);
@@ -122,7 +122,7 @@ pre {
   font-size: 0.75rem;
   padding: 0.05rem 0.45rem;
   border-radius: 999px;
-  background: rgba(168, 85, 247, 0.15);
+  background: rgba(122, 98, 176, 0.15);
   color: var(--violet);
 }
 
@@ -194,12 +194,12 @@ pre {
 
 .btn-primary {
   /* Violet plus foncé pour un bon contraste avec le texte blanc */
-  background: #9333ea;
+  background: #57408f;
   color: #ffffff;
 }
 
 .btn-primary:hover {
-  background: var(--violet);
+  background: #654ca3;
 }
 
 .btn-ghost {
@@ -451,9 +451,9 @@ pre {
 }
 
 .feedback-success {
-  background: rgba(168, 85, 247, 0.1);
-  border: 1px solid rgba(168, 85, 247, 0.35);
-  color: #e9d5ff;
+  background: rgba(122, 98, 176, 0.1);
+  border: 1px solid rgba(122, 98, 176, 0.35);
+  color: #d8cdee;
 }
 
 .hint {
@@ -826,7 +826,7 @@ a.level-card:hover {
 }
 
 .workshop {
-  border-color: rgba(232, 121, 249, 0.35);
+  border-color: rgba(150, 120, 175, 0.35);
 }
 
 .tool-title {
@@ -899,12 +899,12 @@ a.level-card:hover {
 
 .choice-selected {
   border-color: var(--pink);
-  background: rgba(232, 121, 249, 0.08);
+  background: rgba(150, 120, 175, 0.08);
 }
 
 .choice-right {
   border-color: var(--violet);
-  background: rgba(168, 85, 247, 0.08);
+  background: rgba(122, 98, 176, 0.08);
 }
 
 .choice:disabled {
