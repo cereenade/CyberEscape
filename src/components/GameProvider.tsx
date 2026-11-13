@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import * as actions from "@/app/actions/game";
+import { collectCard as collectCardAction, completeLesson as completeLessonAction, getStatus, resetProgress } from "@/app/actions/game";
 import { TOKENS_PER_DAY } from "@/data/meta";
 import type { PlayerStatus, Progress } from "@/lib/types";
 import { useAuth } from "./AuthProvider";
@@ -44,7 +44,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const refresh = useCallback(async () => {
     try {
-      setStatus(await actions.getStatus());
+      setStatus(await getStatus());
     } catch {
       setStatus(GUEST);
     } finally {
@@ -64,15 +64,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   }, [loading, userId, refresh]);
 
   const collectCard = useCallback(async (roomId: string) => {
-    setStatus(await actions.collectCard(roomId));
+    setStatus(await collectCardAction(roomId));
   }, []);
 
   const completeLesson = useCallback(async (slug: string) => {
-    setStatus(await actions.completeLesson(slug));
+    setStatus(await completeLessonAction(slug));
   }, []);
 
   const resetGame = useCallback(async () => {
-    setStatus(await actions.resetProgress());
+    setStatus(await resetProgress());
   }, []);
 
   const value = useMemo<GameContextValue>(

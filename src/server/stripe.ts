@@ -36,14 +36,15 @@ export async function stripe<T = Record<string, unknown>>(method: "GET" | "POST"
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined) body.append(key, String(value));
   }
-  const query = method === "GET" && body.size > 0 ? `?${body}` : "";
+  const encoded = body.toString();
+  const query = method === "GET" && encoded ? `?${encoded}` : "";
   const response = await fetch(`https://api.stripe.com/v1${path}${query}`, {
     method,
     headers: {
       Authorization: `Bearer ${SECRET_KEY}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: method === "GET" ? undefined : body,
+    body: method === "GET" ? undefined : encoded,
     cache: "no-store",
   });
   const json = (await response.json()) as T & { error?: { message?: string } };
