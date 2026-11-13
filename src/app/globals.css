@@ -310,9 +310,6 @@ pre {
   color: var(--muted);
 }
 
-.feature-icon {
-  font-size: 1.8rem;
-}
 
 @keyframes blink {
   to {
@@ -946,9 +943,6 @@ a.level-card:hover {
   align-items: center;
 }
 
-.lesson-icon {
-  font-size: 1.6rem;
-}
 
 .lesson-meta {
   font-family: var(--mono);
@@ -1565,9 +1559,6 @@ a.level-card:hover {
   color: var(--violet);
 }
 
-.step-icon {
-  font-size: 1.8rem;
-}
 
 .home-cta {
   margin: 3.5rem 0 1rem;

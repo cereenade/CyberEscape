@@ -4,17 +4,14 @@ import { LESSONS } from "@/data/lessons";
 
 const FEATURES = [
   {
-    icon: "🚪",
     title: `${TOTAL_ROOMS} salles piégées`,
     text: "Mot de passe dans le code source, message chiffré, faux mail, logs d'attaque… chaque porte cache une énigme.",
   },
   {
-    icon: "🃏",
     title: `${TOTAL_CARDS} cyber-cartes`,
     text: "Une carte par salle. Chacune t'apprend une vraie notion de cyber et te donne la clé pour avancer.",
   },
   {
-    icon: "📚",
     title: `${LESSONS.length} leçons`,
     text: "Une salle de cours rangée par thème et par niveau, avec objectifs, exemples, résumés et mini-quiz.",
   },
@@ -22,22 +19,18 @@ const FEATURES = [
 
 const STEPS = [
   {
-    icon: "🔍",
     title: "Explore la salle",
     text: "Chaque salle raconte une scène de l'attaque : un terminal, une boîte mail, un journal de connexions…",
   },
   {
-    icon: "🃏",
     title: "Ramasse la cyber-carte",
     text: "Elle t'explique une vraie notion de cybersécurité, en quelques lignes, et te sert d'indice.",
   },
   {
-    icon: "🧩",
     title: "Résous l'énigme",
     text: "Décode un message, démasque un faux mail, analyse un log… et la porte s'ouvre sur la salle suivante.",
   },
   {
-    icon: "🪙",
     title: "Progresse chaque jour",
     text: `${TOKENS_PER_DAY} jetons gratuits par jour : 1 jeton par salle réussie. Ton deck grandit, et les cours restent en accès libre.`,
   },
@@ -81,9 +74,6 @@ export default async function HomePage({ searchParams }: Props) {
           {STEPS.map((step, index) => (
             <li key={step.title} className="step">
               <span className="step-number">{index + 1}</span>
-              <span className="step-icon" aria-hidden>
-                {step.icon}
-              </span>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
             </li>
@@ -94,9 +84,6 @@ export default async function HomePage({ searchParams }: Props) {
       <section className="features">
         {FEATURES.map((feature) => (
           <article key={feature.title} className="feature">
-            <span className="feature-icon" aria-hidden>
-              {feature.icon}
-            </span>
             <h2>{feature.title}</h2>
             <p>{feature.text}</p>
           </article>
@@ -108,7 +95,7 @@ export default async function HomePage({ searchParams }: Props) {
         <ol className="levels-list">
           {LEVELS.map((level) => (
             <li key={level.id}>
-              <span aria-hidden>{level.icon}</span> <strong>{level.name}</strong>
+              <strong>{level.name}</strong>
               <span className="muted"> · {level.tagline}</span>
             </li>
           ))}
