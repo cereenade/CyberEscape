@@ -1,0 +1,18 @@
+# Ouvre automatiquement une pull request quand une dépendance a une mise à jour
+# (notamment les correctifs de sécurité de Next.js, React ou Supabase).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      dependances:
+        patterns: ["*"]
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
