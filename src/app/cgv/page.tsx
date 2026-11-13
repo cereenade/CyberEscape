@@ -37,7 +37,7 @@ export default function SalesTermsPage() {
 
       <h2>3. Paiement et renouvellement</h2>
       <p>
-        Le paiement se fait par carte via Stripe ; CyberEscape n&apos;a jamais accès à tes coordonnées bancaires. L&apos;abonnement est mensuel et se
+        Le paiement se fait par carte via Mollie ; CyberEscape n&apos;a jamais accès à tes coordonnées bancaires. L&apos;abonnement est mensuel et se
         renouvelle automatiquement à date anniversaire, sans engagement.
       </p>
 
