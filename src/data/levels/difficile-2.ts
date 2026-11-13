@@ -307,6 +307,6 @@ Cafe_Libre   🔓 ouvert  signal ▂▄▆█
         { label: "Un antivirus à jour", correct: false, explanation: "L'antivirus ne protège pas contre la lecture physique du disque." },
       ],
     },
-    successText: "Le disque était chiffré : le voleur n'a rien pu lire. Niveau difficile entièrement terminé !",
+    successText: "Le disque était chiffré : le voleur n'a rien pu lire. Encore 20 salles avant la sortie du niveau !",
   },
 ];

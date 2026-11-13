@@ -7,6 +7,7 @@ export type Op =
   | "base64"
   | "hex"
   | "binary"
+  | "decimal"
   | "rot13"
   | "caesar"
   | "atbash"
@@ -27,6 +28,7 @@ export const OPS: Record<Op, OpInfo> = {
   base64: { label: "Base64 → texte", description: "Décode du Base64." },
   hex: { label: "Hex → texte", description: "Décode de l'hexadécimal (ex. 48 65 6c)." },
   binary: { label: "Binaire → texte", description: "Décode des octets écrits en 0 et 1." },
+  decimal: { label: "Décimal → texte", description: "Décode des codes de caractères en décimal (ex. 72 105)." },
   rot13: { label: "ROT13", description: "Décale chaque lettre de 13 rangs." },
   caesar: { label: "César", param: "shift", description: "Recule chaque lettre de N rangs." },
   atbash: { label: "Atbash", description: "Inverse l'alphabet : A↔Z, B↔Y…" },
@@ -148,6 +150,18 @@ export function fromBinary(value: string): string {
   return bytesToText(Uint8Array.from(groups, (g) => parseInt(g, 2)));
 }
 
+export function toDecimal(text: string): string {
+  return Array.from(textToBytes(text), (b) => String(b)).join(" ");
+}
+
+export function fromDecimal(value: string): string {
+  const parts = value.trim().split(/[\s,;]+/).filter(Boolean);
+  if (parts.length === 0 || !parts.every((p) => /^\d{1,3}$/.test(p) && Number(p) <= 255)) {
+    throw new Error("Il faut des nombres entre 0 et 255, séparés par des espaces.");
+  }
+  return bytesToText(Uint8Array.from(parts, (p) => Number(p)));
+}
+
 export function toUrl(text: string): string {
   return Array.from(textToBytes(text), (b) => "%" + b.toString(16).toUpperCase().padStart(2, "0")).join("");
 }
@@ -224,6 +238,8 @@ export function applyStep(input: string, step: Step): string {
       return fromHex(input);
     case "binary":
       return fromBinary(input);
+    case "decimal":
+      return fromDecimal(input);
     case "rot13":
       return caesar(input, 13);
     case "caesar": {
