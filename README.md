@@ -12,7 +12,7 @@ Pas besoin d'être expert : tu apprends en jouant, à ton rythme, directement da
 
 ## Le jeu
 
-**500 salles réparties en 5 niveaux de 100 salles, et 10 nouvelles salles chaque jour.** Le joueur choisit librement son niveau.
+**500 salles réparties en 5 niveaux de 100 salles, et 5 nouvelles salles chaque jour.** Le joueur choisit librement son niveau.
 
 | Niveau | Thème | Exemples d'énigmes |
 |---|---|---|
@@ -153,7 +153,7 @@ supabase/schema.sql           # Tables, règles RLS et fonctions
 
 ### Ajouter du contenu
 
-- **Une salle** : suis la procédure de [`docs/AJOUT-QUOTIDIEN.md`](docs/AJOUT-QUOTIDIEN.md) (fichier du niveau, compteur dans `src/data/meta.ts`, puis `npm run check:content`). Une tâche automatique propose chaque jour 10 nouvelles salles en pull request.
+- **Une salle** : suis la procédure de [`docs/AJOUT-QUOTIDIEN.md`](docs/AJOUT-QUOTIDIEN.md) (fichier du niveau, compteur dans `src/data/meta.ts`, puis `npm run check:content`). Une tâche automatique propose chaque jour 5 nouvelles salles en pull request.
 - **Une leçon** : crée un fichier dans `src/data/lessons/` (avec son thème, son niveau, ses objectifs et ses points à retenir) et ajoute-le à la liste dans `index.ts`.
 
 ## Branches

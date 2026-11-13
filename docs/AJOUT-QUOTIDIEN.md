@@ -1,6 +1,6 @@
 # Ajout quotidien de salles
 
-Chaque jour, **10 nouvelles salles** sont ajoutées : **2 par niveau**. Une tâche automatique prépare une pull request ; il reste à la relire et à la fusionner.
+Chaque jour, **5 nouvelles salles** sont ajoutées : **1 par niveau**. Une tâche automatique prépare une pull request ; il reste à la relire et à la fusionner.
 
 ## Règles de contenu
 
@@ -22,7 +22,7 @@ Chaque jour, **10 nouvelles salles** sont ajoutées : **2 par niveau**. Une tâc
 2. Les fichiers contiennent 20 salles : `facile-4.ts` (41–60), `facile-5.ts` (61–80), `facile-6.ts` (81–100), puis `facile-7.ts` (101–120), etc.
 3. Ajouter les nouvelles salles à la fin du dernier fichier du niveau. S'il contient déjà 20 salles, créer le fichier suivant et l'ajouter dans `src/data/game.ts` (import + liste `CONTENT` du niveau).
 4. Les identifiants continuent la numérotation : `facile-101`, `facile-102`… La salle de sortie (`<niveau>-100`) reste automatiquement la dernière du niveau.
-5. Mettre à jour `ROOM_COUNTS` dans `src/data/meta.ts` (+2 par niveau).
+5. Mettre à jour `ROOM_COUNTS` dans `src/data/meta.ts` (+1 par niveau).
 
 ## Vérifier
 
@@ -34,5 +34,5 @@ npm run check:content
 ## Git
 
 - Branche `feat/salles-du-jour-AAAA-MM-JJ` depuis `main` à jour.
-- Un commit par niveau : `feat(salles): 2 nouvelles salles <Niveau> (<ids>)`, puis un commit `chore(salles): compteurs du jour`.
-- Ouvrir une pull request vers `main` avec la liste des 10 salles (titre et notion). Ne jamais fusionner soi-même : la relecture est humaine.
+- Un commit : `feat(salles): 5 nouvelles salles du jour (<ids>)`.
+- Ouvrir une pull request vers `main` avec la liste des 5 salles (titre et notion). Ne jamais fusionner soi-même : la relecture est humaine.
