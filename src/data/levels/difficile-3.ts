@@ -560,7 +560,7 @@ Tâche à exécuter : C:\\Users\\Public\\Videos\\maj.exe -hidden`,
   {
     id: "difficile-40",
     name: "Les conteneurs",
-    story: "Dernière salle du niveau Difficile. Le pirate a pris le contrôle d'un serveur à partir d'un conteneur Docker mal configuré. Trouve toutes les erreurs.",
+    story: "Le pirate a pris le contrôle d'un serveur à partir d'un conteneur Docker mal configuré. Trouve toutes les erreurs.",
     card: {
       title: "La sécurité des conteneurs",
       category: "Système",
@@ -591,6 +591,6 @@ docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock app`,
         { label: "Utiliser une image officielle minimale", correct: false, explanation: "C'est une bonne pratique : moins de logiciels, moins de failles." },
       ],
     },
-    successText: "Conteneur reconfiguré : non root, sans privilèges, secrets externalisés. Niveau Difficile entièrement terminé !",
+    successText: "Conteneur reconfiguré : non root, sans privilèges, secrets externalisés. Un cap est franchi, la suite t'attend !",
   },
 ];

@@ -285,7 +285,7 @@ Cafe_Libre   🔓 ouvert  signal ▂▄▆█
   {
     id: "difficile-20",
     name: "L'ordinateur volé",
-    story: "Dernière salle du niveau. L'ordinateur portable de l'admin a été volé dans le train. Le voleur a démonté le disque pour le lire sur une autre machine.",
+    story: "L'ordinateur portable de l'admin a été volé dans le train. Le voleur a démonté le disque pour le lire sur une autre machine.",
     card: {
       title: "Le chiffrement de disque",
       category: "Défense",

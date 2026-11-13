@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LEVELS, ROOMS_PER_LEVEL, TOTAL_CARDS } from "@/data/meta";
+import { LEVELS, TOTAL_CARDS, roomCount } from "@/data/meta";
 import type { CyberCard } from "@/lib/types";
 import { CyberCardView, LockedCard } from "./CyberCardView";
 import { useGame } from "./GameProvider";
@@ -24,11 +24,11 @@ export function Deck({ cards: ownedCards }: { cards: CyberCard[] }) {
 
       {LEVELS.map((level) => {
         const cards = owned.filter((card) => card.level === level.id);
-        const locked = Math.max(0, ROOMS_PER_LEVEL - cards.length);
+        const locked = Math.max(0, roomCount(level.id) - cards.length);
         return (
           <section key={level.id} className="deck-level">
             <h2 className="deck-level-title">
-              {level.icon} {level.name} <span className="muted">· {cards.length}/{ROOMS_PER_LEVEL}</span>
+              {level.icon} {level.name} <span className="muted">· {cards.length}/{roomCount(level.id)}</span>
             </h2>
             <div className="deck-grid">
               {cards.map((card) => (

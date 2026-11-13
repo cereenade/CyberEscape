@@ -577,7 +577,7 @@ setup_antivirus(1).exe (Bureau)
   {
     id: "moyen-40",
     name: "Le vieux protocole",
-    story: "Dernière salle du niveau Moyen. Le pare-feu a bloqué une tentative de connexion vers un vieux service qui transmet tout en clair, mots de passe compris.",
+    story: "Le pare-feu a bloqué une tentative de connexion vers un vieux service qui transmet tout en clair, mots de passe compris.",
     card: {
       title: "Les protocoles en clair",
       category: "Réseau",
@@ -599,6 +599,6 @@ setup_antivirus(1).exe (Bureau)
       question: "Quel protocole en clair le pirate a-t-il tenté d'utiliser (port 23) ?",
       answers: ["telnet"],
     },
-    successText: "Telnet bloqué et désinstallé du serveur. Niveau Moyen entièrement terminé !",
+    successText: "Telnet bloqué et désinstallé du serveur. Un cap est franchi, la suite t'attend !",
   },
 ];

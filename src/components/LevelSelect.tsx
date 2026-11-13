@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LEVELS, ROOMS_PER_LEVEL } from "@/data/meta";
+import { LEVELS, roomCount } from "@/data/meta";
 import { isLevelComplete, solvedCount } from "@/lib/progress";
 import { useGame } from "./GameProvider";
 
@@ -15,7 +15,7 @@ export function LevelSelect() {
       {LEVELS.map((level, index) => {
         const complete = isLevelComplete(save, level.id);
         const solved = solvedCount(save, level.id);
-        const total = ROOMS_PER_LEVEL;
+        const total = roomCount(level.id);
         return (
           <Link key={level.id} href={`/jeu/${level.id}`} className={`level-card level-${level.id}`}>
             <div className="level-top">

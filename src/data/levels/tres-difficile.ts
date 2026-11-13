@@ -271,7 +271,7 @@ nora  | 9e381d9dde6c70a436b323a7bf9f0951`,
   {
     id: "tres-difficile-10",
     name: "L'observateur d'événements",
-    story: "Dernière salle du niveau. Le journal de sécurité Windows a tout enregistré. Trouve le moment exact où le pirate a réussi à entrer.",
+    story: "Le journal de sécurité Windows a tout enregistré. Trouve le moment exact où le pirate a réussi à entrer.",
     card: {
       title: "Les Event IDs Windows",
       category: "Défense",

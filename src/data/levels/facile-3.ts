@@ -558,7 +558,7 @@ Clics        : 3 412`,
   {
     id: "facile-40",
     name: "La box de la maison",
-    story: "Dernière salle du niveau Facile. Le pirate a accédé au Wi-Fi de l'admin depuis la rue. Dans les réglages de la box, tu découvres pourquoi.",
+    story: "Le pirate a accédé au Wi-Fi de l'admin depuis la rue. Dans les réglages de la box, tu découvres pourquoi.",
     card: {
       title: "Sécuriser sa box Wi-Fi",
       category: "Réseau",
@@ -585,6 +585,6 @@ WPS                 : activé`,
         { label: "Rien, tout est correct", correct: false, explanation: "WEP, mot de passe faible et WPS activé : tout est à revoir." },
       ],
     },
-    successText: "Box passée en WPA3 avec une phrase de passe. Niveau Facile entièrement terminé !",
+    successText: "Box passée en WPA3 avec une phrase de passe. Un cap est franchi, la suite t'attend !",
   },
 ];

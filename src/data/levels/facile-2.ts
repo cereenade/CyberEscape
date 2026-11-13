@@ -256,7 +256,7 @@ export const FACILE_2: RoomContent[] = [
     id: "facile-20",
     name: "Le parcmètre",
     story:
-      "Dernière salle du niveau. Sur la porte de sortie, un autocollant : « Payez votre sortie en scannant ce QR code ». Il est collé par-dessus un autre.",
+      "Sur la porte de sortie, un autocollant : « Payez votre sortie en scannant ce QR code ». Il est collé par-dessus un autre.",
     card: {
       title: "Le quishing",
       category: "Social",
