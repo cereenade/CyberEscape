@@ -22,4 +22,23 @@ export const IMPOSSIBLE_7: RoomContent[] = [
     ]),
     "Service migré vers TLS 1.3 et erreurs uniformisées. L'oracle se tait.",
   ),
+  room(
+    "impossible-102",
+    "La carte qui consommait trop",
+    "Le laboratoire d'évaluation branche un oscilloscope sur une carte à puce de serveur-corp.fr. Pendant le chiffrement, la consommation électrique dessine des pics… qui suivent les bits de la clé.",
+    card("L'analyse de consommation électrique", "Crypto", "⚡", "Un circuit qui chiffre consomme différemment selon les données : mesurer ce courant peut révéler la clé.", [
+      "L'analyse simple (SPA) lit directement les opérations sur une seule courbe.",
+      "L'analyse différentielle (DPA) compare statistiquement des milliers de courbes pour retrouver la clé octet par octet.",
+      "Elle vise surtout les objets physiques : cartes à puce, modules matériels, objets connectés.",
+      "Contre-mesures : masquage des données, exécution en temps et consommation constants, bruit ajouté, certification (Critères communs).",
+    ], "L'algorithme est solide : c'est son exécution qui fuit."),
+    multi("Quelles contre-mesures réduisent ce risque ?", [
+      ["Le masquage : mélanger les données avec un aléa à chaque exécution", true, "La consommation ne dépend plus directement de la clé."],
+      ["Des opérations sans branchement qui dépendent de la clé", true, "Le profil de consommation reste le même quel que soit le bit."],
+      ["Des composants évalués contre les attaques physiques", true, "Les évaluations (Critères communs, EMVCo) testent précisément ces fuites."],
+      ["Passer de AES-128 à AES-256 sans rien changer d'autre", false, "Une clé plus longue fuit tout autant si l'implémentation n'est pas protégée."],
+      ["Cacher le nom de l'algorithme utilisé", false, "La sécurité par l'obscurité ne bloque pas une mesure physique."],
+    ]),
+    "Nouvelle puce masquée, évaluée en laboratoire. Les courbes ne disent plus rien.",
+  ),
 ];

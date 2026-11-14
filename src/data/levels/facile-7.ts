@@ -1,5 +1,5 @@
 import type { RoomContent } from "@/lib/types";
-import { card, multi, room } from "./_build";
+import { card, choice, multi, room } from "./_build";
 
 /** Salles 101 à 120 du niveau Facile. */
 export const FACILE_7: RoomContent[] = [
@@ -19,5 +19,22 @@ export const FACILE_7: RoomContent[] = [
       ["Laisser un partage actif « au cas où » pendant des mois", false, "C'est exactement le piège de cette salle."],
     ]),
     "Partage coupé. Ton point bleu redevient privé.",
+  ),
+  room(
+    "facile-102",
+    "Le portefeuille perdu",
+    "Ce matin, ton portefeuille a disparu dans le bus. Ta carte bancaire est dedans, avec le paiement sans contact activé. Tu te demandes ce que peut en faire la personne qui l'a trouvée.",
+    card("Le paiement sans contact", "Défense", "💳", "Une carte sans contact paie sans code jusqu'à un plafond : en cas de perte, fais opposition tout de suite.", [
+      "Sans code, chaque paiement est limité (souvent 50 € en France), et la carte redemande le code après plusieurs paiements.",
+      "Une carte perdue peut donc servir à quelques petits achats avant d'être bloquée.",
+      "Fais opposition immédiatement depuis l'appli de ta banque ou par téléphone.",
+      "Payer avec ton téléphone (code ou empreinte demandés) ajoute une protection.",
+    ], "Qu'est-ce qui bloque vraiment la carte ?"),
+    choice("Quelle est la première chose à faire ?", [
+      ["Faire opposition sur la carte depuis l'appli ou le numéro de ta banque", true, "La carte est bloquée : plus aucun paiement possible."],
+      ["Attendre de voir s'il y a des paiements suspects", false, "Chaque minute compte : bloque d'abord, vérifie ensuite."],
+      ["Publier une photo de ta carte pour la retrouver", false, "Tu donnerais son numéro à tout le monde."],
+    ]),
+    "Carte bloquée en deux minutes. Une nouvelle carte arrive par la poste.",
   ),
 ];
