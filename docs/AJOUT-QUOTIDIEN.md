@@ -1,6 +1,6 @@
 # Ajout quotidien de salles
 
-Chaque jour, **5 nouvelles salles** sont ajoutées : **1 par niveau**, avec **5 nouveaux cours** (1 cours par salle, qui explique la notion de sa carte). Une tâche automatique prépare une pull request ; il reste à la relire et à la fusionner.
+Chaque jour, **10 nouvelles salles** sont ajoutées : **2 par niveau**, avec **10 nouveaux cours** (1 cours par salle, qui explique la notion de sa carte). Une tâche automatique prépare une pull request ; il reste à la relire et à la fusionner.
 
 ## Règles de contenu
 
@@ -22,9 +22,9 @@ Chaque jour, **5 nouvelles salles** sont ajoutées : **1 par niveau**, avec **5 
 2. Les fichiers contiennent 20 salles : `facile-4.ts` (41–60), `facile-5.ts` (61–80), `facile-6.ts` (81–100), puis `facile-7.ts` (101–120), etc.
 3. Ajouter les nouvelles salles à la fin du dernier fichier du niveau. S'il contient déjà 20 salles, créer le fichier suivant et l'ajouter dans `src/data/game.ts` (import + liste `CONTENT` du niveau).
 4. Les identifiants continuent la numérotation : `facile-101`, `facile-102`… La salle de sortie (`<niveau>-100`) reste automatiquement la dernière du niveau.
-5. Mettre à jour `ROOM_COUNTS` dans `src/data/meta.ts` (+1 par niveau).
+5. Mettre à jour `ROOM_COUNTS` dans `src/data/meta.ts` (+2 par niveau).
 
-## Les 5 cours du jour
+## Les 10 cours du jour
 
 Pour chaque salle ajoutée, écrire un cours qui approfondit la notion de sa carte.
 
@@ -46,5 +46,5 @@ npm run check:content
 ## Git
 
 - Branche `feat/salles-du-jour-AAAA-MM-JJ` depuis `main` à jour.
-- Un commit : `feat(salles): 5 nouvelles salles et 5 cours du jour (<ids>)`.
-- Ouvrir une pull request vers `main` avec la liste des 5 salles (titre et notion) et des 5 cours (slug et titre). Ne jamais fusionner soi-même : la relecture est humaine.
+- Un commit : `feat(salles): 10 nouvelles salles et 10 cours du jour (<ids>)`.
+- Ouvrir une pull request vers `main` avec la liste des 10 salles (titre et notion) et des 10 cours (slug, titre et salle associée). Ne jamais fusionner soi-même : la relecture est humaine.
