@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 import { AUTH_ENABLED, SUPABASE_KEY, SUPABASE_URL } from "./config";
 
@@ -8,11 +9,40 @@ const PROTECTED_PATHS = ["/compte", "/jeu/", "/deck", "/admin"];
 const GUEST_ONLY_PATHS = ["/connexion", "/inscription"];
 
 /**
+ * Avant le lancement (SITE_PUBLIC différent de « true »), le site affiche
+ * « Bientôt disponible » à tout le monde, sauf aux comptes administrateurs.
+ * Seules les pages utiles pour se connecter et les pages légales restent ouvertes.
+ */
+const SITE_PUBLIC = process.env.SITE_PUBLIC === "true";
+const COMING_SOON_PATH = "/bientot";
+const OPEN_PATHS = [COMING_SOON_PATH, "/connexion", "/auth/", "/mot-de-passe-oublie", "/reinitialiser-mot-de-passe", "/api/", "/robots.txt", "/mentions-legales", "/cgv", "/confidentialite", "/conditions"];
+const SERVICE_KEY = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+
+function matches(pathname: string, paths: string[]) {
+  return paths.some((p) => (p.endsWith("/") ? pathname.startsWith(p) : pathname === p || pathname.startsWith(`${p}/`)));
+}
+
+async function isAdminUser(userId: string) {
+  if (!SUPABASE_URL || !SERVICE_KEY) return false;
+  const admin = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
+  const { data } = await admin.from("admins").select("user_id").eq("user_id", userId).maybeSingle();
+  return Boolean(data);
+}
+
+/**
  * Rafraîchit la session Supabase à chaque requête (sinon on serait déconnecté
  * à l'expiration du jeton) et gère les redirections liées à la connexion.
  */
 export async function updateSession(request: NextRequest) {
-  if (!AUTH_ENABLED) return NextResponse.next({ request });
+  if (!AUTH_ENABLED) {
+    if (!SITE_PUBLIC && !matches(request.nextUrl.pathname, OPEN_PATHS)) {
+      const url = request.nextUrl.clone();
+      url.pathname = COMING_SOON_PATH;
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next({ request });
+  }
 
   let response = NextResponse.next({ request });
 
@@ -47,7 +77,11 @@ export async function updateSession(request: NextRequest) {
     return redirect;
   };
 
-  const isProtected = PROTECTED_PATHS.some((p) => (p.endsWith("/") ? pathname.startsWith(p) : pathname === p || pathname.startsWith(`${p}/`)));
+  if (!SITE_PUBLIC && !matches(pathname, OPEN_PATHS) && !(user && (await isAdminUser(user.id)))) {
+    return redirectTo(COMING_SOON_PATH);
+  }
+
+  const isProtected = matches(pathname, PROTECTED_PATHS);
   if (!user && isProtected) {
     return redirectTo("/connexion", { suite: pathname });
   }

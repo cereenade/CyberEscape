@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
+  // Avant le lancement : rien n'est indexé.
+  if (process.env.SITE_PUBLIC !== "true") return { rules: { userAgent: "*", disallow: "/" } };
   return {
     rules: {
       userAgent: "*",
