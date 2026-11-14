@@ -7,7 +7,7 @@ import { updateSession } from "@/lib/supabase/middleware";
  * personne n'entre. Le webhook Mollie reste hors du matcher.
  */
 const SITE_PUBLIC = process.env.SITE_PUBLIC === "true";
-const SITE_PASSWORD = process.env.SITE_PASSWORD ?? "";
+const SITE_PASSWORD = (process.env.SITE_PASSWORD ?? "").trim();
 
 function sameText(a: string, b: string) {
   if (a.length !== b.length) return false;
@@ -21,8 +21,10 @@ function hasAccess(request: NextRequest) {
   const header = request.headers.get("authorization") ?? "";
   if (!header.startsWith("Basic ")) return false;
   try {
-    const decoded = atob(header.slice(6));
-    const password = decoded.slice(decoded.indexOf(":") + 1);
+    // Décodage UTF-8 : accepte les mots de passe avec accents ou caractères spéciaux.
+    const bytes = Uint8Array.from(atob(header.slice(6).trim()), (c) => c.charCodeAt(0));
+    const decoded = new TextDecoder().decode(bytes);
+    const password = decoded.slice(decoded.indexOf(":") + 1).trim();
     return sameText(password, SITE_PASSWORD);
   } catch {
     return false;
