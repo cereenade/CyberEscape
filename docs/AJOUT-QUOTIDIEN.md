@@ -1,6 +1,6 @@
 # Ajout quotidien de salles
 
-Chaque jour, **5 nouvelles salles** sont ajoutées : **1 par niveau**. Une tâche automatique prépare une pull request ; il reste à la relire et à la fusionner.
+Chaque jour, **5 nouvelles salles** sont ajoutées : **1 par niveau**, avec **5 nouveaux cours** (1 cours par salle, qui explique la notion de sa carte). Une tâche automatique prépare une pull request ; il reste à la relire et à la fusionner.
 
 ## Règles de contenu
 
@@ -24,6 +24,18 @@ Chaque jour, **5 nouvelles salles** sont ajoutées : **1 par niveau**. Une tâch
 4. Les identifiants continuent la numérotation : `facile-101`, `facile-102`… La salle de sortie (`<niveau>-100`) reste automatiquement la dernière du niveau.
 5. Mettre à jour `ROOM_COUNTS` dans `src/data/meta.ts` (+1 par niveau).
 
+## Les 5 cours du jour
+
+Pour chaque salle ajoutée, écrire un cours qui approfondit la notion de sa carte.
+
+- Un fichier par cours dans `src/data/lessons/<slug>.ts` (type `Lesson`, modèle : `wifi.ts`). Le slug doit être nouveau.
+- L'importer dans `src/data/lessons/index.ts` et l'ajouter dans la liste `ALL`, sur la ligne de son thème.
+- Thème (`theme`) selon la notion : `bases`, `humain`, `web`, `crypto`, `reseau`, `systeme`, `soc`, `pentest`, `infra`, `grc`.
+- Niveau (`level`) selon la salle : Facile → `debutant`, Moyen ou Difficile → `intermediaire`, Très difficile ou Impossible → `avance`.
+- Au moins 3 sections, des points clés (`keyPoints`), et au moins 3 questions de quiz avec un index `correct` valide (la CI le vérifie).
+- Le cours reprend l'exemple de la salle quand c'est utile. Sources officielles (RFC, ANSSI, CNIL, docs éditeurs) dans `sources` si possible.
+- Mêmes règles de ton et de contenu que pour les salles.
+
 ## Vérifier
 
 ```bash
@@ -34,5 +46,5 @@ npm run check:content
 ## Git
 
 - Branche `feat/salles-du-jour-AAAA-MM-JJ` depuis `main` à jour.
-- Un commit : `feat(salles): 5 nouvelles salles du jour (<ids>)`.
-- Ouvrir une pull request vers `main` avec la liste des 5 salles (titre et notion). Ne jamais fusionner soi-même : la relecture est humaine.
+- Un commit : `feat(salles): 5 nouvelles salles et 5 cours du jour (<ids>)`.
+- Ouvrir une pull request vers `main` avec la liste des 5 salles (titre et notion) et des 5 cours (slug et titre). Ne jamais fusionner soi-même : la relecture est humaine.
