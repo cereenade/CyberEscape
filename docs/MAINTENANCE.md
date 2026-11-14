@@ -36,6 +36,7 @@ Puis ouvre `/admin` sur le site. Pour tous les autres, cette page renvoie une er
 | `SUPABASE_SECRET_KEY` (ou `SUPABASE_SERVICE_ROLE_KEY`) | Souvent déjà ajoutée par l'intégration ; sinon Supabase → Project Settings → API Keys → **Secret key** | **Oui, sinon le jeu est indisponible** |
 | `MOLLIE_API_KEY` | Mollie → Développeurs → Clés API (`test_…` pour essayer, `live_…` pour vendre) | Pour vendre |
 | `RESEND_API_KEY`, `EMAIL_FROM` | resend.com → API Keys ; `CyberEscape <noreply@ton-domaine.fr>` | Pour l'offre étudiante |
+| `SITE_PUBLIC` | `true` le jour du lancement. Avant : page « Bientôt disponible » pour tous sauf les admins connectés | Au lancement |
 
 ⚠️ Aucune de ces clés secrètes ne doit commencer par `NEXT_PUBLIC_` : elles resteraient sinon visibles dans le navigateur. Après chaque ajout : **Deployments → Redeploy**.
 
