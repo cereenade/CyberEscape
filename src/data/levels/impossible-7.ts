@@ -1,5 +1,5 @@
 import type { RoomContent } from "@/lib/types";
-import { card, multi, room } from "./_build";
+import { answer, card, choice, multi, room } from "./_build";
 
 /** Salles 101 à 120 du niveau Impossible. */
 export const IMPOSSIBLE_7: RoomContent[] = [
@@ -40,5 +40,38 @@ export const IMPOSSIBLE_7: RoomContent[] = [
       ["Cacher le nom de l'algorithme utilisé", false, "La sécurité par l'obscurité ne bloque pas une mesure physique."],
     ]),
     "Nouvelle puce masquée, évaluée en laboratoire. Les courbes ne disent plus rien.",
+  ),
+  room(
+    "impossible-103",
+    "La collision d'anniversaire",
+    "Un développeur de serveur-corp.fr identifie les fichiers par une empreinte de 64 bits. « Il faudrait 2^64 essais pour une collision, on est tranquilles », dit-il. Tu n'en es pas si sûr.",
+    card("Le paradoxe des anniversaires", "Crypto", "🎂", "Pour trouver deux entrées qui ont la même empreinte de n bits, il suffit d'environ 2^(n/2) essais, pas 2^n.", [
+      "Dans un groupe de 23 personnes, il y a plus d'une chance sur deux que deux aient le même anniversaire.",
+      "On ne cherche pas une empreinte précise, mais n'importe quelle paire identique : les paires possibles explosent.",
+      "Une empreinte de 64 bits tombe donc vers 2^32 essais, à la portée d'un simple ordinateur.",
+      "C'est pourquoi on exige au moins 256 bits (SHA-256) quand la résistance aux collisions compte.",
+    ], "Divise le nombre de bits par deux."),
+    answer("Vers combien d'essais une collision devient-elle probable ? (réponds sous la forme 2^n)", ["2^32", "2 puissance 32"], {
+      placeholder: "2^…",
+    }),
+    "Empreinte passée à SHA-256. Les collisions retournent dans le domaine de l'impossible.",
+  ),
+  room(
+    "impossible-104",
+    "Le robot recruteur",
+    "Serveur-corp veut acheter un outil d'IA qui trie automatiquement les CV et classe les candidats. La direction te demande ce que dit le règlement européen sur l'IA avant de signer.",
+    card("Le règlement européen sur l'IA (AI Act)", "Défense", "🤖", "L'AI Act classe les systèmes d'IA selon leur risque : plus le risque est élevé, plus les obligations sont fortes.", [
+      "Risque inacceptable : interdit (notation sociale, manipulation des personnes vulnérables…).",
+      "Haut risque : recrutement, crédit, éducation, infrastructures critiques… avec gestion des risques, qualité des données, journalisation, contrôle humain et cybersécurité.",
+      "Risque limité : obligation de transparence (dire qu'on parle à une IA, signaler les contenus générés).",
+      "Risque minimal : pas d'obligation spécifique. Le règlement s'applique par étapes depuis 2025.",
+    ], "Un tri de candidats peut changer la vie de quelqu'un."),
+    choice("Dans quelle catégorie entre cet outil de tri de CV ?", [
+      ["Haut risque : il influence l'accès à l'emploi", true, "Le recrutement figure dans la liste des usages à haut risque, avec des obligations strictes."],
+      ["Risque minimal : c'est un simple outil de bureautique", false, "Il prend des décisions qui touchent directement des personnes."],
+      ["Risque limité : il suffit de prévenir les candidats", false, "La transparence ne suffit pas pour un usage aussi sensible."],
+      ["Interdit dans tous les cas", false, "Il est autorisé, mais encadré."],
+    ]),
+    "Contrat revu : contrôle humain, journaux et audit du fournisseur. Le robot recruteur reste sous surveillance.",
   ),
 ];

@@ -1,5 +1,5 @@
 import type { RoomContent } from "@/lib/types";
-import { answer, card, multi, room } from "./_build";
+import { answer, card, choice, multi, room } from "./_build";
 
 /** Salles 101 à 120 du niveau Moyen. */
 export const MOYEN_7: RoomContent[] = [
@@ -37,5 +37,48 @@ export const MOYEN_7: RoomContent[] = [
       ["Le navigateur envoie automatiquement le GPS dans chaque requête", false, "La position GPS n'est partagée qu'avec ton accord, et ne fait pas partie de l'adresse IP."],
     ]),
     "C'était son VPN d'entreprise, sorti à Paris. Fausse alerte expliquée, règle de détection ajustée.",
+  ),
+  room(
+    "moyen-103",
+    "Le plan du site",
+    "Le site de serveur-corp.fr publie un fichier pour aider les moteurs de recherche à trouver ses pages. En le lisant, tu remarques qu'une adresse n'aurait jamais dû s'y trouver.",
+    card("Le fichier sitemap.xml", "Web", "🗺️", "Le sitemap liste les pages d'un site pour les moteurs de recherche : tout le monde peut le lire.", [
+      "Il se trouve souvent à la racine (/sitemap.xml) et robots.txt indique parfois où il est.",
+      "Il est généré automatiquement : une page de test ou d'administration peut s'y glisser par erreur.",
+      "Un curieux ou un attaquant le lit pour cartographier le site en une seconde.",
+      "N'y mets que des pages publiques, et protège les autres par une vraie authentification.",
+    ], "Quelle adresse n'a rien à faire sur un plan destiné au public ?"),
+    answer("Quel chemin ne devrait pas apparaître dans ce sitemap ?", ["/preprod-admin/", "https://www.serveur-corp.fr/preprod-admin/"], {
+      contentLabel: "https://www.serveur-corp.fr/sitemap.xml",
+      content: `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.serveur-corp.fr/</loc></url>
+  <url><loc>https://www.serveur-corp.fr/offres/</loc></url>
+  <url><loc>https://www.serveur-corp.fr/blog/</loc></url>
+  <url><loc>https://www.serveur-corp.fr/preprod-admin/</loc></url>
+  <url><loc>https://www.serveur-corp.fr/contact/</loc></url>
+</urlset>`,
+      placeholder: "Le chemin",
+    }),
+    "Page retirée du plan et protégée par mot de passe. Le sitemap ne montre plus que la vitrine.",
+  ),
+  room(
+    "moyen-104",
+    "Le ping qui parle trop",
+    "Un collègue lance un ping vers une machine inconnue du réseau local. Il ne sait pas quel système elle utilise. Toi, tu regardes un petit nombre dans la réponse.",
+    card("Le TTL des paquets", "Réseau", "⏳", "Le TTL est un compteur qui baisse d'un à chaque routeur : sa valeur de départ trahit souvent le système.", [
+      "TTL veut dire Time To Live : chaque routeur traversé retire 1, et le paquet est détruit à 0.",
+      "Cela évite qu'un paquet tourne en boucle à l'infini sur Internet.",
+      "Valeurs de départ courantes : 64 (Linux, macOS), 128 (Windows), 255 (beaucoup d'équipements réseau).",
+      "Un TTL reçu de 127 veut donc dire : départ à 128, un routeur traversé.",
+    ], "Remonte au nombre de départ le plus proche, juste au-dessus."),
+    choice("Quel système utilise probablement cette machine ?", [
+      ["Windows : départ à 128, un saut", true, "127 est juste sous 128, la valeur par défaut de Windows."],
+      ["Linux : départ à 64", false, "Linux part de 64 : le TTL reçu serait au plus 64."],
+      ["Un équipement réseau : départ à 255", false, "Il faudrait 128 routeurs entre vous deux : impossible sur un réseau local."],
+    ], {
+      contentLabel: "Résultat du ping",
+      content: "Réponse de 192.168.10.42 : octets=32 temps=2 ms TTL=127\nRéponse de 192.168.10.42 : octets=32 temps=1 ms TTL=127",
+    }),
+    "Bien vu : un poste Windows oublié dans l'inventaire. Il rejoint la liste des machines suivies.",
   ),
 ];
