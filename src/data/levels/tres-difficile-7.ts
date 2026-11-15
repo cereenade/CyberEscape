@@ -1,5 +1,5 @@
 import type { RoomContent } from "@/lib/types";
-import { answer, card, choice, room } from "./_build";
+import { answer, card, choice, multi, room } from "./_build";
 
 /** Salles 101 à 120 du niveau Très difficile. */
 export const TRES_DIFFICILE_7: RoomContent[] = [
@@ -40,5 +40,42 @@ export const TRES_DIFFICILE_7: RoomContent[] = [
       contentLabel: "Alerte EDR sur DC01",
     }),
     "Copie interceptée avant sa sortie. Compte svc-backup désactivé, krbtgt réinitialisé deux fois.",
+  ),
+  room(
+    "tres-difficile-103",
+    "Le tuyau invisible",
+    "Sysmon remonte une série d'événements 17 et 18 sur un poste comptable. Des processus créent et ouvrent des canaux nommés. La plupart sont banals, mais l'EDR signale une communication étrange entre deux machines.",
+    card("Les canaux nommés suspects", "Défense", "🔀", "Un canal nommé (named pipe) permet à des processus de discuter, même à travers le réseau : les outils d'attaque s'en servent pour se cacher.", [
+      "Sysmon trace leur création (événement 17) et leur ouverture (événement 18).",
+      "Windows en utilise des milliers de légitimes : il faut une référence de ce qui est normal sur ton parc.",
+      "Signaux suspects : nom aléatoire, nom connu d'un outil d'administration à distance, processus inattendu (rundll32, Office), connexion depuis une autre machine via SMB.",
+      "Croise toujours avec l'arbre de processus et les connexions réseau avant de conclure.",
+    ], "Qui crée le canal, avec quel nom, et depuis où ?"),
+    multi("Quels éléments rendent ces canaux nommés suspects ?", [
+      ["Un canal au nom aléatoire créé par rundll32.exe sans ligne de commande", true, "Processus détourné et nom généré : signature classique d'un implant."],
+      ["Un canal PSEXESVC créé sur un poste comptable où personne n'administre à distance", true, "Outil d'exécution à distance hors de son contexte habituel : mouvement latéral possible."],
+      ["Un canal ouvert via SMB depuis un autre poste utilisateur", true, "Deux postes clients n'ont pas de raison de se parler ainsi."],
+      ["Un canal créé par le service d'impression (spoolsv.exe) avec son nom habituel", false, "C'est le fonctionnement normal du spouleur."],
+      ["Le simple fait qu'un événement 17 existe", false, "Windows crée des canaux en permanence : seul le contexte compte."],
+    ]),
+    "Le poste est isolé, l'implant identifié. Une règle de détection surveille désormais ces canaux.",
+  ),
+  room(
+    "tres-difficile-104",
+    "Le même mot de passe partout",
+    "Après un incident, l'enquête montre que l'attaquant a sauté d'un poste à 300 autres en une heure. La raison : le compte administrateur local a le même mot de passe sur toutes les machines, depuis 2019.",
+    card("LAPS : un mot de passe local par poste", "Défense", "🔑", "Windows LAPS donne à chaque poste un mot de passe administrateur local unique, aléatoire et changé automatiquement.", [
+      "Un mot de passe local identique partout permet de rejouer la même empreinte (pass-the-hash) sur tout le parc.",
+      "Windows LAPS est intégré à Windows : il génère, fait tourner et sauvegarde le mot de passe dans l'Active Directory ou Entra ID.",
+      "Seuls des groupes autorisés peuvent lire le mot de passe, et chaque lecture peut être journalisée.",
+      "Le mot de passe peut aussi être changé automatiquement après chaque utilisation.",
+    ], "Quelle mesure casse le lien entre tous les postes ?"),
+    choice("Quelle mesure empêche le mieux ce rebond d'un poste à l'autre ?", [
+      ["Déployer Windows LAPS pour un mot de passe local unique et renouvelé sur chaque poste", true, "Une empreinte volée ne sert plus que sur une seule machine, et pas longtemps."],
+      ["Changer le mot de passe commun une fois par an", false, "Il reste identique partout : le rebond reste possible."],
+      ["Écrire le mot de passe dans un script de démarrage partagé", false, "Tout utilisateur du domaine pourrait le lire."],
+      ["Renommer le compte Administrateur", false, "Ça gêne un peu les scripts, pas l'attaquant qui lit les SID."],
+    ]),
+    "LAPS déployé sur les 300 postes. Chaque machine garde désormais son propre secret.",
   ),
 ];
