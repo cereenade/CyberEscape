@@ -1,5 +1,5 @@
 import type { RoomContent } from "@/lib/types";
-import { answer, card, choice, room } from "./_build";
+import { answer, card, choice, multi, room } from "./_build";
 
 /** Salles 101 à 120 du niveau Difficile. */
 export const DIFFICILE_7: RoomContent[] = [
@@ -73,5 +73,45 @@ export const DIFFICILE_7: RoomContent[] = [
       content: "/usr/bin/ping cap_net_raw=ep\n/usr/bin/python3.11 cap_setuid=ep\n/opt/web/serveur cap_net_bind_service=ep",
     }),
     "Capacité retirée de python. Plus aucun raccourci vers root sur ce serveur.",
+  ),
+  room(
+    "difficile-105",
+    "L'adresse qui mentait",
+    "La page d'administration de serveur-corp.fr n'est censée répondre qu'au réseau interne. Pourtant, le journal montre une connexion réussie venue d'Internet… avec un en-tête un peu trop arrangeant.",
+    card("L'en-tête X-Forwarded-For falsifié", "Web", "🎭", "X-Forwarded-For indique l'adresse du client derrière un proxy, mais n'importe qui peut l'écrire : il ne doit jamais servir seul à autoriser un accès.", [
+      "Un proxy ou un répartiteur de charge ajoute cet en-tête pour transmettre l'adresse d'origine.",
+      "Si l'application lui fait confiance sans vérifier d'où vient la requête, un visiteur peut se déclarer « 127.0.0.1 ».",
+      "Les conséquences : contournement de listes d'adresses autorisées, de limites de débit ou de journaux.",
+      "Défense : ne lire l'en-tête que s'il vient d'un proxy de confiance, et ne garder que l'adresse ajoutée par ce proxy.",
+    ], "Qui a écrit cet en-tête ?"),
+    choice("Quelle correction est la bonne ?", [
+      ["N'accepter X-Forwarded-For que depuis le proxy de l'entreprise, et filtrer l'accès admin au niveau réseau", true, "L'adresse vient d'une source de confiance et l'accès est aussi bloqué en amont."],
+      ["Vérifier que l'en-tête contient bien une adresse privée", false, "L'attaquant écrit justement une adresse privée."],
+      ["Lire la première adresse de la liste X-Forwarded-For", false, "La première adresse est celle que le client a choisie lui-même."],
+      ["Renommer la page /admin en /admin2", false, "Cacher la page ne corrige pas la confiance aveugle."],
+    ], {
+      content: "203.0.113.45 - - [16/Nov/2026:03:12:08 +0100] \"GET /admin HTTP/1.1\" 200 \"X-Forwarded-For: 127.0.0.1\"",
+      contentLabel: "journal d'accès",
+    }),
+    "Confiance limitée au proxy, admin filtré par le pare-feu. L'adresse menteuse est démasquée.",
+  ),
+  room(
+    "difficile-106",
+    "La base sans tables",
+    "La nouvelle appli de serveur-corp.fr stocke ses comptes dans une base de documents JSON. « Pas de SQL, donc pas d'injection », affirme le développeur. Le formulaire de connexion accepte pourtant un objet à la place du mot de passe.",
+    card("L'injection NoSQL", "Web", "🍃", "Les bases NoSQL ont aussi leurs injections : si l'appli insère tel quel ce que le client envoie, il peut glisser des opérateurs de requête.", [
+      "Dans une base de documents, une requête est souvent un objet : { utilisateur: …, motDePasse: … }.",
+      "Si le client peut envoyer un objet au lieu d'un texte, il peut y mettre un opérateur (comme « différent de ») et changer le sens de la requête.",
+      "Résultat possible : connexion sans mot de passe ou lecture de données d'autres comptes.",
+      "Défense : vérifier le type et le format de chaque champ, refuser les opérateurs venus du client, utiliser les filtres de requête prévus par la bibliothèque.",
+    ], "Un mot de passe doit-il pouvoir être un objet ?"),
+    multi("Quelles mesures bloquent cette injection ?", [
+      ["Exiger que le mot de passe soit une simple chaîne de caractères", true, "Un objet avec opérateur est rejeté dès l'entrée."],
+      ["Valider chaque champ avec un schéma (type, longueur, format)", true, "Seules les données attendues atteignent la base."],
+      ["Retirer les clés commençant par $ dans les données reçues", true, "Les opérateurs de requête ne passent plus."],
+      ["Se dire qu'une base sans SQL ne peut pas être injectée", false, "C'est exactement l'erreur du développeur."],
+      ["Chiffrer le trafic en HTTPS et s'arrêter là", false, "HTTPS protège le transport, pas la logique de la requête."],
+    ]),
+    "Schéma de validation en place. La base de documents ne se laisse plus raconter d'histoires.",
   ),
 ];

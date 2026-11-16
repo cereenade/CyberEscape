@@ -78,4 +78,42 @@ export const TRES_DIFFICILE_7: RoomContent[] = [
     ]),
     "LAPS déployé sur les 300 postes. Chaque machine garde désormais son propre secret.",
   ),
+  room(
+    "tres-difficile-105",
+    "Le domaine détourné",
+    "L'équipe réseau de serveur-corp.fr a redirigé un domaine de commande de malware vers un serveur interne inoffensif. Ce matin, le serveur piège a reçu des requêtes. À toi de trouver le poste infecté.",
+    card("Le sinkhole DNS", "Défense", "🕳️", "Un sinkhole répond aux noms de domaine malveillants par une adresse contrôlée par les défenseurs : le malware ne joint plus son serveur et se dénonce.", [
+      "Le résolveur DNS interne ou un pare-feu DNS (RPZ) renvoie une adresse piège au lieu de la vraie.",
+      "Les postes qui interrogent ce domaine sont probablement infectés : ce sont eux qu'on isole.",
+      "Attention à lire la bonne colonne : c'est le client qui pose la question qui compte, pas l'adresse renvoyée.",
+      "Des chercheurs ont déjà neutralisé des campagnes entières en prenant le contrôle d'un domaine (WannaCry en 2017).",
+    ], "Qui a posé la question au DNS ?"),
+    answer("Quelle adresse IP interne correspond au poste infecté ?", ["10.20.4.37"], {
+      content: "16/11 07:58:02 client=10.20.4.12 query=www.example.com answer=93.184.215.14\n16/11 08:01:44 client=10.20.4.37 query=update-cdn-check.example.net answer=10.99.0.53 [SINKHOLE]\n16/11 08:01:45 client=10.20.4.12 query=intranet.serveur-corp.fr answer=10.20.1.5\n16/11 08:06:44 client=10.20.4.37 query=update-cdn-check.example.net answer=10.99.0.53 [SINKHOLE]",
+      contentLabel: "journal du résolveur DNS",
+      placeholder: "10.x.x.x",
+    }),
+    "Poste 10.20.4.37 isolé et nettoyé. Le piège a fait son travail.",
+  ),
+  room(
+    "tres-difficile-106",
+    "La commande dans le conteneur",
+    "Une alerte remonte du cluster Kubernetes de serveur-corp.fr. Dans le journal d'audit, un compte de service a lancé une commande dans un pod de production. Tu dois dire ce qui cloche.",
+    card("Les journaux d'audit Kubernetes", "Système", "☸️", "Le journal d'audit Kubernetes enregistre chaque appel à l'API du cluster : qui, quoi, sur quelle ressource, depuis où.", [
+      "Chaque ligne indique l'utilisateur ou le compte de service, le verbe (create, delete, get…), la ressource et le résultat.",
+      "Signaux à surveiller : « exec » dans un pod de production, lecture de secrets, création de rôles ou de pods privilégiés.",
+      "Un compte de service d'application n'a normalement aucune raison d'ouvrir un terminal dans un autre pod.",
+      "La politique d'audit doit être activée et ses journaux envoyés au SIEM, hors du cluster.",
+    ], "Un robot ouvre-t-il un terminal ?"),
+    choice("Quel élément de ce journal doit déclencher l'enquête ?", [
+      ["Le compte de service de l'appli web fait un « exec » dans le pod de la base de paiement", true, "Un compte d'application qui ouvre un shell ailleurs suggère un compte volé ou un pod compromis."],
+      ["Le code de réponse 201", false, "Il indique seulement que la demande a été acceptée."],
+      ["L'espace de noms s'appelle « prod »", false, "C'est le contexte, pas l'anomalie."],
+      ["La ligne est écrite au format JSON", false, "C'est le format normal du journal d'audit."],
+    ], {
+      content: "{\"verb\":\"create\",\"user\":{\"username\":\"system:serviceaccount:prod:web-front\"},\"objectRef\":{\"resource\":\"pods\",\"subresource\":\"exec\",\"namespace\":\"prod\",\"name\":\"paiement-db-0\"},\"responseStatus\":{\"code\":201}}",
+      contentLabel: "journal d'audit",
+    }),
+    "Jeton du compte de service révoqué, pod web isolé. Les droits « exec » sont retirés.",
+  ),
 ];
