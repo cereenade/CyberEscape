@@ -81,4 +81,38 @@ export const MOYEN_7: RoomContent[] = [
     }),
     "Bien vu : un poste Windows oublié dans l'inventaire. Il rejoint la liste des machines suivies.",
   ),
+  room(
+    "moyen-105",
+    "Le mail aux signes égal",
+    "En ouvrant la source d'un mail suspect reçu à serveur-corp.fr, tu tombes sur des mots bizarres : « Votre acc=C3=A8s =C3=A0 la messagerie… ». Ce n'est pas du chiffrement, juste un encodage.",
+    card("L'encodage quoted-printable", "Web", "✉️", "Dans la source d'un mail, « =XX » remplace un octet en hexadécimal : c'est le quoted-printable, prévu pour faire passer les accents.", [
+      "Il est défini pour les mails (MIME, RFC 2045) et s'annonce par l'en-tête Content-Transfer-Encoding: quoted-printable.",
+      "Chaque « = » suivi de deux chiffres hexadécimaux est un octet : =C3=A9 donne « é » en UTF-8.",
+      "Un « = » en fin de ligne signifie juste que la ligne continue.",
+      "Les filtres anti-spam le décodent avant d'analyser le texte : un analyste doit savoir le lire aussi.",
+    ], "=C3=A9 se lit « é »."),
+    answer("Quel mot se cache derrière « s=C3=A9curit=C3=A9 » ?", ["securite", "sécurité"], {
+      content: "Content-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: quoted-printable\n\nMerci de v=C3=A9rifier votre s=C3=A9curit=C3=A9 avant vendredi.",
+      contentLabel: "source du mail",
+      placeholder: "le mot décodé",
+    }),
+    "Mail décodé, phishing confirmé et signalé. Les signes égal n'ont plus de secret.",
+  ),
+  room(
+    "moyen-106",
+    "Le commentaire étrange",
+    "Sur le site de serveur-corp.fr, un commentaire s'affiche normalement. Mais dans le code source de la page, il ressemble à une suite de « &#… ; ». Tu veux comprendre ce que le site a fait.",
+    card("Les entités HTML", "Web", "🔣", "En HTML, « &lt; » ou « &#83; » représentent un caractère : le navigateur l'affiche sans l'interpréter comme du code.", [
+      "Entités nommées : &lt; pour <, &gt; pour >, &amp; pour &, &quot; pour \".",
+      "Entités numériques : &#83; (décimal) ou &#x53; (hexadécimal) donnent le caractère de code 83, soit « S ».",
+      "Transformer < et > en entités avant d'afficher un texte est la base de la protection contre les failles XSS.",
+      "Elles servent aussi à cacher un mot aux filtres naïfs : un analyste les décode pour voir le vrai contenu.",
+    ], "Les nombres sont des codes ASCII en décimal."),
+    answer("Quel mot affiche le navigateur pour « &#83;&#79;&#67; » ?", ["soc"], {
+      content: "<p class=\"commentaire\">Bravo à l'équipe &#83;&#79;&#67; !</p>",
+      contentLabel: "code source",
+      placeholder: "le mot affiché",
+    }),
+    "Entités décodées. Tu sais maintenant pourquoi le site échappe les caractères spéciaux.",
+  ),
 ];

@@ -74,4 +74,41 @@ export const IMPOSSIBLE_7: RoomContent[] = [
     ]),
     "Contrat revu : contrôle humain, journaux et audit du fournisseur. Le robot recruteur reste sous surveillance.",
   ),
+  room(
+    "impossible-105",
+    "La clé volée trop tard",
+    "Un attaquant a volé la clé privée du serveur TLS de serveur-corp.fr. Il avait aussi enregistré des mois de trafic chiffré. La direction veut savoir si ces anciennes conversations sont maintenant lisibles.",
+    card("La confidentialité persistante (Forward Secrecy)", "Crypto", "🔐", "Avec des clés de session éphémères, voler la clé à long terme d'un serveur ne permet pas de déchiffrer le trafic passé.", [
+      "Avec l'ancien échange de clés RSA de TLS, la clé de session voyageait chiffrée avec la clé du serveur : la clé volée ouvre tout l'historique.",
+      "Avec (EC)DHE, chaque session crée sa propre paire de clés temporaire, oubliée juste après.",
+      "La clé longue durée ne sert plus qu'à signer : la voler permet d'usurper le serveur à l'avenir, pas de lire le passé.",
+      "TLS 1.3 impose la confidentialité persistante ; les messageries comme Signal renouvellent même les clés à chaque message.",
+    ], "La clé du serveur chiffrait-elle ou signait-elle ?"),
+    choice("Si le serveur utilisait uniquement TLS 1.3, que risque le trafic enregistré ?", [
+      ["Il reste illisible : les clés éphémères des sessions ont disparu", true, "La clé volée ne permet pas de recalculer les clés de session passées. Il faut tout de même révoquer et remplacer le certificat."],
+      ["Il devient entièrement lisible avec la clé volée", false, "Ce serait le cas avec l'échange de clés RSA, absent de TLS 1.3."],
+      ["Seules les sessions de la dernière heure sont lisibles", false, "Aucune session passée n'est déchiffrable avec cette clé."],
+      ["Rien à faire : le certificat peut rester en place", false, "L'attaquant pourrait se faire passer pour le serveur : il faut révoquer."],
+    ]),
+    "Certificat révoqué, nouvelle clé dans le HSM. Le passé reste scellé.",
+  ),
+  room(
+    "impossible-106",
+    "Calculer sans regarder",
+    "Un hôpital partenaire veut confier à serveur-corp.fr le calcul de statistiques sur des données sensibles, sans jamais lui montrer les données en clair. L'équipe étudie le chiffrement homomorphe.",
+    card("Le chiffrement homomorphe", "Crypto", "🧪", "Le chiffrement homomorphe permet de faire des calculs directement sur des données chiffrées : le résultat, une fois déchiffré, est le bon.", [
+      "Partiellement homomorphe : une seule opération (addition ou multiplication), comme Paillier pour l'addition.",
+      "Totalement homomorphe (FHE) : additions et multiplications à volonté, proposé par Craig Gentry en 2009.",
+      "Le prestataire calcule sans voir les données ; seul le propriétaire de la clé lit le résultat.",
+      "Limites : calculs beaucoup plus lents, chiffrés plus gros, et il faut toujours protéger la clé et limiter ce que révèle le résultat.",
+    ], "Qui a besoin de la clé pour lire le résultat ?"),
+    multi("Quelles affirmations sont vraies ?", [
+      ["Le prestataire peut additionner des valeurs chiffrées sans les déchiffrer", true, "C'est le principe même du chiffrement homomorphe."],
+      ["Seul le détenteur de la clé peut lire le résultat du calcul", true, "Le prestataire ne voit que des données chiffrées."],
+      ["Les calculs sont nettement plus lents que sur des données en clair", true, "C'est aujourd'hui son principal frein."],
+      ["Il rend inutile toute réflexion sur ce que le résultat révèle", false, "Un résultat trop précis peut encore trahir une personne."],
+      ["Le prestataire reçoit la clé privée pour pouvoir calculer", false, "Justement non : il calcule sans la clé de déchiffrement."],
+    ]),
+    "Prototype validé : les statistiques sortent, les données de santé restent chiffrées.",
+  ),
 ];

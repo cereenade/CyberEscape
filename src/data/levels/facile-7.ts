@@ -71,4 +71,41 @@ export const FACILE_7: RoomContent[] = [
     ]),
     "Billet officiel à ton nom dans ton appli. Rendez-vous au premier rang.",
   ),
+  room(
+    "facile-105",
+    "La caméra qui regardait dehors",
+    "Tu as installé une petite caméra connectée pour surveiller ton chat. Un soir, une voix inconnue sort du haut-parleur de la caméra. Quelqu'un s'est connecté à ta place.",
+    card("Les caméras et objets connectés à la maison", "Défense", "📹", "Caméras, babyphones, ampoules ou prises connectées sont de petits ordinateurs : ils se protègent comme un téléphone.", [
+      "Beaucoup d'objets sortent du carton avec un mot de passe simple, parfois le même pour tous.",
+      "Change-le dès l'installation et active la double authentification dans l'appli si elle existe.",
+      "Installe les mises à jour de l'objet : elles corrigent des failles connues.",
+      "Si ta box le permet, place les objets sur le réseau invité, à l'écart de ton ordinateur.",
+    ], "Que vaut un mot de passe livré dans le carton ?"),
+    multi("Quels réflexes protègent ta caméra connectée ?", [
+      ["Changer le mot de passe fourni dès l'installation", true, "Le mot de passe d'usine est souvent connu de tous."],
+      ["Activer les mises à jour automatiques de l'objet", true, "Les failles corrigées ne servent plus aux pirates."],
+      ["Activer la double authentification dans l'appli", true, "Un mot de passe volé ne suffit plus pour se connecter."],
+      ["Garder le mot de passe d'usine pour ne pas l'oublier", false, "C'est la première chose qu'un pirate essaie."],
+      ["Orienter la caméra vers la rue pour qu'elle serve à tout le quartier", false, "Filmer l'espace public pose aussi des problèmes de vie privée et de droit."],
+    ]),
+    "Nouveau mot de passe, mise à jour faite. La caméra ne parle plus qu'à toi.",
+  ),
+  room(
+    "facile-106",
+    "L'appareil que tu ne connais pas",
+    "En fouillant les réglages de ta messagerie, tu découvres une liste « Appareils connectés ». Ton téléphone, ton ordinateur… et une tablette à Lyon, où tu n'as jamais mis les pieds.",
+    card("Vérifier les appareils connectés à ses comptes", "Mots de passe", "📱", "La plupart des comptes affichent la liste des appareils et sessions ouverts : un coup d'œil régulier suffit à repérer un intrus.", [
+      "Tu la trouves souvent dans « Sécurité », « Appareils » ou « Sessions actives ».",
+      "Un appareil inconnu, une ville étrange ou un vieux téléphone revendu doivent être déconnectés.",
+      "Après avoir déconnecté un intrus, change ton mot de passe et active la double authentification.",
+      "Pense aussi aux messageries liées à un ordinateur (version web ou bureau).",
+    ], "Que fais-tu d'une session que tu ne reconnais pas ?"),
+    choice("Que fais-tu en voyant cette tablette inconnue ?", [
+      ["Je la déconnecte, puis je change mon mot de passe et j'active la double authentification", true, "Tu coupes l'accès de l'intrus et tu l'empêches de revenir."],
+      ["Je la laisse : c'est sûrement un bug d'affichage", false, "Une session inconnue doit toujours être prise au sérieux."],
+      ["Je change seulement ma photo de profil", false, "Ça ne coupe pas l'accès de la tablette."],
+      ["Je supprime l'appli de mon téléphone", false, "La tablette resterait connectée à ton compte."],
+    ]),
+    "Tablette déconnectée, mot de passe changé. Ta liste ne contient plus que tes appareils.",
+  ),
 ];
