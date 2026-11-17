@@ -1,7 +1,7 @@
 import type { RoomContent } from "@/lib/types";
 import { answer, card, choice, multi, room } from "./_build";
 
-/** Salles 101 à 120 du niveau Impossible. */
+/** Salles 101 à 108 du niveau Impossible. */
 export const IMPOSSIBLE_7: RoomContent[] = [
   room(
     "impossible-101",
@@ -110,5 +110,41 @@ export const IMPOSSIBLE_7: RoomContent[] = [
       ["Le prestataire reçoit la clé privée pour pouvoir calculer", false, "Justement non : il calcule sans la clé de déchiffrement."],
     ]),
     "Prototype validé : les statistiques sortent, les données de santé restent chiffrées.",
+  ),
+  room(
+    "impossible-107",
+    "La taille qui trahit",
+    "Un audit montre que les pages du portail client de serveur-corp.fr sont compressées en HTTPS et reflètent un paramètre de recherche, juste à côté d'un jeton anti-CSRF secret.",
+    card("L'attaque BREACH", "Crypto", "🗜️", "Quand une page compressée contient à la fois un secret et un texte choisi par l'attaquant, la taille chiffrée révèle si les deux se ressemblent.", [
+      "La compression raccourcit les répétitions : si la saisie devine le début du secret, la réponse est un peu plus courte.",
+      "Le chiffrement TLS cache le contenu, mais pas la longueur des réponses.",
+      "En répétant les essais, on retrouve le secret caractère par caractère.",
+      "Défense : masquer le jeton à chaque réponse, séparer secrets et données reflétées, limiter le débit, voire désactiver la compression sur les pages sensibles.",
+    ], "Qu'est-ce que TLS ne cache pas ?"),
+    multi("Quelles mesures réduisent le risque BREACH ?", [
+      ["Masquer le jeton CSRF avec une valeur aléatoire différente à chaque réponse", true, "Le secret n'apparaît plus deux fois sous la même forme."],
+      ["Ne pas refléter les saisies sur les pages qui contiennent des secrets", true, "Sans texte choisi par l'attaquant, plus d'oracle."],
+      ["Limiter le nombre de requêtes par client", true, "L'attaque demande de très nombreux essais."],
+      ["Passer de TLS 1.2 à TLS 1.3 suffit", false, "BREACH vise la compression HTTP, pas la version de TLS."],
+      ["Allonger la clé de chiffrement", false, "La longueur des réponses reste visible."],
+    ]),
+    "Jetons masqués, reflets séparés des secrets. La taille des pages ne dit plus rien.",
+  ),
+  room(
+    "impossible-108",
+    "Prouver sans montrer",
+    "Un partenaire veut vérifier que les clients de serveur-corp.fr ont plus de 18 ans, sans recevoir leur date de naissance. L'équipe étudie les preuves à divulgation nulle de connaissance.",
+    card("Les preuves à divulgation nulle de connaissance", "Crypto", "🕵️", "Une preuve à divulgation nulle permet de convaincre quelqu'un qu'une affirmation est vraie sans rien révéler d'autre.", [
+      "Trois propriétés : complétude (le vrai est accepté), solidité (le faux est rejeté), divulgation nulle (rien d'autre n'est appris).",
+      "Exemple : prouver qu'on a plus de 18 ans sans donner sa date de naissance.",
+      "Les variantes non interactives (zk-SNARK, zk-STARK) produisent une preuve courte vérifiable par tous.",
+      "Elles servent la minimisation des données, mais restent complexes : une erreur d'implémentation peut tout casser.",
+    ], "Que doit apprendre le vérificateur, en plus du « oui » ?"),
+    choice("Quelle propriété garantit que le partenaire n'apprend pas la date de naissance ?", [
+      ["La divulgation nulle de connaissance", true, "Le vérificateur n'apprend rien d'autre que la vérité de l'affirmation."],
+      ["La complétude", false, "Elle garantit qu'une affirmation vraie est acceptée, pas la confidentialité."],
+      ["La solidité", false, "Elle empêche de faire accepter une affirmation fausse."],
+    ]),
+    "Vérification d'âge en place : le partenaire sait « plus de 18 ans », et rien d'autre.",
   ),
 ];
