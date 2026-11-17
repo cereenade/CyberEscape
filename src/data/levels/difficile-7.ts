@@ -1,7 +1,7 @@
 import type { RoomContent } from "@/lib/types";
-import { answer, card, choice, multi, room } from "./_build";
+import { answer, card, choice, multi, order, room } from "./_build";
 
-/** Salles 101 à 120 du niveau Difficile. */
+/** Salles 101 à 108 du niveau Difficile. */
 export const DIFFICILE_7: RoomContent[] = [
   room(
     "difficile-101",
@@ -113,5 +113,42 @@ export const DIFFICILE_7: RoomContent[] = [
       ["Chiffrer le trafic en HTTPS et s'arrêter là", false, "HTTPS protège le transport, pas la logique de la requête."],
     ]),
     "Schéma de validation en place. La base de documents ne se laisse plus raconter d'histoires.",
+  ),
+  room(
+    "difficile-107",
+    "Le formulaire qui fige tout",
+    "Le site de serveur-corp.fr vérifie les adresses e-mail avec une expression régulière maison. Une seule saisie très longue et bizarre bloque le serveur pendant une minute.",
+    card("Le ReDoS", "Web", "🌀", "Certaines expressions régulières mal écrites mettent un temps énorme à échouer sur une saisie choisie : c'est un déni de service par regex.", [
+      "Le problème vient des quantificateurs imbriqués, comme (a+)+ : le moteur essaie une explosion de combinaisons.",
+      "Une seule requête peut occuper le processeur pendant des secondes, voire des minutes.",
+      "Défense : limiter la taille des saisies, éviter les quantificateurs imbriqués, et fixer un délai maximal d'évaluation.",
+      "Les moteurs à temps linéaire (comme RE2) ne reviennent jamais en arrière et évitent ce piège.",
+    ], "Qu'est-ce qui, dans la regex, fait exploser le nombre d'essais ?"),
+    multi("Quelles mesures protègent contre le ReDoS ?", [
+      ["Limiter la longueur des champs avant de tester la regex", true, "Moins de caractères, beaucoup moins de combinaisons."],
+      ["Supprimer les quantificateurs imbriqués comme (a+)+", true, "C'est la cause principale du retour arrière catastrophique."],
+      ["Utiliser un moteur à temps linéaire ou un délai maximal", true, "Le serveur ne peut plus rester bloqué."],
+      ["Ajouter encore plus de groupes pour être précis", false, "Plus de groupes imbriqués, plus de risque."],
+      ["Faire tourner la regex deux fois pour être sûr", false, "Tu doubles le temps perdu."],
+    ]),
+    "Regex simplifiée, saisies limitées. Le formulaire répond à nouveau en un éclair.",
+  ),
+  room(
+    "difficile-108",
+    "Le nom qui change d'adresse",
+    "L'interface d'administration du routeur interne n'accepte que le réseau local. Pourtant, une page web visitée par un employé a réussi à lui parler, via un nom de domaine dont l'adresse a changé en cours de route.",
+    card("Le DNS rebinding", "Réseau", "🔄", "Un domaine contrôlé par un attaquant répond d'abord avec son serveur, puis avec une adresse interne : le navigateur croit parler au même site.", [
+      "La règle de même origine se base sur le nom, pas sur l'adresse IP.",
+      "Un TTL DNS très court permet de changer l'adresse entre deux requêtes.",
+      "La page peut alors envoyer des requêtes vers un service interne depuis le navigateur de la victime.",
+      "Défense : vérifier l'en-tête Host côté service, exiger une authentification, et filtrer les réponses DNS pointant vers des adresses privées.",
+    ], "Sur quoi le navigateur se base-t-il pour l'origine : le nom ou l'IP ?"),
+    order("Remets l'attaque dans l'ordre :", [
+      "L'employé visite une page sur le domaine de l'attaquant",
+      "Le DNS répond avec l'adresse du serveur de l'attaquant, avec un TTL très court",
+      "Le TTL expire et le DNS répond maintenant avec une adresse interne",
+      "Le script de la page envoie ses requêtes au même nom, qui pointe vers le routeur interne",
+    ]),
+    "En-tête Host vérifié, réponses DNS internes filtrées. Le routeur ne parle plus aux inconnus.",
   ),
 ];

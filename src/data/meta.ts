@@ -47,11 +47,11 @@ export const LEVELS: Level[] = [
  * À mettre à jour à chaque ajout de salles.
  */
 export const ROOM_COUNTS: Record<LevelId, number> = {
-  facile: 106,
-  moyen: 106,
-  difficile: 106,
-  "tres-difficile": 106,
-  impossible: 106,
+  facile: 108,
+  moyen: 108,
+  difficile: 108,
+  "tres-difficile": 108,
+  impossible: 108,
 };
 
 export function roomCount(levelId: LevelId): number {

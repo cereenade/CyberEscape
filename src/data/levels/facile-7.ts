@@ -1,7 +1,7 @@
 import type { RoomContent } from "@/lib/types";
 import { card, choice, multi, phishing, room } from "./_build";
 
-/** Salles 101 à 120 du niveau Facile. */
+/** Salles 101 à 108 du niveau Facile. */
 export const FACILE_7: RoomContent[] = [
   room(
     "facile-101",
@@ -107,5 +107,41 @@ export const FACILE_7: RoomContent[] = [
       ["Je supprime l'appli de mon téléphone", false, "La tablette resterait connectée à ton compte."],
     ]),
     "Tablette déconnectée, mot de passe changé. Ta liste ne contient plus que tes appareils.",
+  ),
+  room(
+    "facile-107",
+    "Le rendez-vous surprise",
+    "Ce matin, ton agenda affiche un événement que tu n'as jamais créé : « Votre colis est bloqué — cliquez ici ». Il est apparu tout seul, avec un lien.",
+    card("Les invitations d'agenda piégées", "Social", "📅", "Un escroc peut glisser un faux rendez-vous dans ton agenda en t'envoyant simplement une invitation.", [
+      "Certains agendas ajoutent automatiquement les invitations reçues, même venant d'inconnus.",
+      "Le piège : un lien dans la description ou un rappel qui sonne pour te pousser à cliquer.",
+      "Ne clique pas, supprime l'événement et signale-le comme spam si l'appli le permet.",
+      "Dans les réglages, choisis de n'ajouter que les invitations des expéditeurs connus.",
+    ], "Qui a créé cet événement : toi, ou un inconnu ?"),
+    choice("Que fais-tu de ce rendez-vous inconnu ?", [
+      ["Je le supprime sans cliquer et je limite l'ajout automatique des invitations", true, "Tu retires le piège et tu évites les suivants."],
+      ["Je clique pour vérifier où est mon colis", false, "C'est exactement ce que l'escroc attend."],
+      ["J'accepte l'invitation pour que le rappel disparaisse", false, "Accepter confirme à l'escroc que ton adresse est active."],
+    ]),
+    "Événement supprimé, réglages ajustés. Ton agenda ne reçoit plus d'invités surprises.",
+  ),
+  room(
+    "facile-108",
+    "La photo tombée du ciel",
+    "Dans le train, ton téléphone vibre : « Un appareil inconnu veut vous envoyer une photo ». Le partage de proximité est ouvert à tout le monde.",
+    card("Le partage de proximité", "Défense", "📲", "AirDrop, Quick Share et leurs cousins envoient des fichiers sans fil aux appareils proches.", [
+      "En mode « Tout le monde », n'importe qui à quelques mètres peut t'envoyer des images.",
+      "Le nom de ton appareil (ex. « iPhone de Léa ») est visible : il peut révéler ton prénom.",
+      "Règle-le sur « Contacts uniquement », ou active « Tout le monde » seulement quelques minutes.",
+      "Refuse toujours un fichier venant d'un appareil inconnu.",
+    ], "Qui peut t'envoyer un fichier en mode « Tout le monde » ?"),
+    multi("Quels réglages te protègent ?", [
+      ["Passer le partage de proximité en « Contacts uniquement »", true, "Les inconnus ne peuvent plus rien t'envoyer."],
+      ["Donner à ton appareil un nom neutre, sans ton prénom", true, "Tu restes discret dans la liste des appareils proches."],
+      ["Refuser les fichiers d'appareils inconnus", true, "Le bon réflexe si le partage est resté ouvert."],
+      ["Laisser « Tout le monde » activé en permanence", false, "C'est ce qui permet les envois non désirés."],
+      ["Accepter le fichier pour voir qui l'envoie", false, "Tu risques de recevoir une image choquante ou piégée."],
+    ]),
+    "Partage limité à tes contacts. Le train redevient calme.",
   ),
 ];

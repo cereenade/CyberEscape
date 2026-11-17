@@ -1,7 +1,7 @@
 import type { RoomContent } from "@/lib/types";
 import { answer, card, choice, multi, room } from "./_build";
 
-/** Salles 101 à 120 du niveau Très difficile. */
+/** Salles 101 à 108 du niveau Très difficile. */
 export const TRES_DIFFICILE_7: RoomContent[] = [
   room(
     "tres-difficile-101",
@@ -115,5 +115,39 @@ export const TRES_DIFFICILE_7: RoomContent[] = [
       contentLabel: "journal d'audit",
     }),
     "Jeton du compte de service révoqué, pod web isolé. Les droits « exec » sont retirés.",
+  ),
+  room(
+    "tres-difficile-107",
+    "L'adresse magique",
+    "L'EDR d'une machine virtuelle cloud signale une requête curl vers 169.254.169.254, lancée par l'application web. Juste après, des appels API arrivent depuis une IP inconnue avec le rôle de cette machine.",
+    card("Le service de métadonnées cloud (IMDS)", "Système", "☁️", "Chaque machine cloud peut interroger une adresse locale spéciale qui fournit sa configuration, et parfois des identifiants temporaires.", [
+      "169.254.169.254 n'est joignable que depuis la machine elle-même.",
+      "Une faille SSRF dans une appli peut servir à lire ces identifiants à sa place.",
+      "IMDSv2 (AWS) impose un jeton obtenu par une requête PUT, ce qui bloque la plupart des SSRF simples.",
+      "À surveiller : un processus inattendu qui contacte l'IMDS, et l'usage des identifiants du rôle depuis une IP hors du cloud.",
+    ], "Depuis où les identifiants du rôle ont-ils été utilisés ?"),
+    choice("Quelle mesure aurait le mieux empêché le vol des identifiants ?", [
+      ["Imposer IMDSv2 (jeton de session) et corriger la SSRF", true, "Une SSRF simple ne peut plus obtenir le jeton, et la faille est fermée."],
+      ["Changer le nom de la machine virtuelle", false, "L'adresse de l'IMDS reste la même."],
+      ["Ouvrir l'IMDS sur Internet pour mieux le surveiller", false, "Ce serait une catastrophe : il ne doit jamais être exposé."],
+    ]),
+    "Identifiants révoqués, IMDSv2 obligatoire, SSRF corrigée. L'adresse magique ne répond plus aux intrus.",
+  ),
+  room(
+    "tres-difficile-108",
+    "Le gardien des admins",
+    "Tu retires des droits suspects sur le compte d'un administrateur du domaine. Une heure plus tard, ils sont revenus. Quelqu'un a modifié l'objet AdminSDHolder.",
+    card("AdminSDHolder", "Système", "🛡️", "Dans Active Directory, AdminSDHolder sert de modèle de permissions pour les comptes et groupes protégés (Admins du domaine…).", [
+      "Toutes les 60 minutes environ, le processus SDProp recopie ses permissions sur les comptes protégés.",
+      "Un attaquant qui ajoute un droit sur AdminSDHolder le voit réappliqué automatiquement : c'est une persistance.",
+      "L'événement 5136 (modification d'un objet de l'annuaire) avec l'audit activé révèle le changement.",
+      "Défense : surveiller l'ACL de CN=AdminSDHolder,CN=System et la comparer à une référence.",
+    ], "Quel événement Windows signale la modification d'un objet de l'annuaire ?"),
+    answer("Quel identifiant d'événement dois-tu chercher pour trouver la modification d'AdminSDHolder ?", ["5136"], {
+      content: "Contrôleur de domaine — Journal Sécurité\n4624 Ouverture de session réussie\n4662 Opération effectuée sur un objet\n5136 Un objet du service d'annuaire a été modifié\n4738 Un compte d'utilisateur a été modifié",
+      contentLabel: "Événements disponibles",
+      placeholder: "numéro d'événement",
+    }),
+    "ACL d'AdminSDHolder restaurée et sous surveillance. Les droits suspects ne reviennent plus.",
   ),
 ];

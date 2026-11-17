@@ -1,7 +1,7 @@
 import type { RoomContent } from "@/lib/types";
 import { answer, card, choice, multi, room } from "./_build";
 
-/** Salles 101 à 120 du niveau Moyen. */
+/** Salles 101 à 108 du niveau Moyen. */
 export const MOYEN_7: RoomContent[] = [
   room(
     "moyen-101",
@@ -114,5 +114,42 @@ export const MOYEN_7: RoomContent[] = [
       placeholder: "le mot affiché",
     }),
     "Entités décodées. Tu sais maintenant pourquoi le site échappe les caractères spéciaux.",
+  ),
+  room(
+    "moyen-107",
+    "Le dossier oublié",
+    "En relisant les journaux du site vitrine de serveur-corp.fr, tu vois des requêtes vers /.git/HEAD et /.git/config qui répondent 200. Un message de commit récupéré contient une chaîne étrange.",
+    card("Le dossier .git exposé", "Web", "🗂️", "Un site déployé avec son dossier .git rend tout l'historique du code téléchargeable.", [
+      "Le dossier .git contient chaque version des fichiers, même ceux supprimés depuis.",
+      "Un mot de passe effacé du code peut rester lisible dans un ancien commit.",
+      "Défense : ne jamais déployer .git, et bloquer l'accès aux fichiers cachés sur le serveur web.",
+      "Si un secret a fuité dans l'historique : le changer tout de suite, puis nettoyer le dépôt.",
+    ], "Que renvoie le serveur pour /.git/HEAD ? Et que cache la chaîne du commit ?"),
+    answer("Décode la chaîne du commit : quel fichier sensible a été ajouté ?", ["config.php"], {
+      intro: "La chaîne semble encodée. Utilise l'atelier pour la décoder.",
+      content: "GET /.git/HEAD 200\nGET /.git/config 200\ncommit 3f2a91c : « ajout de Y29uZmlnLnBocA== »",
+      contentLabel: "Extrait du journal",
+      tools: ["base64", "hex", "rot13"],
+      workshopInput: "Y29uZmlnLnBocA==",
+      placeholder: "nom du fichier",
+    }),
+    "Dossier .git retiré, accès aux fichiers cachés bloqué, mot de passe changé.",
+  ),
+  room(
+    "moyen-108",
+    "Le service qui parle tout seul",
+    "Un développeur affirme : « Pas de risque, ma base de données écoute sur 127.0.0.1 ». Un collègue a pourtant configuré 0.0.0.0. Qui a raison ?",
+    card("L'adresse de bouclage (localhost)", "Réseau", "🔁", "127.0.0.1 (ou ::1 en IPv6) désigne la machine elle-même : seuls ses propres programmes peuvent s'y connecter.", [
+      "Un service qui écoute sur 127.0.0.1 n'est pas joignable depuis le réseau.",
+      "0.0.0.0 veut dire « toutes les interfaces » : le service devient joignable par les autres machines.",
+      "Tout le bloc 127.0.0.0/8 est réservé au bouclage, et « localhost » y renvoie.",
+      "Pour une base de données locale, écouter sur 127.0.0.1 réduit fortement l'exposition.",
+    ], "Quelle adresse veut dire « toutes les interfaces » ?"),
+    choice("Quelle configuration rend la base injoignable depuis le réseau ?", [
+      ["Écouter sur 127.0.0.1", true, "Seule la machine elle-même peut s'y connecter."],
+      ["Écouter sur 0.0.0.0", false, "C'est l'inverse : toutes les interfaces, donc le réseau aussi."],
+      ["Écouter sur l'adresse IP publique du serveur", false, "La base serait exposée à Internet."],
+    ]),
+    "Base remise sur 127.0.0.1. Elle ne parle plus qu'à son serveur.",
   ),
 ];
