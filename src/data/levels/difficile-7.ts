@@ -1,5 +1,5 @@
 import type { RoomContent } from "@/lib/types";
-import { answer, card, choice, multi, room } from "./_build";
+import { answer, card, choice, multi, order, room } from "./_build";
 
 /** Salles 101 à 120 du niveau Difficile. */
 export const DIFFICILE_7: RoomContent[] = [
@@ -113,5 +113,44 @@ export const DIFFICILE_7: RoomContent[] = [
       ["Chiffrer le trafic en HTTPS et s'arrêter là", false, "HTTPS protège le transport, pas la logique de la requête."],
     ]),
     "Schéma de validation en place. La base de documents ne se laisse plus raconter d'histoires.",
+  ),
+  room(
+    "difficile-107",
+    "Le formulaire qui fige le serveur",
+    "Le site de serveur-corp.fr vérifie les adresses e-mail avec une expression régulière. Un visiteur a envoyé une seule « adresse » très longue et bizarre : le processeur du serveur est resté bloqué à 100 % pendant une minute.",
+    card("Le déni de service par expression régulière (ReDoS)", "Web", "🌀", "Une expression régulière mal écrite peut mettre un temps énorme à analyser certaines chaînes : un seul message suffit alors à figer un serveur.", [
+      "Les motifs avec des répétitions imbriquées, comme (a+)+ ou (\\w+\\s?)*, peuvent essayer des milliards de combinaisons avant d'échouer.",
+      "Le temps de calcul explose avec la longueur de l'entrée : quelques dizaines de caractères suffisent.",
+      "Se protéger : limiter la taille des entrées, simplifier les motifs, fixer un délai maximal, ou utiliser un moteur à temps linéaire (comme RE2).",
+      "Des outils d'analyse de code repèrent les expressions régulières dangereuses avant la mise en production.",
+    ], "Qu'est-ce qui empêche l'analyse de durer des heures ?"),
+    choice("Quelle correction protège le mieux ce formulaire ?", [
+      ["Limiter la longueur du champ et remplacer le motif par une version sans répétitions imbriquées (ou un moteur à temps linéaire)", true, "Tu supprimes la cause : l'analyse reste rapide quelle que soit l'entrée."],
+      ["Ajouter un serveur de plus", false, "Chaque requête piégée bloquera aussi le nouveau serveur."],
+      ["Vérifier l'adresse seulement en JavaScript dans le navigateur", false, "L'attaquant envoie sa requête directement au serveur."],
+      ["Masquer le message d'erreur du formulaire", false, "Le serveur calcule toujours aussi longtemps."],
+    ], {
+      content: "Motif utilisé : ^([a-zA-Z0-9]+\\.?)+@serveur-corp\\.fr$\nEntrée reçue : aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!\nTemps d'analyse : 61 s (processeur à 100 %)",
+      contentLabel: "rapport d'incident",
+    }),
+    "Motif réécrit, longueur limitée à 254 caractères. Le formulaire répond en une milliseconde.",
+  ),
+  room(
+    "difficile-108",
+    "Le site qui parlait au routeur",
+    "Une collègue a visité un site de jeux en ligne. Peu après, la page d'administration de son routeur, qui n'est joignable que depuis le réseau interne, a reçu des requêtes venues… de son propre navigateur.",
+    card("Le DNS rebinding", "Réseau", "🔁", "Le DNS rebinding change l'adresse d'un nom de domaine en cours de visite pour que le navigateur, sans le savoir, envoie des requêtes à un appareil du réseau interne.", [
+      "Le navigateur autorise une page à parler à son propre domaine (même origine) : c'est le nom qui compte, pas l'adresse IP.",
+      "L'attaquant donne une durée de vie (TTL) très courte à son domaine, puis le fait pointer vers une adresse interne.",
+      "Les services internes sans mot de passe, ou qui ne vérifient pas l'en-tête Host, sont les plus exposés.",
+      "Se protéger : vérifier l'en-tête Host, exiger une authentification même en interne, et filtrer au résolveur DNS les réponses qui renvoient des adresses privées.",
+    ], "Le nom reste le même, mais l'adresse derrière change."),
+    order("Remets les étapes de cette attaque dans l'ordre :", [
+      "La victime visite une page de l'attaquant, dont le domaine pointe vers le serveur de l'attaquant avec un TTL très court",
+      "Le script de la page attend que la réponse DNS expire",
+      "Le domaine de l'attaquant est redirigé vers l'adresse interne du routeur",
+      "Le navigateur, pensant rester sur le même site, envoie les requêtes du script au routeur interne",
+    ]),
+    "Le routeur vérifie maintenant l'en-tête Host et le résolveur filtre les adresses privées. Le site de jeux ne parle plus qu'à lui-même.",
   ),
 ];

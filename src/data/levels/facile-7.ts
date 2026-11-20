@@ -108,4 +108,43 @@ export const FACILE_7: RoomContent[] = [
     ]),
     "Tablette déconnectée, mot de passe changé. Ta liste ne contient plus que tes appareils.",
   ),
+  room(
+    "facile-107",
+    "La tablette du petit frère",
+    "Ton petit frère de 8 ans vient de recevoir une tablette. En une soirée, il a téléchargé trois jeux inconnus, discuté avec un « ami » qu'il n'a jamais vu et presque acheté des pièces virtuelles à 49 €.",
+    card("Le contrôle parental", "Défense", "🧸", "Le contrôle parental adapte un appareil à l'âge de l'enfant : il filtre, limite et demande l'accord d'un adulte.", [
+      "Les téléphones, tablettes, consoles et box proposent des réglages gratuits (Temps d'écran, Family Link, profils enfant).",
+      "Tu peux bloquer les achats intégrés, filtrer les contenus selon l'âge et limiter le temps d'écran.",
+      "Le compte de l'enfant reste rattaché à celui d'un parent, qui valide les nouvelles applis.",
+      "Aucun réglage ne remplace le dialogue : explique-lui de venir te voir si quelque chose le met mal à l'aise.",
+    ], "Qui doit dire « oui » avant un achat ou une nouvelle appli ?"),
+    multi("Quels réglages aident à protéger ton petit frère ?", [
+      ["Bloquer les achats intégrés ou exiger l'accord d'un parent", true, "Plus de mauvaise surprise sur la facture."],
+      ["Activer un profil enfant avec un filtre selon l'âge", true, "Les applis et vidéos inadaptées sont masquées."],
+      ["Lui expliquer qu'il peut toujours en parler à un adulte", true, "Le dialogue reste la meilleure protection."],
+      ["Lui donner le mot de passe du compte parent pour qu'il se débrouille", false, "Il pourrait tout désactiver et tout acheter."],
+      ["Laisser les discussions ouvertes à tous les inconnus", false, "Un inconnu en ligne peut mentir sur son âge et ses intentions."],
+    ]),
+    "Profil enfant activé, achats bloqués. Ton frère joue tranquille, et il sait qu'il peut venir te parler.",
+  ),
+  room(
+    "facile-108",
+    "Les cinq étoiles trop parfaites",
+    "Tu cherches un chargeur pas cher. Une boutique inconnue affiche 4,9/5 et des centaines d'avis enthousiastes. Avant de payer, tu lis les commentaires de plus près.",
+    card("Les faux avis en ligne", "Social", "⭐", "Des avis peuvent être achetés ou écrits par des robots : apprends à repérer ceux qui sonnent faux.", [
+      "Signaux d'alerte : beaucoup d'avis publiés le même jour, des phrases identiques, aucun détail concret.",
+      "Des profils sans photo ni historique, qui n'ont jamais laissé d'autre avis, sont suspects.",
+      "Lis surtout les avis moyens (2 ou 3 étoiles) : ils sont souvent les plus honnêtes.",
+      "En France, publier ou commander de faux avis est une pratique commerciale trompeuse : tu peux la signaler sur SignalConso.",
+    ], "Des avis tous identiques, le même jour… c'est normal ?"),
+    choice("Quel indice montre le mieux que ces avis sont faux ?", [
+      ["Plusieurs avis presque identiques, publiés le même jour par des comptes sans historique", true, "C'est la signature d'avis achetés ou générés en masse."],
+      ["Un client se plaint d'une livraison un peu lente", false, "Un avis nuancé et précis ressemble plutôt à un vrai."],
+      ["La boutique répond poliment à un avis négatif", false, "Répondre aux clients n'a rien de suspect."],
+    ], {
+      content: "★★★★★ « Produit super top, je recommande ! » – Client123 – 03/11\n★★★★★ « Produit super top je recommande !! » – Acheteur_77 – 03/11\n★★★★★ « Super produit top, je recommande ! » – User4589 – 03/11\n★★★☆☆ « Ça charge bien, mais le câble est court et la livraison a pris 9 jours. » – Nadia R. – 21/09",
+      contentLabel: "avis de la boutique",
+    }),
+    "Tu as choisi un chargeur vendu par une enseigne connue. Les fausses étoiles n'ont pas brillé longtemps.",
+  ),
 ];

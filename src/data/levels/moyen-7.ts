@@ -115,4 +115,42 @@ export const MOYEN_7: RoomContent[] = [
     }),
     "Entités décodées. Tu sais maintenant pourquoi le site échappe les caractères spéciaux.",
   ),
+  room(
+    "moyen-107",
+    "Qui écoute sur ce serveur ?",
+    "Le serveur web de serveur-corp.fr est censé n'ouvrir que les ports 22 et 443. Tu lances la commande qui liste les connexions et les ports en écoute. Une ligne ne devrait pas être là.",
+    card("Lire les connexions actives (netstat)", "Réseau", "🔌", "Les commandes netstat ou ss affichent les ports en écoute et les connexions établies : un port inattendu mérite une enquête.", [
+      "Sous Linux, « ss -tulpn » liste les ports TCP et UDP en écoute avec le programme qui les ouvre. Sous Windows, « netstat -ano ».",
+      "LISTEN signifie que le programme attend des connexions ; ESTABLISHED, qu'une connexion est en cours.",
+      "Une écoute sur 127.0.0.1 n'est joignable que depuis la machine ; sur 0.0.0.0, depuis tout le réseau.",
+      "Compare toujours avec la liste des services prévus : tout le reste doit être expliqué ou fermé.",
+    ], "Quel port n'était pas prévu, et qui l'ouvre ?"),
+    choice("Quelle ligne doit attirer ton attention ?", [
+      ["Le programme « kworkerd » qui écoute sur 0.0.0.0:4444", true, "Port non prévu, ouvert à tout le réseau, par un programme au nom qui imite un processus du noyau."],
+      ["sshd qui écoute sur 0.0.0.0:22", false, "Le port 22 fait partie des services prévus."],
+      ["nginx qui écoute sur 0.0.0.0:443", false, "C'est le site web, prévu lui aussi."],
+      ["postgres qui écoute sur 127.0.0.1:5432", false, "Il n'écoute que localement : il n'est pas joignable depuis le réseau."],
+    ], {
+      content: "Netid State  Local Address:Port  Process\ntcp   LISTEN 0.0.0.0:22          users:((\"sshd\",pid=812))\ntcp   LISTEN 0.0.0.0:443         users:((\"nginx\",pid=1033))\ntcp   LISTEN 127.0.0.1:5432      users:((\"postgres\",pid=954))\ntcp   LISTEN 0.0.0.0:4444        users:((\"kworkerd\",pid=6671))",
+      contentLabel: "sortie de ss -tulpn",
+    }),
+    "Programme inconnu isolé et analysé. Le port 4444 est refermé.",
+  ),
+  room(
+    "moyen-108",
+    "Les refus du pare-feu",
+    "Cette nuit, le pare-feu de serveur-corp.fr a refusé beaucoup de connexions. La plupart sont du bruit habituel d'Internet, mais une adresse insiste bien plus que les autres sur le même service.",
+    card("Lire un journal de pare-feu", "Défense", "🧱", "Un journal de pare-feu dit qui a tenté de joindre quoi, et si c'était autorisé ou bloqué : il révèle les tentatives répétées.", [
+      "Chaque ligne indique l'heure, l'action (ALLOW ou DENY), l'adresse source, l'adresse de destination et le port.",
+      "Le port renseigne sur le service visé : 22 pour SSH, 3389 pour le bureau à distance, 443 pour le web.",
+      "Une même source qui revient en boucle sur un même port signale souvent une attaque par force brute ou un scan.",
+      "Les blocages montrent que le pare-feu fait son travail ; ce qui compte, c'est de repérer la source qui insiste et ce qu'elle vise.",
+    ], "Compte les lignes de chaque adresse source."),
+    answer("Quelle adresse source insiste le plus sur le port 22 ?", ["198.51.100.23"], {
+      content: "02:10:04 DENY src=203.0.113.8 dst=10.0.0.5 dport=3389\n02:10:11 DENY src=198.51.100.23 dst=10.0.0.5 dport=22\n02:10:12 DENY src=198.51.100.23 dst=10.0.0.5 dport=22\n02:10:12 ALLOW src=10.0.0.40 dst=10.0.0.5 dport=443\n02:10:13 DENY src=198.51.100.23 dst=10.0.0.5 dport=22\n02:10:15 DENY src=192.0.2.77 dst=10.0.0.5 dport=22\n02:10:15 DENY src=198.51.100.23 dst=10.0.0.5 dport=22\n02:10:16 DENY src=198.51.100.23 dst=10.0.0.5 dport=22",
+      contentLabel: "journal du pare-feu",
+      placeholder: "Une adresse IP",
+    }),
+    "198.51.100.23 est ajoutée à la liste de blocage, et SSH n'accepte plus que les clés.",
+  ),
 ];
