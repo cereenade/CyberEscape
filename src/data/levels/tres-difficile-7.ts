@@ -116,4 +116,42 @@ export const TRES_DIFFICILE_7: RoomContent[] = [
     }),
     "Jeton du compte de service révoqué, pod web isolé. Les droits « exec » sont retirés.",
   ),
+  room(
+    "tres-difficile-107",
+    "Les requêtes DNS invisibles",
+    "Le SOC de serveur-corp.fr surveille les requêtes DNS pour repérer les domaines malveillants. Mais sur certains postes, plus aucune requête n'apparaît dans les journaux : le navigateur résout désormais les noms en HTTPS, vers un résolveur public.",
+    card("Le DNS over HTTPS (DoH) en entreprise", "Réseau", "🕶️", "DoH chiffre les requêtes DNS dans du HTTPS : excellent pour la vie privée, mais il peut contourner le résolveur et la surveillance de l'entreprise.", [
+      "Avec DoH, une requête DNS ressemble à du trafic web ordinaire sur le port 443.",
+      "Un navigateur ou un malware qui utilise un résolveur DoH externe échappe au filtrage DNS et aux journaux du SOC.",
+      "En entreprise, on configure les navigateurs par stratégie pour utiliser le résolveur interne (qui peut lui-même proposer DoH).",
+      "On bloque les résolveurs DoH publics connus au proxy ou au pare-feu, et on alerte sur les postes qui essaient quand même.",
+    ], "Garder le chiffrement, mais vers quel résolveur ?"),
+    multi("Quelles mesures rendent la visibilité au SOC sans sacrifier la sécurité ?", [
+      ["Imposer par stratégie le résolveur interne dans les navigateurs", true, "Les requêtes repassent par le résolveur que le SOC journalise et filtre."],
+      ["Bloquer au proxy les résolveurs DoH publics connus", true, "Un logiciel qui tente de les joindre échoue… et se signale."],
+      ["Alerter quand un poste tente de joindre un résolveur DoH externe", true, "Un malware qui veut se cacher se trahit ainsi."],
+      ["Interdire tout le trafic HTTPS sortant", false, "Plus personne ne pourrait travailler."],
+      ["Revenir partout au DNS en clair vers Internet", false, "Tu perdrais la confidentialité sans gagner en contrôle."],
+    ]),
+    "Navigateurs configurés, résolveurs externes bloqués. Les requêtes DNS réapparaissent dans le SIEM.",
+  ),
+  room(
+    "tres-difficile-108",
+    "Le dépanneur que personne n'a appelé",
+    "L'EDR signale l'installation d'un outil de prise en main à distance sur le poste d'une comptable. L'outil est légitime et signé… mais aucun ticket de support n'existe. Dans la ligne de commande, l'adresse du serveur de connexion est encodée.",
+    card("Les outils de télémaintenance détournés (RMM)", "Défense", "🛠️", "Les attaquants installent de vrais outils de prise en main à distance : signés et connus, ils passent sous les radars des antivirus.", [
+      "Ces outils (RMM) sont légitimes : ils sont signés, et l'antivirus ne les bloque pas.",
+      "Les arnaques au faux support et les rançongiciels s'en servent pour garder un accès discret.",
+      "Établis la liste des outils autorisés dans l'entreprise et bloque ou alerte sur tous les autres.",
+      "Signaux à surveiller : installation sans ticket, serveur de connexion inconnu, exécution depuis le dossier Téléchargements.",
+    ], "Décode l'adresse : à qui ce poste allait-il se connecter ?"),
+    answer("Quel est le nom du serveur de connexion caché dans la commande ?", ["depannage-express.example.net"], {
+      content: "C:\\Users\\compta\\Downloads\\assist_setup.exe /silent /relay=dGVuLmVscG1heGUuc3NlcnB4ZS1lZ2FubmFwZWQ=",
+      contentLabel: "ligne de commande remontée par l'EDR",
+      tools: ["base64", "hex", "reverse", "rot13"],
+      workshopInput: "dGVuLmVscG1heGUuc3NlcnB4ZS1lZ2FubmFwZWQ=",
+      placeholder: "nom.de.domaine",
+    }),
+    "Domaine bloqué, outil désinstallé et poste examiné. Seuls les outils de support autorisés restent permis.",
+  ),
 ];

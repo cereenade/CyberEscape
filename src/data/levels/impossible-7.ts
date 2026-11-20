@@ -1,5 +1,5 @@
 import type { RoomContent } from "@/lib/types";
-import { answer, card, choice, multi, room } from "./_build";
+import { answer, card, choice, multi, order, room } from "./_build";
 
 /** Salles 101 à 120 du niveau Impossible. */
 export const IMPOSSIBLE_7: RoomContent[] = [
@@ -110,5 +110,41 @@ export const IMPOSSIBLE_7: RoomContent[] = [
       ["Le prestataire reçoit la clé privée pour pouvoir calculer", false, "Justement non : il calcule sans la clé de déchiffrement."],
     ]),
     "Prototype validé : les statistiques sortent, les données de santé restent chiffrées.",
+  ),
+  room(
+    "impossible-107",
+    "L'algorithme gravé dans le code",
+    "Le comité de sécurité de serveur-corp.fr veut préparer la migration vers la cryptographie post-quantique. Problème : dans plusieurs applications, l'algorithme de chiffrement est écrit en dur dans des centaines de fichiers. Changer d'algorithme prendrait des années.",
+    card("La crypto-agilité", "Crypto", "🔄", "La crypto-agilité, c'est la capacité à changer d'algorithme ou de taille de clé rapidement, sans réécrire les applications.", [
+      "Un algorithme peut être affaibli du jour au lendemain (SHA-1, RSA trop court, futur ordinateur quantique).",
+      "Première étape : un inventaire des usages cryptographiques (où, quel algorithme, quelles clés, quelles données).",
+      "Le code appelle une bibliothèque ou un service central, et l'algorithme est un paramètre de configuration.",
+      "Les données et signatures indiquent l'algorithme utilisé, pour faire cohabiter ancien et nouveau pendant la transition (mode hybride).",
+    ], "Qu'est-ce qui permet de changer d'algorithme sans tout réécrire ?"),
+    choice("Quelle démarche rend le système vraiment crypto-agile ?", [
+      ["Inventorier les usages, centraliser la crypto dans une bibliothèque configurable et étiqueter chaque donnée avec son algorithme", true, "Changer d'algorithme devient un changement de configuration, et l'ancien reste lisible pendant la transition."],
+      ["Remplacer dès maintenant l'algorithme par un post-quantique, en dur, dans chaque fichier", false, "Tu recrées le même problème pour la prochaine migration."],
+      ["Développer un algorithme maison secret", false, "La cryptographie maison est presque toujours plus faible que les standards."],
+      ["Attendre qu'un ordinateur quantique existe pour agir", false, "Des données chiffrées aujourd'hui peuvent être stockées et déchiffrées plus tard."],
+    ]),
+    "Inventaire fait, crypto centralisée. La prochaine migration sera une ligne de configuration.",
+  ),
+  room(
+    "impossible-108",
+    "La faille qui ne touchait personne",
+    "Une faille critique est publiée dans une bibliothèque présente dans le SBOM du logiciel que serveur-corp.fr vend à ses clients. Vingt clients appellent, inquiets. Or l'équipe pense que la fonction vulnérable n'est jamais appelée par le produit. Il faut le prouver et le communiquer proprement.",
+    card("Le VEX (exploitabilité des vulnérabilités)", "Défense", "📑", "Un document VEX indique, pour chaque vulnérabilité d'un composant, si le produit est réellement touché, avec une justification lisible par les machines.", [
+      "Le SBOM liste les composants ; le VEX dit si leurs failles concernent vraiment le produit.",
+      "Statuts possibles : non concerné (not_affected), concerné (affected), corrigé (fixed), en cours d'analyse (under_investigation).",
+      "Un statut « non concerné » doit être justifié, par exemple : le code vulnérable n'est pas présent, ou n'est jamais exécuté.",
+      "Formats courants : CSAF, CycloneDX ou OpenVEX. Le VEX se met à jour à chaque nouvelle version du produit.",
+    ], "On analyse avant d'affirmer, et on réévalue ensuite."),
+    order("Remets les étapes de traitement de cette faille dans l'ordre :", [
+      "Repérer dans le SBOM les produits qui contiennent la bibliothèque vulnérable",
+      "Analyser si la fonction vulnérable est présente et atteignable dans le produit",
+      "Publier un VEX avec le statut et sa justification (ici : code vulnérable jamais exécuté)",
+      "Réévaluer et mettre à jour le VEX à chaque nouvelle version du produit",
+    ]),
+    "VEX publié avec justification. Les clients savent, preuves à l'appui, qu'ils ne sont pas exposés.",
   ),
 ];
