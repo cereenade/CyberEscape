@@ -147,4 +147,40 @@ export const FACILE_7: RoomContent[] = [
     }),
     "Tu as choisi un chargeur vendu par une enseigne connue. Les fausses étoiles n'ont pas brillé longtemps.",
   ),
+  room(
+    "facile-109",
+    "Le jeu introuvable",
+    "Ton jeu préféré n'est pas encore sorti sur ton téléphone. Dans ta boîte mail, trois messages parlent d'applis. L'un d'eux te propose de l'installer « en avant-première » depuis un lien direct.",
+    card("Les applis hors des boutiques officielles", "Défense", "📲", "Installe tes applis depuis les boutiques officielles : un fichier téléchargé ailleurs peut cacher un logiciel espion.", [
+      "Les boutiques officielles (App Store, Google Play) analysent les applis avant de les publier.",
+      "Un fichier d'installation reçu par lien (APK sur Android) ne passe par aucun contrôle.",
+      "Ne désactive jamais la protection « sources inconnues » pour une promesse d'avant-première ou de version gratuite.",
+      "Avant d'installer, regarde l'éditeur, le nombre de téléchargements et les permissions demandées.",
+    ], "D'où vient le fichier qu'on te demande d'installer ?"),
+    phishing([
+      ["Boutique d'applis", "no-reply@store-officiel.example.com", "Ton appli Météo a été mise à jour", "La nouvelle version de Météo Plus est disponible. Elle s'installera automatiquement depuis la boutique.", "Voir dans la boutique", "https://store-officiel.example.com/apps/meteo-plus", false, "Une simple notification de mise à jour, qui renvoie vers la boutique officielle."],
+      ["Team Gaming News", "avant-premiere@jeux-gratuits-apk.example.net", "Le jeu en avant-première, GRATUIT !", "Télécharge le fichier d'installation avant tout le monde ! Autorise les « sources inconnues » dans tes réglages puis lance le fichier. Offre limitée à 24 h.", "Télécharger le fichier .apk", "https://jeux-gratuits-apk.example.net/jeu-beta.apk", true, "Un fichier d'installation hors boutique, une demande de baisser une protection et une urgence : c'est le piège classique pour installer un logiciel espion."],
+      ["Ton club de basket", "contact@club-basket.example.org", "L'appli du club est en ligne", "Retrouve les horaires des entraînements dans notre appli, disponible sur les boutiques officielles. Cherche « Club Basket Ville ».", "Page de l'appli sur la boutique", "https://store-officiel.example.com/apps/club-basket-ville", false, "Le club t'invite à chercher l'appli dans la boutique officielle, sans fichier à télécharger."],
+    ]),
+    "Fichier supprimé, sources inconnues toujours bloquées. Tu attendras la vraie sortie du jeu sur la boutique.",
+  ),
+  room(
+    "facile-110",
+    "Le grenier numérique",
+    "En rangeant ta boîte mail, tu retrouves des inscriptions oubliées : un forum de 2017, une appli de quiz, une boutique où tu n'as acheté qu'une fois. Tous ces comptes existent encore, avec tes données dedans.",
+    card("Les comptes inutilisés", "Mots de passe", "🗃️", "Un compte oublié reste une porte ouverte : supprime ceux qui ne te servent plus.", [
+      "Un vieux compte garde ton e-mail, parfois ton adresse et ta carte bancaire.",
+      "Si le site se fait pirater, tes données fuient, même si tu ne t'y connectes plus.",
+      "Cherche « Bienvenue » ou « Confirme ton inscription » dans ta boîte mail pour retrouver tes comptes.",
+      "Supprime le compte depuis ses réglages ; le RGPD te permet de demander l'effacement de tes données.",
+    ], "Un compte que tu n'utilises plus protège-t-il encore tes données ?"),
+    multi("Que fais-tu de ces comptes oubliés ?", [
+      ["Supprimer les comptes dont tu n'as plus besoin, depuis leurs réglages", true, "Moins de comptes, moins de données qui peuvent fuir."],
+      ["Retirer la carte bancaire enregistrée sur les comptes que tu gardes", true, "Une carte enregistrée est une cible de choix."],
+      ["Demander l'effacement de tes données si la suppression n'est pas proposée", true, "C'est un droit prévu par le RGPD."],
+      ["Les laisser tels quels : si tu ne t'y connectes plus, ils ne risquent rien", false, "Le site peut être piraté sans toi, et tes données avec."],
+      ["Mettre le même mot de passe partout pour t'en souvenir plus facilement", false, "Une seule fuite ouvrirait alors tous tes comptes."],
+    ]),
+    "Sept comptes supprimés, deux cartes retirées. Ton grenier numérique est bien plus léger.",
+  ),
 ];

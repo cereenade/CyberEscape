@@ -147,4 +147,44 @@ export const IMPOSSIBLE_7: RoomContent[] = [
     ]),
     "VEX publié avec justification. Les clients savent, preuves à l'appui, qu'ils ne sont pas exposés.",
   ),
+  room(
+    "impossible-109",
+    "Le registre aux mille pages",
+    "Le journal d'audit de serveur-corp.fr contient des millions d'entrées. Un auditeur veut vérifier qu'une entrée précise y figure, sans tout télécharger, et être sûr que personne n'a réécrit l'historique.",
+    card("Les arbres de Merkle", "Crypto", "🌳", "Un arbre de Merkle résume des millions de données en une seule empreinte, et prouve qu'un élément en fait partie avec quelques empreintes seulement.", [
+      "Chaque feuille est l'empreinte (hachage) d'une donnée ; chaque nœud est l'empreinte de ses deux enfants, jusqu'à la racine.",
+      "Changer une seule donnée change toutes les empreintes jusqu'à la racine : la modification se voit tout de suite.",
+      "Pour prouver qu'une donnée est dans l'arbre, il suffit de fournir les empreintes « sœurs » sur le chemin vers la racine : environ log₂(n) empreintes.",
+      "On les retrouve dans Certificate Transparency, Git, les sauvegardes dédupliquées et les journaux infalsifiables.",
+    ], "Combien d'étages faut-il monter pour aller d'une feuille à la racine ?"),
+    choice("L'arbre compte 8 entrées. Combien d'empreintes faut-il fournir pour prouver que l'entrée E3 en fait partie ?", [
+      ["3 empreintes : une par étage, de la feuille jusqu'à la racine", true, "Avec 8 feuilles, l'arbre a 3 étages (log₂ 8 = 3) : H4, H(1,2) et H(5..8) suffisent pour recalculer la racine."],
+      ["8 empreintes : il faut toutes les feuilles", false, "C'est justement ce que l'arbre évite : seules les empreintes sœurs sont nécessaires."],
+      ["1 empreinte : la racine suffit", false, "La racine seule ne permet pas de relier E3 à l'arbre : il faut le chemin."],
+    ], {
+      content: "                 Racine\n            /             \\\n      H(1..4)               H(5..8)\n      /     \\               /     \\\n  H(1,2)   H(3,4)       H(5,6)   H(7,8)\n  /  \\     /  \\         /  \\     /  \\\n H1  H2   H3  H4       H5  H6   H7  H8\n\nÀ prouver : l'entrée E3 (feuille H3)",
+      contentLabel: "arbre de Merkle du journal d'audit",
+    }),
+    "Preuve vérifiée avec 3 empreintes au lieu de 8 entrées. L'historique du journal est intact.",
+  ),
+  room(
+    "impossible-110",
+    "La négociation truquée",
+    "Un client et un serveur annoncent chacun les versions de chiffrement qu'ils acceptent. Un attaquant placé au milieu efface discrètement les meilleures options : les deux finissent par parler une vieille version cassée.",
+    card("Les attaques par rétrogradation", "Crypto", "⬇️", "Une attaque par rétrogradation force deux parties à choisir une protection plus faible que celle qu'elles savent utiliser.", [
+      "Pendant la négociation, chacun annonce ce qu'il sait faire ; si ces annonces ne sont pas protégées, un intermédiaire peut les modifier.",
+      "Exemples historiques : FREAK et Logjam (chiffrement « export » affaibli), POODLE (repli vers SSL 3.0).",
+      "TLS 1.3 signe tout l'échange et ajoute une sentinelle dans l'aléa du serveur, qui trahit une rétrogradation.",
+      "Défense : désactiver les vieilles versions et suites côté serveur, plutôt que de compter sur le client pour choisir la meilleure.",
+    ], "Que se passe-t-il si les vieilles options n'existent plus du tout ?"),
+    choice("Quelle mesure protège le mieux le serveur contre ce genre d'attaque ?", [
+      ["N'accepter que TLS 1.2 et 1.3 avec des suites robustes, et retirer tout le reste", true, "S'il n'y a plus de version faible à proposer, il n'y a plus rien vers quoi rétrograder."],
+      ["Garder SSL 3.0 activé pour les vieux navigateurs, mais le placer en dernier", false, "L'attaquant efface justement les meilleures options : le dernier choix devient le seul."],
+      ["Changer le certificat du serveur plus souvent", false, "Le certificat ne protège pas une négociation qui accepte des versions cassées."],
+    ], {
+      content: "Annonce du client  : TLS 1.3, TLS 1.2, SSL 3.0\nVu par le serveur  : SSL 3.0          (les autres ont disparu en route)\nRéponse du serveur : « D'accord pour SSL 3.0 »",
+      contentLabel: "négociation interceptée",
+    }),
+    "Vieilles versions retirées. La négociation ne peut plus descendre plus bas que TLS 1.2.",
+  ),
 ];
