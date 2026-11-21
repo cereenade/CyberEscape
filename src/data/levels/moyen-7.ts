@@ -153,4 +153,43 @@ export const MOYEN_7: RoomContent[] = [
     }),
     "198.51.100.23 est ajoutée à la liste de blocage, et SSH n'accepte plus que les clés.",
   ),
+  room(
+    "moyen-109",
+    "Les notes du développeur",
+    "Le site de serveur-corp.fr semble propre. Mais en affichant le code source de la page d'accueil, tu tombes sur un commentaire oublié par un développeur. Il contient une chaîne étrange.",
+    card("Les commentaires dans le code HTML", "Web", "💬", "Les commentaires HTML sont invisibles à l'écran, mais n'importe qui peut les lire dans le code source.", [
+      "Un commentaire HTML s'écrit <!-- ... --> : le navigateur ne l'affiche pas, mais il l'envoie à chaque visiteur.",
+      "On y trouve parfois des notes internes, des chemins cachés ou des identifiants de test.",
+      "Encoder une information en Base64 ne la cache pas : ça se décode en un clic.",
+      "Bonne pratique : retirer automatiquement les commentaires au moment de la mise en ligne.",
+    ], "Le texte invisible n'est pas secret. Et le Base64 se décode."),
+    answer("Quel nom d'environnement se cache dans le commentaire ?", ["preprod"], {
+      content: "<footer>© serveur-corp.fr</footer>\n<!-- TODO avant la mise en ligne : retirer le lien vers l'environnement cHJlcHJvZA== -->",
+      contentLabel: "code source de la page",
+      tools: ["base64", "hex", "rot13"],
+      workshopInput: "cHJlcHJvZA==",
+      placeholder: "Le mot décodé",
+    }),
+    "preprod ! Le commentaire est retiré, et la chaîne de mise en ligne supprime désormais toutes les notes internes.",
+  ),
+  room(
+    "moyen-110",
+    "Les 404 en rafale",
+    "Le serveur web de serveur-corp.fr ralentit. Tu ouvres son journal d'accès : chaque ligne indique l'adresse du visiteur, l'heure, la page demandée et le code de réponse.",
+    card("Le journal d'accès du serveur web", "Défense", "📜", "Le journal d'accès raconte chaque visite : une rafale d'erreurs 404 depuis une même adresse trahit souvent un scan.", [
+      "Une ligne typique : adresse IP, date, méthode (GET, POST), page demandée, code de réponse, taille, User-Agent.",
+      "200 = page trouvée, 404 = page introuvable, 403 = accès interdit.",
+      "Des dizaines de 404 en quelques secondes sur des pages comme /admin ou /backup : quelqu'un cherche des fichiers oubliés.",
+      "Réaction : vérifier qu'aucune page sensible n'a répondu 200, puis limiter ou bloquer l'adresse.",
+    ], "Qui demande plein de pages qui n'existent pas, en quelques secondes ?"),
+    choice("Quelle adresse est en train de scanner le site ?", [
+      ["203.0.113.45", true, "Quatre pages sensibles testées en trois secondes, presque toutes en 404 : c'est un scan de fichiers oubliés."],
+      ["198.51.100.12", false, "Deux pages normales, trouvées (200) à quelques secondes d'intervalle : un visiteur ordinaire."],
+      ["192.0.2.80", false, "Une seule erreur 404 sur une image : ça arrive à tout le monde."],
+    ], {
+      content: "198.51.100.12 - [21/Nov 10:02:01] \"GET /index.html\" 200\n203.0.113.45 - [21/Nov 10:02:03] \"GET /admin/\" 404\n203.0.113.45 - [21/Nov 10:02:03] \"GET /backup.zip\" 404\n198.51.100.12 - [21/Nov 10:02:04] \"GET /contact.html\" 200\n203.0.113.45 - [21/Nov 10:02:05] \"GET /.env\" 404\n192.0.2.80 - [21/Nov 10:02:05] \"GET /img/logo-old.png\" 404\n203.0.113.45 - [21/Nov 10:02:06] \"GET /old/config.php\" 403",
+      contentLabel: "access.log",
+    }),
+    "Adresse limitée, et aucune page sensible n'a répondu 200. Le serveur respire de nouveau.",
+  ),
 ];

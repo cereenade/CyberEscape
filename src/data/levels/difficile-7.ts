@@ -153,4 +153,43 @@ export const DIFFICILE_7: RoomContent[] = [
     ]),
     "Le routeur vérifie maintenant l'en-tête Host et le résolveur filtre les adresses privées. Le site de jeux ne parle plus qu'à lui-même.",
   ),
+  room(
+    "difficile-109",
+    "Le dossier qui n'aurait pas dû être là",
+    "Pendant un audit autorisé de serveur-corp.fr, tu remarques que l'adresse /.git/HEAD répond au lieu d'afficher une erreur. Le dossier de versions du site a été copié avec le reste.",
+    card("Le dossier .git exposé", "Web", "🗂️", "Un dossier .git publié par erreur permet de reconstruire tout le code du site, historique et secrets compris.", [
+      "Le dossier .git contient l'historique complet du projet : chaque fichier, chaque version.",
+      "S'il est accessible en ligne, on peut reconstituer le code source, y compris des mots de passe supprimés depuis.",
+      "Supprimer un secret dans un nouveau commit ne suffit pas : il reste dans l'historique, il faut le changer.",
+      "Défense : déployer sans le dossier .git, bloquer les fichiers cachés sur le serveur et scanner les dépôts à la recherche de secrets.",
+    ], "Un secret effacé du code est-il effacé de l'historique ?"),
+    multi("Quelles mesures corrigent vraiment le problème ?", [
+      ["Bloquer l'accès aux dossiers cachés (/.git, /.env) dans la configuration du serveur", true, "Le dossier ne répond plus aux visiteurs."],
+      ["Déployer le site sans le dossier .git (copie des seuls fichiers utiles)", true, "La cause est traitée à la source."],
+      ["Changer tous les mots de passe et clés présents dans l'historique", true, "Ils ont pu être copiés : seuls de nouveaux secrets sont sûrs."],
+      ["Supprimer le mot de passe du fichier dans un nouveau commit, et s'arrêter là", false, "Il reste lisible dans les versions précédentes."],
+      ["Renommer la page d'accueil pour brouiller les pistes", false, "Ça ne change rien à l'accès au dossier .git."],
+    ]),
+    "Dossier bloqué, déploiement corrigé, secrets renouvelés. L'historique ne raconte plus rien d'utile.",
+  ),
+  room(
+    "difficile-110",
+    "L'installateur trop généreux",
+    "Sur un poste Windows de serveur-corp.fr, un utilisateur sans droits d'administration arrive à installer n'importe quel paquet .msi… avec les droits SYSTEM. Tu inspectes le registre.",
+    card("AlwaysInstallElevated", "Système", "📦", "Ce réglage Windows installe tout paquet MSI avec les droits SYSTEM : n'importe quel utilisateur devient administrateur.", [
+      "AlwaysInstallElevated est une stratégie qui existe à deux endroits : HKLM et HKCU.",
+      "Si elle vaut 1 aux deux endroits, chaque fichier .msi s'installe avec les droits les plus élevés.",
+      "Un utilisateur malveillant peut alors fabriquer un paquet qui lui donne les pleins pouvoirs.",
+      "Défense : laisser la stratégie désactivée par GPO et passer par un outil de déploiement contrôlé.",
+    ], "Que se passe-t-il quand la valeur vaut 1 des deux côtés ?"),
+    choice("Que montre ce relevé, et que faut-il faire ?", [
+      ["La stratégie est active aux deux endroits : il faut la désactiver par GPO", true, "Avec 1 dans HKLM et HKCU, tout MSI s'installe en SYSTEM : c'est une élévation de privilèges toute prête."],
+      ["Rien d'anormal : seuls les administrateurs peuvent installer des MSI", false, "Justement non : ce réglage donne ce pouvoir à tout le monde."],
+      ["Il suffit de supprimer la clé dans HKCU de cet utilisateur", false, "La GPO doit être corrigée, sinon la valeur revient et touche les autres postes."],
+    ], {
+      content: "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer\n    AlwaysInstallElevated    REG_DWORD    0x1\n\nHKCU\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer\n    AlwaysInstallElevated    REG_DWORD    0x1",
+      contentLabel: "relevé du registre",
+    }),
+    "Stratégie désactivée sur tout le parc. Les installations repassent par l'outil de déploiement validé.",
+  ),
 ];

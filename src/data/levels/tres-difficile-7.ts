@@ -1,5 +1,5 @@
 import type { RoomContent } from "@/lib/types";
-import { answer, card, choice, multi, room } from "./_build";
+import { answer, card, choice, multi, order, room } from "./_build";
 
 /** Salles 101 à 120 du niveau Très difficile. */
 export const TRES_DIFFICILE_7: RoomContent[] = [
@@ -153,5 +153,44 @@ export const TRES_DIFFICILE_7: RoomContent[] = [
       placeholder: "nom.de.domaine",
     }),
     "Domaine bloqué, outil désinstallé et poste examiné. Seuls les outils de support autorisés restent permis.",
+  ),
+  room(
+    "tres-difficile-109",
+    "Le gabarit modifié",
+    "Une alerte remonte sur un contrôleur de domaine : un objet très particulier de l'Active Directory a vu ses permissions changer. Toutes les heures, ces permissions sont recopiées sur les comptes les plus puissants.",
+    card("La persistance via AdminSDHolder", "Défense", "🛡️", "AdminSDHolder sert de modèle de droits pour les comptes privilégiés : le modifier offre une persistance discrète.", [
+      "AdminSDHolder est un objet du conteneur System de l'Active Directory.",
+      "Toutes les 60 minutes, le processus SDProp recopie ses permissions sur les groupes protégés (Admins du domaine, etc.).",
+      "Un attaquant qui ajoute ses droits sur AdminSDHolder les retrouve sur tous ces comptes, même après nettoyage.",
+      "Détection : l'événement 5136 (modification d'objet annuaire) sur CN=AdminSDHolder doit déclencher une alerte.",
+    ], "Quel objet recopie ses droits sur les comptes protégés ?"),
+    choice("Que dois-tu conclure de cet événement ?", [
+      ["Un compte non privilégié s'est donné des droits sur AdminSDHolder : c'est une persistance à traiter en priorité", true, "Ses droits vont être recopiés sur tous les groupes protégés : il faut retirer l'entrée et enquêter sur le compte."],
+      ["C'est la tâche SDProp normale, aucune action n'est nécessaire", false, "SDProp lit AdminSDHolder ; il ne le modifie pas, et sûrement pas avec un compte de stagiaire."],
+      ["Il suffit de retirer le compte du groupe Admins du domaine", false, "Il n'y est peut-être pas : ses droits viennent du modèle, qu'il faut corriger."],
+    ], {
+      content: "EventID 5136 - Un objet du service d'annuaire a été modifié\nCompte : SERVEUR-CORP\\stagiaire.web\nObjet DN : CN=AdminSDHolder,CN=System,DC=serveur-corp,DC=fr\nAttribut : nTSecurityDescriptor\nOpération : Valeur ajoutée\nNouvelle ACE : (A;;GA;;;S-1-5-21-…-4127)  # Contrôle total pour stagiaire.web",
+      contentLabel: "journal de sécurité du contrôleur de domaine",
+    }),
+    "Entrée retirée d'AdminSDHolder, compte désactivé et alerte 5136 ajoutée au SOC. La porte dérobée est refermée.",
+  ),
+  room(
+    "tres-difficile-110",
+    "Le mot de passe de 2014",
+    "Le compte de service svc-sauvegarde tourne sur trois serveurs. Son mot de passe n'a pas changé depuis 2014, et il est écrit dans un vieux script. L'équipe veut passer à un compte de service géré.",
+    card("Les comptes de service gérés (gMSA)", "Défense", "🤖", "Un gMSA est un compte de service dont l'Active Directory change lui-même le mot de passe, long et aléatoire.", [
+      "Les comptes de service classiques ont souvent des mots de passe anciens, partagés et jamais changés : une cible idéale (Kerberoasting).",
+      "Avec un gMSA, l'AD génère un mot de passe de 240 caractères et le renouvelle automatiquement (tous les 30 jours par défaut).",
+      "Seuls les serveurs autorisés peuvent récupérer ce mot de passe : personne n'a besoin de le connaître.",
+      "La migration se fait service par service, puis l'ancien compte est désactivé.",
+    ], "Et si plus personne ne connaissait le mot de passe ?"),
+    order("Remets la migration vers un gMSA dans le bon ordre.", [
+      "Créer la clé racine KDS du domaine (une seule fois)",
+      "Créer le gMSA en autorisant uniquement les trois serveurs concernés",
+      "Installer et tester le gMSA sur chaque serveur",
+      "Configurer le service de sauvegarde pour qu'il tourne avec le gMSA",
+      "Désactiver l'ancien compte svc-sauvegarde et effacer le mot de passe du script",
+    ]),
+    "Migration terminée. svc-sauvegarde est désactivé, et plus aucun mot de passe ne traîne dans les scripts.",
   ),
 ];
