@@ -192,4 +192,43 @@ export const MOYEN_7: RoomContent[] = [
     }),
     "Adresse limitée, et aucune page sensible n'a répondu 200. Le serveur respire de nouveau.",
   ),
+  room(
+    "moyen-111",
+    "La page restée dans le cache",
+    "Sur l'ordinateur partagé de la médiathèque, tu cliques sur « Précédent » après t'être déconnecté de ton espace client. Ta page de facture réapparaît, avec ton adresse et ton RIB.",
+    card("L'en-tête Cache-Control et les pages sensibles", "Web", "🗄️", "Le serveur indique au navigateur s'il peut garder une copie d'une page : pour une page privée, la réponse doit être non.", [
+      "L'en-tête de réponse Cache-Control dit au navigateur (et aux proxys) ce qu'il peut stocker.",
+      "« no-store » : ne garde aucune copie. C'est la valeur pour une page qui contient des données personnelles.",
+      "« public, max-age=86400 » : tout le monde peut garder la page un jour entier. Parfait pour un logo, dangereux pour une facture.",
+      "Sur un ordinateur partagé, déconnecte-toi et ferme le navigateur.",
+    ], "Quelle valeur interdit toute copie ?"),
+    choice("Quelle réponse du serveur protège correctement la page de facture ?", [
+      ["Réponse B : Cache-Control: no-store", true, "Le navigateur ne garde aucune copie : « Précédent » redemande la page, qui exige de se reconnecter."],
+      ["Réponse A : Cache-Control: public, max-age=86400", false, "La page peut rester stockée un jour, même par un proxy partagé."],
+      ["Réponse C : aucun en-tête Cache-Control", false, "Le navigateur décide seul, et garde souvent la page en mémoire."],
+    ], {
+      content: "Réponse A\nHTTP/1.1 200 OK\nContent-Type: text/html\nCache-Control: public, max-age=86400\n\nRéponse B\nHTTP/1.1 200 OK\nContent-Type: text/html\nCache-Control: no-store\n\nRéponse C\nHTTP/1.1 200 OK\nContent-Type: text/html",
+      contentLabel: "en-têtes de trois versions de /facture",
+    }),
+    "Le site passe ses pages privées en no-store. « Précédent » n'affiche plus que la page de connexion.",
+  ),
+  room(
+    "moyen-112",
+    "Le lien qui sait qui tu es",
+    "Tu reçois la lettre d'information de boutique-exemple.fr et tu veux transférer son lien à un ami. En regardant l'adresse de plus près, tu remarques un paramètre étrange à la fin.",
+    card("Les identifiants cachés dans les liens de suivi", "Web", "🔗", "Un lien de mail peut contenir ton identité, simplement encodée : le transférer, c'est parfois transférer ton compte.", [
+      "Les mails marketing ajoutent des paramètres pour savoir qui a cliqué (?u=…, ?id=…).",
+      "Ces paramètres sont souvent juste encodés en Base64 ou en hexadécimal : n'importe qui peut les lire.",
+      "Certains liens connectent même directement à ton compte : ne les transfère pas.",
+      "Pour partager, copie l'adresse de la page sans ses paramètres.",
+    ], "Ce paramètre ressemble à du Base64."),
+    answer("Quelle information se cache dans le paramètre u ?", ["lea@example.com"], {
+      content: "https://www.boutique-exemple.fr/promo?u=bGVhQGV4YW1wbGUuY29t",
+      contentLabel: "lien de la lettre d'information",
+      tools: ["base64", "hex", "url"],
+      workshopInput: "bGVhQGV4YW1wbGUuY29t",
+      placeholder: "Le texte décodé",
+    }),
+    "lea@example.com : ton adresse, en clair pour qui sait décoder. Tu partages la page sans le paramètre.",
+  ),
 ];

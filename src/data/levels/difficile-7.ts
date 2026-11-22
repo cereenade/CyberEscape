@@ -192,4 +192,46 @@ export const DIFFICILE_7: RoomContent[] = [
     }),
     "Stratégie désactivée sur tout le parc. Les installations repassent par l'outil de déploiement validé.",
   ),
+  room(
+    "difficile-111",
+    "Le mot de passe « 0 »",
+    "Pendant un audit autorisé de serveur-corp.fr, tu relis le code PHP de la page de connexion. La comparaison du mot de passe utilise deux signes égal, pas trois.",
+    card("La comparaison laxiste (type juggling)", "Web", "⚖️", "Certains langages convertissent les types avant de comparer : deux valeurs différentes peuvent alors être jugées « égales ».", [
+      "En PHP, == compare après conversion de type ; === compare aussi le type.",
+      "Dans les anciennes versions, « 0e123 » == « 0e456 » est vrai : les deux sont lus comme 0 en notation scientifique.",
+      "Un hachage qui commence par 0e suivi de chiffres peut donc être « égal » à un autre.",
+      "Défense : comparaison stricte (===), fonctions dédiées comme hash_equals() et password_verify().",
+    ], "Deux égal ou trois ?"),
+    choice("Quelle correction rend la vérification fiable ?", [
+      ["Utiliser password_verify() avec un hachage moderne, ou au minimum une comparaison stricte", true, "Plus de conversion de type : seule la vraie valeur passe."],
+      ["Garder == mais ajouter un message d'erreur plus vague", false, "Le message ne change rien à la comparaison fautive."],
+      ["Mettre le mot de passe en majuscules avant la comparaison", false, "La conversion de type reste possible."],
+    ], {
+      content: "$hash = md5($_POST['password']);\nif ($hash == $user['password_md5']) {\n    connecter($user);\n}",
+      contentLabel: "login.php (extrait)",
+    }),
+    "Comparaison stricte et password_verify() en place. Le « 0 » magique ne passe plus.",
+  ),
+  room(
+    "difficile-112",
+    "La tâche de minuit",
+    "Sur un serveur Linux de test, un script de sauvegarde tourne chaque nuit en root grâce à cron. Tu remarques ses droits : tout le monde peut le modifier.",
+    card("Les scripts cron modifiables par tous", "Système", "⏰", "Un script lancé par root mais modifiable par n'importe qui permet à n'importe qui de devenir root.", [
+      "cron lance des commandes à heure fixe, souvent avec les droits root (/etc/crontab, /etc/cron.d).",
+      "Si le script appelé est en -rwxrwxrwx, un simple utilisateur peut y ajouter ses propres commandes.",
+      "À minuit, root les exécutera sans poser de question.",
+      "Défense : script appartenant à root, droits 700 ou 750, dossier parent protégé aussi.",
+    ], "Regarde le dernier groupe de droits du script."),
+    multi("Quelles mesures corrigent ce risque ?", [
+      ["Donner le script à root (chown root:root)", true, "Seul root peut alors le modifier."],
+      ["Retirer l'écriture aux autres (chmod 750 ou 700)", true, "Plus personne d'autre ne peut glisser une commande dedans."],
+      ["Vérifier aussi les droits du dossier qui contient le script", true, "Un dossier modifiable permet de remplacer le fichier entier."],
+      ["Déplacer la tâche à 3 h du matin", false, "L'heure ne change rien : le script reste modifiable."],
+      ["Renommer le script en .backup_secret.sh", false, "Un nom caché ne protège pas des droits trop larges."],
+    ], {
+      content: "$ cat /etc/crontab\n0 0 * * * root /opt/scripts/sauvegarde.sh\n\n$ ls -l /opt/scripts/sauvegarde.sh\n-rwxrwxrwx 1 deploy deploy 412 nov. 20 sauvegarde.sh",
+      contentLabel: "terminal",
+    }),
+    "Script rendu à root, droits resserrés. La tâche de minuit ne fait plus que des sauvegardes.",
+  ),
 ];

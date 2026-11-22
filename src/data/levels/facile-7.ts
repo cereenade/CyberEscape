@@ -1,5 +1,5 @@
 import type { RoomContent } from "@/lib/types";
-import { card, choice, multi, phishing, room } from "./_build";
+import { card, choice, multi, order, phishing, room } from "./_build";
 
 /** Salles 101 à 120 du niveau Facile. */
 export const FACILE_7: RoomContent[] = [
@@ -182,5 +182,40 @@ export const FACILE_7: RoomContent[] = [
       ["Mettre le même mot de passe partout pour t'en souvenir plus facilement", false, "Une seule fuite ouvrirait alors tous tes comptes."],
     ]),
     "Sept comptes supprimés, deux cartes retirées. Ton grenier numérique est bien plus léger.",
+  ),
+  room(
+    "facile-111",
+    "Le colis que tu n'as pas commandé",
+    "Un colis arrive à ton nom : une petite lampe que tu n'as jamais commandée. Quelques jours plus tard, un avis cinq étoiles « signé » de toi apparaît sur un site marchand.",
+    card("Les colis non commandés (brushing)", "Social", "📦", "Recevoir un objet jamais commandé n'est pas un cadeau : c'est souvent le signe que tes coordonnées circulent.", [
+      "Des vendeurs envoient des objets bon marché pour créer de « vrais » achats et publier de faux avis en ton nom.",
+      "Cela veut dire que ton nom et ton adresse ont fuité quelque part.",
+      "Ne paie rien et ne scanne pas un QR code glissé dans le colis.",
+      "Signale-le au site marchand, change le mot de passe de ton compte et surveille tes commandes.",
+    ], "Que révèle ce colis sur tes données ?"),
+    multi("Quels bons réflexes adoptes-tu face à ce colis ?", [
+      ["Signaler le colis et le faux avis au site marchand", true, "Le site peut supprimer l'avis et sanctionner le vendeur."],
+      ["Changer le mot de passe de ton compte marchand", true, "Si ton compte a été utilisé, tu en reprends le contrôle."],
+      ["Scanner le QR code « pour remercier l'expéditeur »", false, "Un QR code inconnu peut mener vers un site piégé."],
+      ["Payer les frais demandés par SMS pour « garder » le colis", false, "Tu n'as rien à payer pour un objet que tu n'as pas commandé."],
+    ]),
+    "Avis supprimé, mot de passe changé. La lampe éclaire maintenant ton bureau, sans rien te coûter.",
+  ),
+  room(
+    "facile-112",
+    "Ton double sur les réseaux",
+    "Tes amis reçoivent une invitation d'un compte qui porte ton nom et ta photo de profil. Ce « toi » leur demande déjà de l'argent pour une urgence. Ton vrai compte, lui, n'a pas été piraté.",
+    card("Le clonage de profil sur les réseaux sociaux", "Social", "👥", "Un escroc peut copier ta photo et ton nom pour créer un faux compte et piéger tes proches.", [
+      "Le clone n'a pas besoin de ton mot de passe : il recopie juste ce qui est public.",
+      "Il invite tes amis, puis demande de l'argent ou un code reçu par SMS.",
+      "Signale le faux compte au réseau social et préviens tes proches par un autre moyen.",
+      "Limite qui peut voir ta liste d'amis : c'est elle que le clone utilise.",
+    ], "Le pirate a-t-il eu besoin de ton mot de passe ?"),
+    order("Remets dans l'ordre les bonnes actions face au faux profil.", [
+      "Prévenir tes proches de ne pas répondre au faux compte",
+      "Signaler le faux profil comme usurpation d'identité au réseau social",
+      "Rendre ta liste d'amis visible uniquement par toi",
+    ]),
+    "Le faux compte a disparu, et personne n'a envoyé d'argent. Ton double est retourné dans l'ombre.",
   ),
 ];

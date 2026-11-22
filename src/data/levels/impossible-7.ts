@@ -187,4 +187,40 @@ export const IMPOSSIBLE_7: RoomContent[] = [
     }),
     "Vieilles versions retirées. La négociation ne peut plus descendre plus bas que TLS 1.2.",
   ),
+  room(
+    "impossible-111",
+    "Le court-circuit volontaire",
+    "Un fabricant de badges d'accès te confie un lot de cartes à évaluer. En laboratoire, une baisse de tension de quelques nanosecondes au bon moment fait sauter la vérification du code PIN.",
+    card("L'injection de fautes matérielles", "Crypto", "⚡", "Perturber volontairement une puce (tension, horloge, laser) peut lui faire sauter une instruction ou fausser un calcul.", [
+      "Un glitch de tension ou d'horloge peut faire « oublier » un test : si (pin_ok) devient toujours vrai.",
+      "Sur RSA-CRT, une seule signature fausse peut suffire à retrouver la clé privée (attaque de Bellcore).",
+      "Contre-mesures : capteurs de tension et de lumière, double vérification, vérifier une signature avant de l'envoyer.",
+      "Les puces certifiées (Critères communs, EAL élevé) sont testées contre ces attaques.",
+    ], "Que doit faire la puce avant de renvoyer une signature ?"),
+    multi("Quelles contre-mesures réduisent ce risque ?", [
+      ["Vérifier chaque signature RSA avant de la renvoyer", true, "Une signature fausse n'est jamais publiée : l'attaque de Bellcore échoue."],
+      ["Faire chaque test critique deux fois, de façon différente", true, "Une seule faute ne suffit plus à sauter la vérification."],
+      ["Ajouter des capteurs de tension, d'horloge et de lumière", true, "La puce détecte la perturbation et s'efface ou se bloque."],
+      ["Allonger le code PIN à 8 chiffres", false, "La faute saute le test : la longueur du code ne compte plus."],
+      ["Cacher le modèle de la puce sous une étiquette", false, "L'obscurité ne protège pas contre une attaque physique."],
+    ]),
+    "Le fabricant ajoute double vérification et capteurs. Ton glitch ne fait plus que redémarrer la carte.",
+  ),
+  room(
+    "impossible-112",
+    "Le message modifié en route",
+    "Une application chiffre ses messages en AES-CTR, sans étiquette d'intégrité. En changeant quelques bits du message chiffré, un attaquant transforme « VIREMENT 100 » en « VIREMENT 900 » sans connaître la clé.",
+    card("Le chiffrement authentifié (AEAD)", "Crypto", "🔏", "Chiffrer cache le contenu, mais n'empêche pas de le modifier : un mode authentifié protège les deux.", [
+      "En CTR, changer un bit du chiffré change le même bit du clair : on modifie le message à l'aveugle.",
+      "Un mode AEAD (AES-GCM, ChaCha20-Poly1305) ajoute une étiquette qui détecte toute modification.",
+      "Il protège aussi des données associées non chiffrées (en-têtes, identifiants).",
+      "Règle d'or : ne jamais réutiliser un nonce avec la même clé, sinon l'étiquette se forge.",
+    ], "Il faut cacher le contenu ET détecter les modifications."),
+    choice("Quelle solution corrige l'application ?", [
+      ["Passer à AES-GCM ou ChaCha20-Poly1305 avec un nonce unique par message", true, "L'étiquette détecte la moindre modification : le message trafiqué est rejeté."],
+      ["Passer d'AES-128 à AES-256 en mode CTR", false, "Une clé plus longue ne détecte pas les modifications."],
+      ["Encoder le message en Base64 avant de le chiffrer", false, "Un encodage n'apporte aucune intégrité."],
+    ]),
+    "Passage à AES-GCM. Le message trafiqué est rejeté : étiquette invalide.",
+  ),
 ];
