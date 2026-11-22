@@ -193,4 +193,45 @@ export const TRES_DIFFICILE_7: RoomContent[] = [
     ]),
     "Migration terminée. svc-sauvegarde est désactivé, et plus aucun mot de passe ne traîne dans les scripts.",
   ),
+  room(
+    "tres-difficile-111",
+    "L'antivirus qui s'endort",
+    "Ton SIEM remonte une rafale d'événements Microsoft Defender sur le poste PC-COMPTA-07, quelques minutes avant une alerte de chiffrement de fichiers.",
+    card("La désactivation de l'antivirus (événements 5001 et 5007)", "Défense", "🛡️", "Avant de lancer leur charge, beaucoup d'attaquants coupent l'antivirus : les journaux de Defender le racontent.", [
+      "5001 : la protection en temps réel a été désactivée.",
+      "5007 : la configuration de Defender a changé (exclusion ajoutée, réglage modifié).",
+      "Une exclusion sur C:\\Users\\Public ou un dossier temporaire juste avant une alerte est très suspecte.",
+      "Défense : protection contre les modifications (Tamper Protection), alerte SIEM sur 5001/5007 hors maintenance.",
+    ], "Quel événement montre l'antivirus éteint ?"),
+    order("Remets dans l'ordre la séquence de l'attaque, telle que la racontent les journaux.", [
+      "5007 : exclusion ajoutée sur C:\\Users\\Public",
+      "5001 : protection en temps réel désactivée",
+      "Création de C:\\Users\\Public\\upd.exe",
+      "Alerte : renommage massif de fichiers en .locked",
+    ], {
+      content: "02:14:09 PC-COMPTA-07 Defender 5001 Protection en temps réel désactivée\n02:16:40 PC-COMPTA-07 Sysmon 11 Fichier créé C:\\Users\\Public\\upd.exe\n02:13:52 PC-COMPTA-07 Defender 5007 Exclusion ajoutée : C:\\Users\\Public\n02:19:03 PC-COMPTA-07 EDR Renommage massif de fichiers (.locked)",
+      contentLabel: "extrait du SIEM (non trié)",
+    }),
+    "Poste isolé à 02:19, Tamper Protection activée partout. La prochaine tentative de couper Defender échouera.",
+  ),
+  room(
+    "tres-difficile-112",
+    "Le ticket qui voyage",
+    "Le contrôleur de domaine enregistre des accès au serveur de fichiers FS-01 avec le compte de l'administratrice a.martin. Pourtant, elle est en congé, et aucune connexion par mot de passe n'apparaît.",
+    card("Le pass-the-ticket Kerberos", "Système", "🎫", "Un ticket Kerberos volé en mémoire peut être réutilisé sur une autre machine, sans connaître le mot de passe.", [
+      "Kerberos donne un TGT à la connexion, puis des tickets de service (TGS) pour chaque serveur.",
+      "Un attaquant qui copie ces tickets depuis la mémoire d'un poste peut les rejouer ailleurs.",
+      "Indices : tickets de service (4769) pour un compte depuis une adresse IP inhabituelle, sans demande de TGT (4768) associée.",
+      "Défense : groupe Protected Users, Credential Guard, postes d'administration dédiés, réinitialisation des tickets du compte.",
+    ], "Un ticket demandé sans connexion préalable…"),
+    choice("Quel indice trahit le mieux le pass-the-ticket ?", [
+      ["Des 4769 pour a.martin depuis 10.0.8.23, sans aucun 4768 depuis cette adresse", true, "Le ticket est utilisé sans avoir été obtenu normalement : il a été importé."],
+      ["Un 4768 de a.martin depuis son poste habituel la semaine dernière", false, "C'est une connexion normale, avant son congé."],
+      ["Un 4624 de type 2 pour le compte svc-backup", false, "Un autre compte, connecté normalement."],
+    ], {
+      content: "11/22 09:41 DC01 4769 Compte=a.martin Service=cifs/FS-01 IP=10.0.8.23\n11/22 09:42 DC01 4769 Compte=a.martin Service=ldap/DC01 IP=10.0.8.23\n11/22 09:40 DC01 4624 Type=2 Compte=svc-backup IP=10.0.2.5\n11/15 08:02 DC01 4768 Compte=a.martin IP=10.0.1.14",
+      contentLabel: "journal de sécurité de DC01",
+    }),
+    "Poste 10.0.8.23 isolé, mot de passe et tickets de a.martin réinitialisés. Le ticket volé ne vaut plus rien.",
+  ),
 ];
